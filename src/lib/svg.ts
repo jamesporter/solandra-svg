@@ -6,26 +6,31 @@ export type Vector2D = [number, number]
 /**
 Will support something like: 
 
-  "fill"
-  "fill-opacity" 
-  "opacity"
-  "stroke"
-  "stroke-dasharray" a lot of these in viewBox dimensions
-  "stroke-dashoffset"
-  "stroke-linecap"
-  "stroke-linejoin"
-  "stroke-miterlimit"
-  "stroke-opacity"
-  "stroke-width" NB this has to be really low if going to work with 1 h dimensions?
+  - [x] "fill"
+  - [x] "fill-opacity" 
+  - [x] "opacity"
+  - [x] "stroke"
+  - [x] "stroke-dasharray" a lot of these in viewBox dimensions
+  - [x] "stroke-dashoffset"
+  - [x] "stroke-linecap"
+  - [x] "stroke-linejoin"
+  - [x] "stroke-miterlimit"
+  - [x] "stroke-opacity"
+  - [x] "stroke-width" NB this has to be really low if going to work with 1 h dimensions?
 
-  "transform"
+  - [ ] "transform"
 
-  "class"
-  "id"
+  - [x] "class"
+  - [x] "id"
   
 */
 export class Attributes {
-  private attributes: { [key: string]: string } = {}
+  private attributes: { [key: string]: string | number } = {}
+
+  opacity(opacity: number): Attributes {
+    this.attributes["opacity"] = opacity
+    return this
+  }
 
   fill(
     hue: number,
@@ -39,8 +44,13 @@ export class Attributes {
     return this
   }
 
-  opacity(opacity: number): Attributes {
-    this.attributes["opacity"] = opacity.toString()
+  noFill(): Attributes {
+    this.attributes["fill"] = "none"
+    return this
+  }
+
+  fillOpacity(opacity: number): Attributes {
+    this.attributes["fill-opacity"] = opacity
     return this
   }
 
@@ -53,6 +63,43 @@ export class Attributes {
     this.attributes[
       "stroke"
     ] = `hsla(${hue}, ${saturation}%, ${lightness}%, ${opacity})`
+    return this
+  }
+
+  strokeOpacity(opacity: number): Attributes {
+    this.attributes["stroke-opacity"] = opacity
+    return this
+  }
+
+  strokeWidth(width: number): Attributes {
+    this.attributes["stroke-width"] = width
+    return this
+  }
+
+  lineCap(cap: "butt" | "round" | "square"): Attributes {
+    this.attributes["stroke-linecap"] = cap
+    return this
+  }
+
+  lineJoin(
+    join: "arcs" | "bevel" | "miter" | "miter-clip" | "round"
+  ): Attributes {
+    this.attributes["stroke-linejoin"] = join
+    return this
+  }
+
+  miterLimit(limit: number): Attributes {
+    this.attributes["stroke-miterlimit"] = limit
+    return this
+  }
+
+  dashArray(...dashes: number[]): Attributes {
+    this.attributes["stroke-dasharray"] = dashes.join(" ")
+    return this
+  }
+
+  dashOffset(offset: number) {
+    this.attributes["stroke-dashoffset"] = offset
     return this
   }
 
@@ -70,6 +117,19 @@ export class Attributes {
     return Object.entries(this.attributes)
       .map(([k, v]) => `${k}="${v}"`)
       .join(" ")
+  }
+
+  static stroked(configure?: (attributes: Attributes) => void): Attributes {
+    const attr = new Attributes().noFill().strokeWidth(0.01).stroke(0, 0, 0)
+    configure?.(attr)
+    return attr
+  }
+
+  // at the moment a bit pointless, maybe remove?
+  static filled(configure?: (attributes: Attributes) => void): Attributes {
+    const attr = new Attributes()
+    configure?.(attr)
+    return attr
   }
 }
 
@@ -116,6 +176,10 @@ export class Path {
     const d = this.segments.map(segmentToString).join(" ")
     return `<path ${this.attributes.string} d="${d}" />`
   }
+
+  configureAttributes(configureAttributes: (attributes: Attributes) => void) {
+    configureAttributes(this.attributes)
+  }
 }
 
 export class Group {
@@ -157,6 +221,14 @@ export class SolandraSvg {
 
   path(attributes: Attributes = new Attributes()): Path {
     const path = new Path(attributes)
+    this.elements.push(path)
+    return path
+  }
+
+  strokedPath(configureAttributes?: (attributes: Attributes) => void): Path {
+    const attr = Attributes.stroked()
+    configureAttributes?.(attr)
+    const path = new Path(attr)
     this.elements.push(path)
     return path
   }

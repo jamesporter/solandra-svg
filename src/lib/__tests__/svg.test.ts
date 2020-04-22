@@ -41,4 +41,20 @@ describe("A very simple SVG", () => {
       `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 0.5\\" width=\\"200\\" height=\\"100\\"><path stroke=\\"hsla(220, 90%, 40%, 1)\\" opacity=\\"0.9\\" class=\\"square\\" id=\\"test-square\\" d=\\"M 0.25 0 L 0.25 0.5 L 0.75 0.5 L 0.75 0 Z\\" /></svg>"`
     )
   })
+
+  it("Should be able to do a trivial SVG with a stroked square", () => {
+    const svg = new SolandraSvg(300, 300)
+    svg
+      .strokedPath()
+      .moveTo([0.25, 0.25])
+      .lineTo([0.75, 0.25])
+      .lineTo([0.75, 0.75])
+      .lineTo([0.25, 0.75])
+      .close()
+    const output = svg.image
+    expect(output).toMatch(/.*viewBox="0 0 1 1".*/)
+    expect(output).toMatchInlineSnapshot(
+      `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\"><path fill=\\"none\\" stroke-width=\\"0.01\\" stroke=\\"hsla(0, 0%, 0%, 1)\\" d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" /></svg>"`
+    )
+  })
 })
