@@ -7,8 +7,8 @@ export function SVGSketch({
   height,
 }: {
   sketch: (sol: SolandraSvg) => void
-  width
-  height
+  width: number
+  height: number
 }) {
   const svg = new SolandraSvg(width, height, 1)
   sketch(svg)
