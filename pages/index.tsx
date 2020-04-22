@@ -74,6 +74,21 @@ export default function Home() {
           })
         }}
       />
+
+      <h2>Hello Rectangles</h2>
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          s.times(25, () => {
+            s.strokedPath((attr) => attr.fill(220, 90, 50, 0.2)).rect(
+              s.randomPoint(),
+              s.gaussian({ sd: 0.05, mean: 0.2 }),
+              s.gaussian({ sd: 0.1, mean: 0.3 })
+            )
+          })
+        }}
+      />
     </div>
   )
 }

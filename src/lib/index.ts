@@ -1,4 +1,6 @@
 export * from "./svg"
+export * from "./attributes"
+export * from "./path"
 
 // All copied from main Solandra
 export * from "./util/noise"

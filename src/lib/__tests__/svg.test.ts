@@ -1,4 +1,5 @@
-import { SolandraSvg, Attributes } from "../svg"
+import { SolandraSvg } from "../svg"
+import { Attributes } from "../attributes"
 
 describe("A very simple SVG", () => {
   it("should be possible to instantiate and get meta", () => {

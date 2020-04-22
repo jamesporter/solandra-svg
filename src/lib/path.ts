@@ -1,6 +1,7 @@
 import { Point2D, CurveConfig } from "./util/types"
 import { convertToSVGCubicSpec } from "./util/curveCalcs"
 import { Attributes } from "./attributes"
+import { v } from "."
 
 export type PathSegment =
   | { kind: "move"; to: Point2D }
@@ -66,6 +67,38 @@ export class Path {
     })
     return this
   }
+
+  rect(
+    at: Point2D,
+    width: number,
+    height: number,
+    align: "topLeft" | "center" = "topLeft"
+  ): Path {
+    const start =
+      align === "topLeft" ? at : v.subtract(at, [width / 2, height / 2])
+    this.segments.push({ kind: "move", to: start })
+    this.segments.push({ kind: "line", to: v.add(start, [width, 0]) })
+    this.segments.push({ kind: "line", to: v.add(start, [width, height]) })
+    this.segments.push({ kind: "line", to: v.add(start, [0, height]) })
+    this.segments.push({ kind: "line", to: start })
+    return this
+  }
+
+  // Was copying from solandra but there I jump to raw bezier, wanted to stay in curve config world: TODO Maths: can I do it? How?
+  // seems likely to work?
+  //
+  // ellipse(
+  //   at: Point2D,
+  //   width: number,
+  //   height: number,
+  //   align: "topLeft" | "center" = "topLeft"
+  // ): Path {
+  //   const [cX, cY]: Point2D =
+  //   align === "center" ? at : [at[0] + width / 2, at[1] + height / 2]
+  // const a = (4 / 3) * Math.tan(Math.PI / 8)
+
+  // this.segments
+  // }
 
   close(): Path {
     this.segments.push({ kind: "close" })
