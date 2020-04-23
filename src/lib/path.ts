@@ -84,21 +84,48 @@ export class Path {
     return this
   }
 
-  // Was copying from solandra but there I jump to raw bezier, wanted to stay in curve config world: TODO Maths: can I do it? How?
-  // seems likely to work?
-  //
-  // ellipse(
-  //   at: Point2D,
-  //   width: number,
-  //   height: number,
-  //   align: "topLeft" | "center" = "topLeft"
-  // ): Path {
-  //   const [cX, cY]: Point2D =
-  //   align === "center" ? at : [at[0] + width / 2, at[1] + height / 2]
-  // const a = (4 / 3) * Math.tan(Math.PI / 8)
+  circle(
+    at: Point2D,
+    size: number,
+    align: "topLeft" | "center" = "topLeft"
+  ): Path {
+    const [cX, cY]: Point2D =
+      align === "center" ? at : [at[0] + size / 2, at[1] + size / 2]
+    const a = (4 / 3) * Math.tan(Math.PI / 8)
 
-  // this.segments
-  // }
+    const start: Point2D = [cX, cY - size / 2]
+    const firstPoint: Point2D = [cX + size / 2, cY]
+    const secondPoint: Point2D = [cX, cY + size / 2]
+    const thirdPoint: Point2D = [cX - size / 2, cY]
+
+    const D = v.subtract(firstPoint, start)
+
+    this.segments.push({ kind: "move", to: start })
+
+    const bulbousness =
+      v.magnitude([((1 - a) * size) / 2, ((a - 1) * size) / 2]) / v.magnitude(D)
+
+    const ac = v.add(start, v.scale(D, (1 - bulbousness) / 2))
+    const cp1: Point2D = [cX + (a * size) / 2, cY - size / 2]
+
+    const curveSize = (v.magnitude(v.subtract(cp1, ac)) * 2) / v.magnitude(D)
+
+    ;[firstPoint, secondPoint, thirdPoint, start].forEach((pt) => {
+      this.segments.push({
+        kind: "cubicCurve",
+        to: pt,
+        config: {
+          polarlity: 1,
+          curveAngle: 0,
+          twist: 0,
+          curveSize,
+          bulbousness,
+        },
+      })
+    })
+
+    return this
+  }
 
   close(): Path {
     this.segments.push({ kind: "close" })

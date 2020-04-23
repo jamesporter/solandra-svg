@@ -89,6 +89,21 @@ export default function Home() {
           })
         }}
       />
+
+      <h2>Hello Circles</h2>
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          s.times(25, () => {
+            const w = s.gaussian({ mean: 0.2, sd: 0.05 })
+            s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2)).circle(
+              s.randomPoint(),
+              w
+            )
+          })
+        }}
+      />
     </div>
   )
 }
