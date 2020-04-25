@@ -18,3 +18,11 @@ export function SVGSketch({
     <img src={`data:image/svg+xml;utf8,${image}`} style={{ width, height }} />
   )
 }
+
+export function A4ishSketch({
+  sketch,
+}: {
+  sketch: (sol: SolandraSvg) => void
+}) {
+  return <SVGSketch width={3508 / 4} height={2480 / 4} sketch={sketch} />
+}

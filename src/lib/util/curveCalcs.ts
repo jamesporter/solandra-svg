@@ -1,6 +1,7 @@
 import { Point2D, CurveConfig } from "./types"
 import { default as v } from "./vectors"
 
+// TODO in case where from == to, should handle in somewhat nice way?
 export function convertToSVGCubicSpec({
   from,
   to,

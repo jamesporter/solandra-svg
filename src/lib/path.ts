@@ -132,6 +132,10 @@ export class Path {
     return this
   }
 
+  // chaiken(n: number = 2): Path {
+
+  // }
+
   get string(): string {
     if (this.segments.length === 0) throw Error("Must add to path")
     if (this.segments[0].kind !== "move")

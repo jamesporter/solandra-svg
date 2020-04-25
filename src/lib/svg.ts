@@ -47,7 +47,7 @@ export class SolandraSvg {
   }
 
   strokedPath(configureAttributes?: (attributes: Attributes) => void): Path {
-    const attr = Attributes.stroked()
+    const attr = Attributes.stroked().stroke(0, 0, 0)
     configureAttributes?.(attr)
     const path = new Path(attr)
     this.elements.push(path)

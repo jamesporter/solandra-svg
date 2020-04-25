@@ -1,4 +1,5 @@
 import Head from "next/head"
+import Link from "next/link"
 import { SVGSketch } from "../src/components/SVGSketch"
 import { v, Point2D } from "../src/lib"
 
@@ -12,6 +13,14 @@ export default function Home() {
       <h1>solandra-svg</h1>
 
       <p>A little library for drawing in SVG, but with a nicer API</p>
+
+      <p>
+        Basically I made this to generate stuff to plot.{" "}
+        <Link href="/one">
+          <a>My first generated drawings for a 2D plotter</a>
+        </Link>
+        .
+      </p>
 
       <h2>Hello World</h2>
       <SVGSketch

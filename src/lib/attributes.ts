@@ -115,7 +115,7 @@ export class Attributes {
   }
 
   static stroked(configure?: (attributes: Attributes) => void): Attributes {
-    const attr = new Attributes().noFill().strokeWidth(0.01).stroke(0, 0, 0)
+    const attr = new Attributes().noFill().strokeWidth(0.005).stroke(0, 0, 0)
     configure?.(attr)
     return attr
   }
