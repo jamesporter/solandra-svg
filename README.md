@@ -24,6 +24,26 @@ Output in various ways: inital focus preview/sketch-book + svg file (or somethin
 
 Probably just support svg, path and g(roup)
 
+## TO DO/Roadmap
+
+- [x] Basics
+- [ ] Transforms
+- [ ] Ellipse
+- [ ] Arcs (within path)
+- [ ] Inkscape friendly export (dimensions, colours, ...?)
+- [ ] squash commits(!), publish to npm, open source
+
+### Post v'1'
+
+- [ ] Groups (have plans for closure based approach for nesting)
+- [ ] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
+
 ## API
 
 ## Publishing
+
+`yarn build:package`
+
+`cd package`
+
+`npm publish`
