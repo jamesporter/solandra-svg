@@ -6,6 +6,16 @@
 
 [Install](https://www.npmjs.com/package/solandra-svg)
 
+![Sample](./sample.svg)
+
+```typescript
+s.times(25, () => {
+  s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2))
+    .moveTo(s.randomPoint())
+    .arcTo(s.randomPoint())
+})
+```
+
 ## To develop or run locally
 
 First, run the development server:
