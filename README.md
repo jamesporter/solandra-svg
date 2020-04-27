@@ -33,11 +33,11 @@ Probably just support svg, path and g(roup)
 - [x] Custom path transform (i.e. user supplied functiont to transform; at least points, maybe other aspects of path spec?)
 - [x] Chaiken
 - [x] clone path
-- [ ] Inkscape friendly export (dimensions, colours, ...?)
-- [ ] squash commits(!), publish to npm, open source
+- [x] squash commits(!), publish to npm, open source
 
 ### Post v'1'
 
+- [ ] Inkscape friendly export (dimensions, colours, ...?)
 - [ ] Groups (have plans for closure based approach for nesting)
 - [ ] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
 
