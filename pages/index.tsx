@@ -99,17 +99,64 @@ export default function Home() {
         }}
       />
 
-      <h2>Hello Circles</h2>
+      <h2>Hello Arcs</h2>
       <SVGSketch
         width={480}
         height={480}
         sketch={(s) => {
           s.times(25, () => {
-            const w = s.gaussian({ mean: 0.2, sd: 0.05 })
-            s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2)).circle(
-              s.randomPoint(),
-              w
-            )
+            s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2))
+              .moveTo(s.randomPoint())
+              .arcTo(s.randomPoint())
+          })
+        }}
+      />
+
+      <h2>Hello Ellipses</h2>
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          s.times(35, () => {
+            const size = s.gaussian({ sd: 0.2, mean: 0.25 })
+            s.strokedPath((attr) =>
+              attr.fill(s.sample([130, 200, 210]), 90, 40, 0.2)
+            ).ellipse(s.randomPoint(), size, size / 1.25, "center")
+          })
+        }}
+      />
+
+      <h2>Hello Chaiken</h2>
+
+      <p>
+        An elegant algorithm for smooth a path of lines. Repeatedly cut the
+        corners. In solandra-svg this is only applied to lines (as it doesn't
+        make sense for other path segments).
+      </p>
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          const { bottom } = s.meta
+          s.times(4, (n) => {
+            const path = s
+              .strokedPath((attr) =>
+                attr.strokeOpacity(0.2 + n * 0.1).stroke(15, 90, 60)
+              )
+              .moveTo([0.1, bottom * 0.4])
+            for (let i = 0.1; i <= 0.9; i += 0.2) {
+              path.lineTo([i, bottom * 0.4 + 0.3 * Math.cos(i * 10)])
+            }
+
+            path
+              .map((el) => {
+                if (el.kind === "line" || el.kind === "move") {
+                  return { ...el, to: v.add(el.to, [0, 0.1 * n]) }
+                } else {
+                  return el
+                }
+              })
+              .chaiken(n + 1)
           })
         }}
       />

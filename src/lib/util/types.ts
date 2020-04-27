@@ -8,3 +8,11 @@ export type CurveConfig = {
   bulbousness?: number
   twist?: number
 }
+
+export type ArcConfig = {
+  rX?: number
+  rY?: number
+  xAxisRotation?: number
+  largeArc?: boolean // is > π
+  // will do sweep = largeArc flags, I think that is typically 'correct'
+}

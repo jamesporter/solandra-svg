@@ -28,8 +28,10 @@ Probably just support svg, path and g(roup)
 
 - [x] Basics
 - [ ] Transforms
-- [ ] Ellipse
-- [ ] Arcs (within path)
+- [x] Arcs (within path)
+- [x] Ellipse (as move, arc)
+- [x] Custom path transform (i.e. user supplied functiont to transform; at least points, maybe other aspects of path spec?)
+- [x] Chaiken
 - [ ] Inkscape friendly export (dimensions, colours, ...?)
 - [ ] squash commits(!), publish to npm, open source
 

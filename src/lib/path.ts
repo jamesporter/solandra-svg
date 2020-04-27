@@ -1,4 +1,4 @@
-import { Point2D, CurveConfig } from "./util/types"
+import { Point2D, CurveConfig, ArcConfig } from "./util/types"
 import { convertToSVGCubicSpec } from "./util/curveCalcs"
 import { Attributes } from "./attributes"
 import { v } from "."
@@ -14,6 +14,7 @@ export type PathSegment =
       to: Point2D
       config: Required<CurveConfig>
     }
+  | { kind: "arc"; to: Point2D; config: Required<ArcConfig> }
   | { kind: "close" }
 
 // To force types later, a bit nasty but to cover most potential errors with runtime checks
@@ -33,6 +34,14 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
         to: segment.to,
         ...segment.config,
       })
+    case "arc":
+      const {
+        config: { rX, rY, largeArc, xAxisRotation },
+        to,
+      } = segment
+      return `A ${rX} ${rY} ${xAxisRotation} ${largeArc ? 1 : 0} ${
+        largeArc ? 1 : 0
+      } ${to[0]} ${to[1]}`
   }
 }
 
@@ -68,6 +77,35 @@ export class Path {
     return this
   }
 
+  arcTo(point: Point2D, config: ArcConfig = {}): Path {
+    try {
+      const previous: Point2D = (this.segments[this.segments.length - 1] as any)
+        .to
+      const {
+        rX = Math.abs(point[0] - previous[0]),
+        rY = Math.abs(point[1] - previous[1]),
+        largeArc = false,
+        xAxisRotation = 0,
+      } = config
+
+      this.segments.push({
+        kind: "arc",
+        to: point,
+        config: {
+          rX: rX,
+          rY: rY,
+          xAxisRotation,
+          largeArc,
+        },
+      })
+
+      return this
+    } catch (ex) {
+      console.error("Probably no previous point", ex)
+      return this
+    }
+  }
+
   rect(
     at: Point2D,
     width: number,
@@ -84,46 +122,29 @@ export class Path {
     return this
   }
 
-  circle(
+  ellipse(
     at: Point2D,
-    size: number,
+    width: number,
+    height: number,
     align: "topLeft" | "center" = "topLeft"
   ): Path {
     const [cX, cY]: Point2D =
-      align === "center" ? at : [at[0] + size / 2, at[1] + size / 2]
-    const a = (4 / 3) * Math.tan(Math.PI / 8)
+      align === "center" ? at : [at[0] + width / 2, at[1] + height / 2]
 
-    const start: Point2D = [cX, cY - size / 2]
-    const firstPoint: Point2D = [cX + size / 2, cY]
-    const secondPoint: Point2D = [cX, cY + size / 2]
-    const thirdPoint: Point2D = [cX - size / 2, cY]
+    const rX = width / 2
+    const rY = height / 2
 
-    const D = v.subtract(firstPoint, start)
-
-    this.segments.push({ kind: "move", to: start })
-
-    const bulbousness =
-      v.magnitude([((1 - a) * size) / 2, ((a - 1) * size) / 2]) / v.magnitude(D)
-
-    const ac = v.add(start, v.scale(D, (1 - bulbousness) / 2))
-    const cp1: Point2D = [cX + (a * size) / 2, cY - size / 2]
-
-    const curveSize = (v.magnitude(v.subtract(cp1, ac)) * 2) / v.magnitude(D)
-
-    ;[firstPoint, secondPoint, thirdPoint, start].forEach((pt) => {
-      this.segments.push({
-        kind: "cubicCurve",
-        to: pt,
-        config: {
-          polarlity: 1,
-          curveAngle: 0,
-          twist: 0,
-          curveSize,
-          bulbousness,
-        },
-      })
-    })
-
+    // draw from top, seems most natural, like a clock?
+    this.segments.push({ kind: "move", to: [cX, cY - height / 2] })
+    for (let i = 0; i < 4; i++) {
+      this.arcTo(
+        [
+          cX + rX * Math.cos(Math.PI * (i + 1)),
+          cY + rY * Math.sin(Math.PI * (i + 1)),
+        ],
+        { rX, rY }
+      )
+    }
     return this
   }
 
@@ -132,9 +153,43 @@ export class Path {
     return this
   }
 
-  // chaiken(n: number = 2): Path {
+  chaiken(n: number = 2): Path {
+    for (let k = 0; k < n; k++) {
+      const newSegments: PathSegment[] = []
+      newSegments.push(this.segments[0])
 
-  // }
+      for (let i = 1; i < this.segments.length - 1; i++) {
+        const a = this.segments[i - 1]
+        const b = this.segments[i]
+        const c = this.segments[i + 1]
+
+        if (b.kind === "line" && c.kind === "line" && (a as Toable)["to"]) {
+          console.log({ a, b, c })
+          newSegments.push({
+            kind: "line",
+            to: v.pointAlong((a as Toable).to, b.to, 0.75),
+          })
+          newSegments.push({
+            kind: "line",
+            to: v.pointAlong(b.to, c.to, 0.25),
+          })
+        } else {
+          newSegments.push(b)
+        }
+      }
+      newSegments.push(this.segments[this.segments.length - 1])
+
+      console.log({ segments: this.segments, newSegments })
+
+      this.segments = newSegments
+    }
+    return this
+  }
+
+  map(fn: (el: PathSegment, index: number) => PathSegment): Path {
+    this.segments = this.segments.map(fn)
+    return this
+  }
 
   get string(): string {
     if (this.segments.length === 0) throw Error("Must add to path")
