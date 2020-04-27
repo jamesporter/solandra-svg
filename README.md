@@ -1,6 +1,12 @@
 # solandra-svg
 
-## This website
+[Try out](https://codesandbox.io/s/simple-solandra-svg-demo-obinl)
+
+[Site](https://solandra-svg.netlify.app/)
+
+[Install](https://www.npmjs.com/package/solandra-svg)
+
+## To develop or run locally
 
 First, run the development server:
 
