@@ -1,5 +1,6 @@
 export * from "./svg"
 export * from "./attributes"
+export * from "./transforms"
 export * from "./path"
 
 // All copied from main Solandra

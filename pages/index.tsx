@@ -1,7 +1,7 @@
 import Head from "next/head"
 import Link from "next/link"
 import { SVGSketch } from "../src/components/SVGSketch"
-import { v, Point2D } from "../src/lib"
+import { v, Point2D, Transform, Attributes } from "../src/lib"
 
 export default function Home() {
   return (
@@ -158,6 +158,38 @@ export default function Home() {
               })
               .chaiken(n + 1)
           })
+        }}
+      />
+
+      <h2>Hello Transforms</h2>
+
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          const path = s
+            .strokedPath((attr) => attr.fill(90, 90, 40, 0.5))
+            .ellipse([0.5, 0.5], 0.2, 0.3, "center")
+
+          s.strokedPath((attr) =>
+            attr
+              .fill(70, 90, 40, 0.5)
+              .transform(new Transform().rotate(Math.PI / 8))
+          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+
+          s.strokedPath((attr) =>
+            attr
+              .fill(50, 90, 40, 0.5)
+              .transform(new Transform().scale(1.2, 1.6))
+          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+
+          s.strokedPath((attr) =>
+            attr.fill(30, 90, 40, 0.5).transform(new Transform().skewX(20))
+          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+
+          s.strokedPath((attr) =>
+            attr.fill(10, 90, 40, 0.5).transform(new Transform().skewY(20))
+          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
         }}
       />
     </div>

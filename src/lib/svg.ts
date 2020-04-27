@@ -13,8 +13,6 @@ export class Group {
   }
 }
 
-export class Transform {}
-
 export class SolandraSvg {
   readonly aspectRatio: number
   private rng: Prando
@@ -53,6 +51,12 @@ export class SolandraSvg {
     this.elements.push(path)
     return path
   }
+
+  // clonePath(path: Path, attributes?: Attributes): Path {
+  //   const newPath = path.clone(attributes)
+  //   this.elements.push(path)
+  //   return newPath
+  // }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //                                                                                              //

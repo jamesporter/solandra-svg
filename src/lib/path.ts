@@ -126,7 +126,7 @@ export class Path {
     at: Point2D,
     width: number,
     height: number,
-    align: "topLeft" | "center" = "topLeft"
+    align: "topLeft" | "center" = "center"
   ): Path {
     const [cX, cY]: Point2D =
       align === "center" ? at : [at[0] + width / 2, at[1] + height / 2]
@@ -190,6 +190,17 @@ export class Path {
     this.segments = this.segments.map(fn)
     return this
   }
+
+  /**
+   * NB while this copies a path it won't be inclued in a drawing
+   * use SolandraSVG.clonePath(path) for this.
+   */
+  // clone(attributes?: Attributes): Path {
+  //   // attributes are assumed not to change so safe to share
+  //   const p = new Path(attributes || this.attributes)
+  //   p.segments = this.segments.map((s) => JSON.parse(JSON.stringify(s)))
+  //   return p
+  // }
 
   get string(): string {
     if (this.segments.length === 0) throw Error("Must add to path")

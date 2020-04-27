@@ -1,3 +1,5 @@
+import { Transform } from "./transforms"
+
 /**
 Will support something like: 
 
@@ -12,9 +14,7 @@ Will support something like:
   - [x] "stroke-miterlimit"
   - [x] "stroke-opacity"
   - [x] "stroke-width" NB this has to be really low if going to work with 1 h dimensions?
-
-  - [ ] "transform"
-
+  - [x] "transform"
   - [x] "class"
   - [x] "id"
   
@@ -105,6 +105,11 @@ export class Attributes {
 
   id(name: string): Attributes {
     this.attributes["id"] = name
+    return this
+  }
+
+  transform(transformations: Transform): Attributes {
+    this.attributes["transform"] = transformations.string
     return this
   }
 
