@@ -195,12 +195,11 @@ export class Path {
    * NB while this copies a path it won't be inclued in a drawing
    * use SolandraSVG.clonePath(path) for this.
    */
-  // clone(attributes?: Attributes): Path {
-  //   // attributes are assumed not to change so safe to share
-  //   const p = new Path(attributes || this.attributes)
-  //   p.segments = this.segments.map((s) => JSON.parse(JSON.stringify(s)))
-  //   return p
-  // }
+  clone(attributes?: Attributes): Path {
+    const p = new Path(attributes || this.attributes.clone())
+    p.segments = this.segments.map((s) => JSON.parse(JSON.stringify(s)))
+    return p
+  }
 
   get string(): string {
     if (this.segments.length === 0) throw Error("Must add to path")

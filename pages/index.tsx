@@ -167,9 +167,12 @@ export default function Home() {
         width={480}
         height={480}
         sketch={(s) => {
-          const path = s
-            .strokedPath((attr) => attr.fill(90, 90, 40, 0.5))
-            .ellipse([0.5, 0.5], 0.2, 0.3, "center")
+          s.strokedPath((attr) => attr.fill(90, 90, 40, 0.5)).ellipse(
+            [0.5, 0.5],
+            0.2,
+            0.3,
+            "center"
+          )
 
           s.strokedPath((attr) =>
             attr
@@ -190,6 +193,24 @@ export default function Home() {
           s.strokedPath((attr) =>
             attr.fill(10, 90, 40, 0.5).transform(new Transform().skewY(20))
           ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+        }}
+      />
+
+      <h2>Hello Clone</h2>
+
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          const path = s.strokedPath().ellipse([0, 0], 0.3, 0.4)
+
+          s.times(20, (n) => {
+            s.clonePath(path).configureAttributes((attr) =>
+              attr
+                .transform(new Transform().scale(n / 2, n / 2))
+                .stroke(n * 5, 90, 40)
+            )
+          })
         }}
       />
     </div>

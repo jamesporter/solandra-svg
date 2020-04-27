@@ -113,6 +113,12 @@ export class Attributes {
     return this
   }
 
+  clone(): Attributes {
+    const newAttr = new Attributes()
+    newAttr.attributes = { ...this.attributes }
+    return newAttr
+  }
+
   get string(): string {
     return Object.entries(this.attributes)
       .map(([k, v]) => `${k}="${v}"`)

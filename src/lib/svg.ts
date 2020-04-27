@@ -52,11 +52,11 @@ export class SolandraSvg {
     return path
   }
 
-  // clonePath(path: Path, attributes?: Attributes): Path {
-  //   const newPath = path.clone(attributes)
-  //   this.elements.push(path)
-  //   return newPath
-  // }
+  clonePath(path: Path, attributes?: Attributes): Path {
+    const newPath = path.clone(attributes)
+    this.elements.push(newPath)
+    return newPath
+  }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //                                                                                              //
