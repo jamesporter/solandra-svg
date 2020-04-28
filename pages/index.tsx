@@ -4,16 +4,49 @@ import { SVGSketch } from "../src/components/SVGSketch"
 import { v, Point2D, Transform } from "../src/lib"
 import { motion } from "framer-motion"
 import { useState } from "react"
+import PageWithTransition from "../src/components/PageWithTransition"
+
+function SeeSource() {
+  return (
+    <p>
+      How does this work?{" "}
+      <a href="https://github.com/jamesporter/solandra-svg/blob/master/pages/index.tsx">
+        See the source code
+      </a>
+      .
+    </p>
+  )
+}
 
 export default function Home() {
   const [n, setN] = useState(25)
   const [h, setH] = useState(20)
 
   return (
-    <div className="container">
+    <PageWithTransition>
       <Head>
         <title>Solandra SVG</title>
       </Head>
+
+      <pre
+        className="hideIfNotLarge"
+        style={{
+          position: "relative",
+          top: 320,
+          marginTop: -120,
+          marginLeft: 720,
+          padding: 10,
+          borderLeft: "2px solid #991414",
+          color: "hsla(0, 0%, 0%, 0.65)",
+        }}
+      >{`s.times(${n}, () => {
+  s.strokedPath((attr) =>
+    attr.fill(
+      s.sample([${h - 20}, ${h}, ${h + 20}]), 90, 50, 0.2)
+  )
+    .moveTo(s.randomPoint())
+    .arcTo(s.randomPoint())
+})`}</pre>
 
       <SVGSketch
         width={480}
@@ -21,7 +54,7 @@ export default function Home() {
         sketch={(s) => {
           s.times(n, () => {
             s.strokedPath((attr) =>
-              attr.fill(s.sample([h, h - 10, h + 10]), 90, 50, 0.2)
+              attr.fill(s.sample([h - 20, h, h + 20]), 90, 50, 0.2)
             )
               .moveTo(s.randomPoint())
               .arcTo(s.randomPoint())
@@ -31,7 +64,7 @@ export default function Home() {
 
       <div
         style={{
-          width: 400,
+          width: 300,
           height: 40,
           borderRadius: 20,
           backgroundColor: "#fcf0f0",
@@ -48,7 +81,7 @@ export default function Home() {
           drag="x"
           dragElastic={0}
           dragMomentum={false}
-          dragConstraints={{ left: 0, right: 360 }}
+          dragConstraints={{ left: 0, right: 260 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onDrag={(event, info) => {
@@ -64,7 +97,7 @@ export default function Home() {
 
       <div
         style={{
-          width: 400,
+          width: 300,
           height: 40,
           borderRadius: 20,
           backgroundColor: "#fcf0f0",
@@ -81,12 +114,12 @@ export default function Home() {
           drag="x"
           dragElastic={0}
           dragMomentum={false}
-          dragConstraints={{ left: 0, right: 360 }}
+          dragConstraints={{ left: 0, right: 260 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onDrag={(event, info) => {
             const x = info.point.x
-            const newH = Math.floor(20 + x / 4)
+            const newH = Math.floor(20 + x)
             // 'throttling'!
             if (newH !== h) setH(newH)
           }}
@@ -105,6 +138,9 @@ export default function Home() {
       </p>
 
       <h2>Tiling</h2>
+
+      <SeeSource />
+
       <SVGSketch
         width={480}
         height={480}
@@ -128,6 +164,9 @@ export default function Home() {
       />
 
       <h2>Hello Curves</h2>
+
+      <SeeSource />
+
       <SVGSketch
         width={480}
         height={480}
@@ -151,6 +190,9 @@ export default function Home() {
       />
 
       <h2>Hello Rectangles</h2>
+
+      <SeeSource />
+
       <SVGSketch
         width={480}
         height={480}
@@ -166,6 +208,9 @@ export default function Home() {
       />
 
       <h2>Hello Ellipses</h2>
+
+      <SeeSource />
+
       <SVGSketch
         width={480}
         height={480}
@@ -186,6 +231,9 @@ export default function Home() {
         corners. In solandra-svg this is only applied to lines (as it doesn't
         make sense for other path segments).
       </p>
+
+      <SeeSource />
+
       <SVGSketch
         width={480}
         height={480}
@@ -215,7 +263,7 @@ export default function Home() {
       />
 
       <h2>Hello Transforms</h2>
-
+      <SeeSource />
       <SVGSketch
         width={480}
         height={480}
@@ -250,7 +298,7 @@ export default function Home() {
       />
 
       <h2>Hello Clone</h2>
-
+      <SeeSource />
       <SVGSketch
         width={480}
         height={480}
@@ -266,6 +314,6 @@ export default function Home() {
           })
         }}
       />
-    </div>
+    </PageWithTransition>
   )
 }

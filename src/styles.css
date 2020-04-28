@@ -288,3 +288,9 @@ p {
 .shadow {
   box-shadow: 0px 2px 5px 2px rgba(77, 77, 77, 0.37);
 }
+
+@media (max-width: 1200px) {
+  .hideIfNotLarge {
+    display: none;
+  }
+}

@@ -1,11 +1,12 @@
 import Head from "next/head"
-import { SVGSketch, A4ishSketch } from "../src/components/SVGSketch"
+import { A4ishSketch } from "../src/components/SVGSketch"
 import { v, Point2D } from "../src/lib"
 import Link from "next/link"
+import PageWithTransition from "../src/components/PageWithTransition"
 
 export default function One() {
   return (
-    <div className="container">
+    <PageWithTransition>
       <Head>
         <title>Solandra SVG</title>
       </Head>
@@ -236,6 +237,6 @@ export default function One() {
           )
         }}
       />
-    </div>
+    </PageWithTransition>
   )
 }
