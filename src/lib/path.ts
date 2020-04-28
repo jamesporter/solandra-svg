@@ -164,7 +164,6 @@ export class Path {
         const c = this.segments[i + 1]
 
         if (b.kind === "line" && c.kind === "line" && (a as Toable)["to"]) {
-          console.log({ a, b, c })
           newSegments.push({
             kind: "line",
             to: v.pointAlong((a as Toable).to, b.to, 0.75),
@@ -178,9 +177,6 @@ export class Path {
         }
       }
       newSegments.push(this.segments[this.segments.length - 1])
-
-      console.log({ segments: this.segments, newSegments })
-
       this.segments = newSegments
     }
     return this

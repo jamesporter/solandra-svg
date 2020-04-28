@@ -1,18 +1,100 @@
 import Head from "next/head"
 import Link from "next/link"
 import { SVGSketch } from "../src/components/SVGSketch"
-import { v, Point2D, Transform, Attributes } from "../src/lib"
+import { v, Point2D, Transform } from "../src/lib"
+import { motion } from "framer-motion"
+import { useState } from "react"
 
 export default function Home() {
+  const [n, setN] = useState(25)
+  const [h, setH] = useState(20)
+
   return (
     <div className="container">
       <Head>
         <title>Solandra SVG</title>
       </Head>
 
-      <h1>solandra-svg</h1>
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          s.times(n, () => {
+            s.strokedPath((attr) =>
+              attr.fill(s.sample([h, h - 10, h + 10]), 90, 50, 0.2)
+            )
+              .moveTo(s.randomPoint())
+              .arcTo(s.randomPoint())
+          })
+        }}
+      />
 
-      <p>A little library for drawing in SVG, but with a nicer API</p>
+      <div
+        style={{
+          width: 400,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: "#fcf0f0",
+          margin: "auto",
+        }}
+      >
+        <motion.div
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            background: "#991414",
+          }}
+          drag="x"
+          dragElastic={0}
+          dragMomentum={false}
+          dragConstraints={{ left: 0, right: 360 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onDrag={(event, info) => {
+            const x = info.point.x
+            const newN = Math.floor(25 + x / 8)
+            // 'throttling'!
+            if (newN !== n) setN(newN)
+          }}
+        />
+      </div>
+
+      <br />
+
+      <div
+        style={{
+          width: 400,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: "#fcf0f0",
+          margin: "auto",
+        }}
+      >
+        <motion.div
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            background: "#991414",
+          }}
+          drag="x"
+          dragElastic={0}
+          dragMomentum={false}
+          dragConstraints={{ left: 0, right: 360 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onDrag={(event, info) => {
+            const x = info.point.x
+            const newH = Math.floor(20 + x / 4)
+            // 'throttling'!
+            if (newH !== h) setH(newH)
+          }}
+        />
+      </div>
+      <h1 style={{ textAlign: "center", paddingTop: 40 }}>solandra-svg</h1>
+
+      <p>A little library for drawing in SVG, but with a nicer API.</p>
 
       <p>
         Basically I made this to generate stuff to plot.{" "}
@@ -21,22 +103,6 @@ export default function Home() {
         </Link>
         .
       </p>
-
-      <h2>Hello World</h2>
-      <SVGSketch
-        width={480}
-        height={480}
-        sketch={(s) => {
-          const path = s
-            .strokedPath((attr) =>
-              attr.stroke(220, 90, 30, 0.9).fill(20, 90, 80, 0.2)
-            )
-            .moveTo(s.randomPoint())
-          s.times(25, () => {
-            path.lineTo(s.randomPoint())
-          })
-        }}
-      />
 
       <h2>Tiling</h2>
       <SVGSketch
@@ -95,19 +161,6 @@ export default function Home() {
               s.gaussian({ sd: 0.05, mean: 0.2 }),
               s.gaussian({ sd: 0.1, mean: 0.3 })
             )
-          })
-        }}
-      />
-
-      <h2>Hello Arcs</h2>
-      <SVGSketch
-        width={480}
-        height={480}
-        sketch={(s) => {
-          s.times(25, () => {
-            s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2))
-              .moveTo(s.randomPoint())
-              .arcTo(s.randomPoint())
           })
         }}
       />
