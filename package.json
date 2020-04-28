@@ -1,6 +1,6 @@
 {
   "name": "solandra-svg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,6 +11,7 @@
     "build:package": "node pre-publish && yarn tsc ./src/lib/index.ts --outDir ./package --lib dom,esnext --target ES2016 --skipLibCheck --moduleResolution Node -d"
   },
   "dependencies": {
+    "framer-motion": "^1.10.3",
     "next": "9.3.5",
     "prando": "^5.1.2",
     "react": "16.13.1",
