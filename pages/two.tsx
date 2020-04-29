@@ -32,8 +32,46 @@ export default function One() {
               v.scale(s.randomPoint(), 0.7)
             )
             path.curveTo(pt)
-            s.strokedPath().ellipse(pt, 0.02, 0.02)
+            s.strokedPath().ellipse(pt, 0.03, 0.02)
           })
+        }}
+      />
+
+      <A4InkscapeSketch
+        sketch={(s) => {
+          s.forHorizontal(
+            { n: 30, margin: 0.1 },
+            ([x, y], [dX, dY], [cX, cY], i) => {
+              const a: Point2D = [cX, y]
+              const b: Point2D = [cX, y + dY * Math.random()]
+
+              s.strokedPath().moveTo(a).lineTo(b)
+            }
+          )
+
+          s.forVertical(
+            { n: 20, margin: 0.1 },
+            ([x, y], [dX, dY], [cX, cY], i) => {
+              const a: Point2D = [x, cY]
+              const b: Point2D = [x + dX * Math.random(), cY]
+
+              s.strokedPath().moveTo(a).lineTo(b)
+            }
+          )
+        }}
+      />
+
+      <A4InkscapeSketch
+        sketch={(s) => {
+          const points = s.shuffle(
+            s.build(
+              s.aroundCircle,
+              { n: 40, r: 0.25, at: s.meta.center },
+              (pt) => pt
+            )
+          )
+          const path = s.strokedPath().moveTo(points[0])
+          points.slice(1).forEach((pt) => path.lineTo(pt))
         }}
       />
     </PageWithTransition>
