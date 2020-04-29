@@ -48,3 +48,26 @@ export function A4ishSketch({
     />
   )
 }
+
+export function A4InkscapeSketch({
+  sketch,
+}: {
+  sketch: (sol: SolandraSvg) => void
+}) {
+  const svg = new SolandraSvg(297, 210, 1)
+  sketch(svg)
+
+  return (
+    <img
+      src={svg.UNSTABLE_imageSrcInkscapeReady}
+      style={{
+        width: 297 * 2,
+        height: 210 * 2,
+        maxWidth: "90%",
+        display: "block",
+        margin: "20px auto",
+      }}
+      className="shadow"
+    />
+  )
+}

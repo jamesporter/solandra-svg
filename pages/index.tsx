@@ -134,6 +134,10 @@ export default function Home() {
         <Link href="/one">
           <a>My first generated drawings for a 2D plotter</a>
         </Link>
+        . And my{" "}
+        <Link href="/two">
+          <a>Second collection</a>
+        </Link>
         .
       </p>
 

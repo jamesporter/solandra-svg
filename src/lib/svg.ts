@@ -35,6 +35,22 @@ export class SolandraSvg {
       .join()}</svg>`
   }
 
+  get imageSrc(): string {
+    return `data:image/svg+xml;utf8,${this.image}`
+  }
+
+  get UNSTABLE_imageInkscapeReady(): string {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
+      1 / this.aspectRatio
+    }" width="${this.width}mm" height="${this.height}mm">${this.elements
+      .map((el) => el.string)
+      .join()}</svg>`
+  }
+
+  get UNSTABLE_imageSrcInkscapeReady(): string {
+    return `data:image/svg+xml;utf8,${this.UNSTABLE_imageInkscapeReady}`
+  }
+
   // Will do fancy nested groups stuff with closure based API but let's keep it simple for now
   // group(config: GroupConfig, callback: () => void) {}
 
@@ -45,7 +61,11 @@ export class SolandraSvg {
   }
 
   strokedPath(configureAttributes?: (attributes: Attributes) => void): Path {
-    const attr = Attributes.stroked().stroke(0, 0, 0)
+    const attr = Attributes.stroked()
+      .stroke(0, 0, 0)
+      .strokeWidth(0.005)
+      .strokeOpacity(1)
+      .lineCap("round")
     configureAttributes?.(attr)
     const path = new Path(attr)
     this.elements.push(path)
