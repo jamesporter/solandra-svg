@@ -53,9 +53,9 @@ Probably just support svg, path and g(roup)
 
 ### Post v'1'
 
-- [ ] Inkscape friendly export (dimensions, colours, ...?)
+- [x] Inkscape friendly export (dimensions, colours, ...?)
 - [ ] Groups (have plans for closure based approach for nesting)
-- [ ] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
+- [x] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
 
 ## API
 
