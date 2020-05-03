@@ -5,13 +5,14 @@ import { v, Point2D, Transform } from "../src/lib"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import PageWithTransition from "../src/components/PageWithTransition"
+import Source from "../src/components/Source"
 
 function SeeSource() {
   return (
     <p>
-      How does this work?{" "}
+      The full code for all these examples is{" "}
       <a href="https://github.com/jamesporter/solandra-svg/blob/master/pages/index.tsx">
-        See the source code
+        available on GitHub
       </a>
       .
     </p>
@@ -28,25 +29,28 @@ export default function Home() {
         <title>Solandra SVG</title>
       </Head>
 
-      <pre
+      <div
         className="hideIfNotLarge"
         style={{
           position: "relative",
-          top: 320,
+          top: 340,
           marginTop: -120,
           marginLeft: 720,
-          padding: 10,
-          borderLeft: "2px solid #991414",
           color: "hsla(0, 0%, 0%, 0.65)",
+          width: 320,
         }}
-      >{`s.times(${n}, () => {
+      >
+        <Source
+          code={`s.times(${n}, () => {
   s.strokedPath((attr) =>
     attr.fill(
       s.sample([${h - 20}, ${h}, ${h + 20}]), 90, 50, 0.2)
   )
     .moveTo(s.randomPoint())
     .arcTo(s.randomPoint())
-})`}</pre>
+})`}
+        />
+      </div>
 
       <SVGSketch
         width={480}
@@ -141,10 +145,36 @@ export default function Home() {
         .
       </p>
 
+      <div className="ctas">
+        <div>
+          <a href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl">
+            Try out
+          </a>
+
+          <p>A ready to play with CodeSandbox.</p>
+        </div>
+
+        <div>
+          <a href="https://github.com/jamesporter/solandra-svg">GitHub</a>
+          <p>Full soure code for the library and this site</p>
+        </div>
+
+        <div>
+          <a href="https://www.npmjs.com/package/solandra-svg">Install</a>
+          <p>
+            npm install solandra-svg
+            <br />
+            yarn add solandra-svg
+          </p>
+        </div>
+      </div>
+
       <h2>Tiling</h2>
 
-      <SeeSource />
-
+      <p>
+        Quickly create graphics that tile the canvas without having to worry
+        about all the low lever details.
+      </p>
       <SVGSketch
         width={480}
         height={480}
@@ -167,10 +197,31 @@ export default function Home() {
         }}
       />
 
+      <Source
+        code={`s.forTiling(
+  { n: 5, type: "square", margin: 0.1 },
+  ([x, y], [dX], c, i) => {
+    const path = s
+      .strokedPath((attr) =>
+        attr.stroke(355, 10, 10, 0.9).fill(340, 90, 70, 0.2)
+      )
+      .moveTo([0.5, 0.5])
+
+    s.times(10, () => {
+      const pt = s.randomPoint()
+      path.lineTo([x + pt[0] * dX, y + pt[1] * dX])
+    })
+  }
+)`}
+      />
+
       <h2>Hello Curves</h2>
 
-      <SeeSource />
-
+      <p>
+        Curves are easy and fun to draw with an API from{" "}
+        <a href="https://solandra.netlify.app">Solandra</a> that actually makes
+        sense.
+      </p>
       <SVGSketch
         width={480}
         height={480}
@@ -193,10 +244,27 @@ export default function Home() {
         }}
       />
 
+      <Source
+        code={`s.times(15, () => {
+  let start = [s.random(), bottom] as Point2D
+  let end = [s.random(), bottom] as Point2D
+  s.strokedPath((attr) => attr.stroke(20, 90, 60, 0.5))
+    .moveTo(start)
+    .curveTo(end, { curveSize: 3 })
+
+  start = [s.random(), 0] as Point2D
+  end = [s.random(), 0] as Point2D
+  s.strokedPath((attr) => attr.stroke(0, 90, 60, 0.5))
+    .moveTo(start)
+    .curveTo(end, { polarlity: -1, curveSize: 3 })
+})`}
+      />
+
       <h2>Hello Rectangles</h2>
 
-      <SeeSource />
-
+      <p>
+        Rectangles are easy to draw and the framework takes care of alignment.
+      </p>
       <SVGSketch
         width={480}
         height={480}
@@ -211,9 +279,21 @@ export default function Home() {
         }}
       />
 
+      <Source
+        code={`s.times(25, () => {
+  s.strokedPath((attr) => attr.fill(220, 90, 50, 0.2)).rect(
+    s.randomPoint(),
+    s.gaussian({ sd: 0.05, mean: 0.2 }),
+    s.gaussian({ sd: 0.1, mean: 0.3 })
+  )
+})`}
+      />
+
       <h2>Hello Ellipses</h2>
 
-      <SeeSource />
+      <p>
+        Ellipses are easy to draw and the framework takes care of alignment.
+      </p>
 
       <SVGSketch
         width={480}
@@ -228,6 +308,15 @@ export default function Home() {
         }}
       />
 
+      <Source
+        code={`s.times(35, () => {
+  const size = s.gaussian({ sd: 0.2, mean: 0.25 })
+  s.strokedPath((attr) =>
+    attr.fill(s.sample([130, 200, 210]), 90, 40, 0.2)
+  ).ellipse(s.randomPoint(), size, size / 1.25, "center")
+})`}
+      />
+
       <h2>Hello Chaiken</h2>
 
       <p>
@@ -235,8 +324,6 @@ export default function Home() {
         corners. In solandra-svg this is only applied to lines (as it doesn't
         make sense for other path segments).
       </p>
-
-      <SeeSource />
 
       <SVGSketch
         width={480}
@@ -266,8 +353,31 @@ export default function Home() {
         }}
       />
 
+      <Source
+        code={`const { bottom } = s.meta
+s.times(4, (n) => {
+  const path = s
+    .strokedPath((attr) =>
+      attr.strokeOpacity(0.2 + n * 0.1).stroke(15, 90, 60)
+    )
+    .moveTo([0.1, bottom * 0.4])
+  for (let i = 0.1; i <= 0.9; i += 0.2) {
+    path.lineTo([i, bottom * 0.4 + 0.3 * Math.cos(i * 10)])
+  }
+
+  path
+    .map((el) => {
+      if (el.kind === "line" || el.kind === "move") {
+        return { ...el, to: v.add(el.to, [0, 0.1 * n]) }
+      } else {
+        return el
+      }
+    })
+    .chaiken(n + 1)
+})`}
+      />
+
       <h2>Hello Transforms</h2>
-      <SeeSource />
       <SVGSketch
         width={480}
         height={480}
@@ -306,9 +416,15 @@ export default function Home() {
           ).rect([0.3, 0.3], 0.2, 0.3, "center")
         }}
       />
+      <Source
+        code={`s.strokedPath((attr) =>
+  attr
+    .fill(210, 90, 20, 0.5)
+    .transform(new Transform().rotate(Math.PI / 8))
+).rect([0.3, 0.3], 0.2, 0.3, "center")`}
+      />
 
       <h2>Hello Clone</h2>
-      <SeeSource />
       <SVGSketch
         width={480}
         height={480}
@@ -324,6 +440,20 @@ export default function Home() {
           })
         }}
       />
+
+      <Source
+        code={`const path = s.strokedPath().ellipse([0, 0], 0.3, 0.4)
+
+s.times(20, (n) => {
+  s.clonePath(path).configureAttributes((attr) =>
+    attr
+      .transform(new Transform().scale(n / 2, n / 2))
+      .stroke(n * 5, 90, 40)
+  )
+})`}
+      />
+
+      <SeeSource />
     </PageWithTransition>
   )
 }
