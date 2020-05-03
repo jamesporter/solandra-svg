@@ -3,30 +3,40 @@
  * might expand/make safer?
  */
 export class Transform {
-  string = ""
+  transforms: string[] = []
 
   translate(x: number, y: number): Transform {
-    this.string += ` translate(${x}, ${y})`
+    this.transforms.push(`translate(${x}, ${y})`)
     return this
   }
 
   scale(x: number, y: number): Transform {
-    this.string += ` scale(${x}, ${y})`
+    this.transforms.push(`scale(${x}, ${y})`)
     return this
   }
 
-  rotate(angle: number): Transform {
-    this.string += ` rotate(${(180 * angle) / Math.PI})`
+  rotate(angle: number): Transform
+  rotate(angle: number, x: number, y: number): Transform
+  rotate(angle: number, x?: number, y?: number): Transform {
+    let extra = ""
+    if (x !== undefined && y !== undefined) {
+      extra = `, ${x}, ${y}`
+    }
+    this.transforms.push(`rotate(${(180 * angle) / Math.PI}${extra})`)
     return this
   }
 
   skewX(x: number): Transform {
-    this.string += ` skewX(${x})`
+    this.transforms.push(`skewX(${x})`)
     return this
   }
 
   skewY(y: number): Transform {
-    this.string += ` skewY(${y})`
+    this.transforms.push(`skewY(${y})`)
     return this
+  }
+
+  get string(): string {
+    return this.transforms.join(" ")
   }
 }
