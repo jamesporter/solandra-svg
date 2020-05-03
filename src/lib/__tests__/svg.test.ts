@@ -39,7 +39,7 @@ describe("A very simple SVG", () => {
     expect(output).toMatch(/.*viewBox="0 0 1 0.5".*/)
     expect(output).toMatch(/.*0\.25 0.*/)
     expect(output).toMatchInlineSnapshot(
-      `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 0.5\\" width=\\"200\\" height=\\"100\\"><path stroke=\\"#0A47C2\\" opacity=\\"0.9\\" class=\\"square\\" id=\\"test-square\\" d=\\"M 0.25 0 L 0.25 0.5 L 0.75 0.5 L 0.75 0 Z\\" /></svg>"`
+      `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 0.5\\" width=\\"200\\" height=\\"100\\"><path class=\\"square\\" id=\\"test-square\\" style=\\"stroke:#0A47C2; opacity:0.9;\\" d=\\"M 0.25 0 L 0.25 0.5 L 0.75 0.5 L 0.75 0 Z\\" /></svg>"`
     )
   })
 
@@ -55,7 +55,7 @@ describe("A very simple SVG", () => {
     const output = svg.image
     expect(output).toMatch(/.*viewBox="0 0 1 1".*/)
     expect(output).toMatchInlineSnapshot(
-      `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\"><path fill=\\"none\\" stroke-width=\\"0.005\\" stroke=\\"#000000\\" stroke-opacity=\\"1\\" stroke-linecap=\\"round\\" d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" /></svg>"`
+      `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\"><path  style=\\"fill:none; stroke-width:0.005; stroke:#000000; stroke-opacity:1; stroke-linecap:round;\\" d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" /></svg>"`
     )
   })
 })
