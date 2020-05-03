@@ -35,8 +35,10 @@ export class SolandraSvg {
       .join()}</svg>`
   }
 
-  get imageSrc(): string {
-    return `data:image/svg+xml;utf8,${this.image}`
+  imageSrc(encode: boolean = true): string {
+    return `data:image/svg+xml;utf8,${
+      encode ? encodeURIComponent(this.image) : this.image.replace(/\#/g, "%23")
+    }`
   }
 
   get UNSTABLE_imageInkscapeReady(): string {
@@ -47,8 +49,12 @@ export class SolandraSvg {
       .join()}</svg>`
   }
 
-  get UNSTABLE_imageSrcInkscapeReady(): string {
-    return `data:image/svg+xml;utf8,${this.UNSTABLE_imageInkscapeReady}`
+  UNSTABLE_imageSrcInkscapeReady(encode: boolean = true): string {
+    return `data:image/svg+xml;utf8,${
+      encode
+        ? encodeURIComponent(this.UNSTABLE_imageInkscapeReady)
+        : this.UNSTABLE_imageInkscapeReady.replace(/\#/g, "%23")
+    }`
   }
 
   // Will do fancy nested groups stuff with closure based API but let's keep it simple for now

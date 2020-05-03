@@ -16,11 +16,9 @@ export function SVGSketch({
 }) {
   const svg = new SolandraSvg(width, height, 1)
   sketch(svg)
-  const image = svg.image
-
   return (
     <img
-      src={`data:image/svg+xml;utf8,${image}`}
+      src={svg.imageSrc(false)}
       style={{
         width,
         height,
@@ -59,7 +57,7 @@ export function A4InkscapeSketch({
 
   return (
     <img
-      src={svg.UNSTABLE_imageSrcInkscapeReady}
+      src={svg.UNSTABLE_imageSrcInkscapeReady()}
       style={{
         width: 297 * 2,
         height: 210 * 2,

@@ -272,8 +272,8 @@ export default function Home() {
         width={480}
         height={480}
         sketch={(s) => {
-          s.strokedPath((attr) => attr.fill(90, 90, 40, 0.5)).ellipse(
-            [0.5, 0.5],
+          s.strokedPath((attr) => attr.fill(210, 90, 10, 0.5)).rect(
+            [0.3, 0.3],
             0.2,
             0.3,
             "center"
@@ -281,23 +281,29 @@ export default function Home() {
 
           s.strokedPath((attr) =>
             attr
-              .fill(70, 90, 40, 0.5)
+              .fill(210, 90, 20, 0.5)
               .transform(new Transform().rotate(Math.PI / 8))
-          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+          ).rect([0.3, 0.3], 0.2, 0.3, "center")
 
           s.strokedPath((attr) =>
             attr
-              .fill(50, 90, 40, 0.5)
-              .transform(new Transform().scale(1.2, 1.6))
-          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+              .fill(210, 90, 30, 0.5)
+              .transform(new Transform().rotate(Math.PI / 3, 0.3, 0.3))
+          ).rect([0.3, 0.3], 0.2, 0.3, "center")
 
           s.strokedPath((attr) =>
-            attr.fill(30, 90, 40, 0.5).transform(new Transform().skewX(20))
-          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+            attr
+              .fill(210, 90, 40, 0.5)
+              .transform(new Transform().scale(1.5, 1.8))
+          ).rect([0.3, 0.3], 0.2, 0.3, "center")
 
           s.strokedPath((attr) =>
-            attr.fill(10, 90, 40, 0.5).transform(new Transform().skewY(20))
-          ).ellipse([0.5, 0.5], 0.2, 0.3, "center")
+            attr.fill(210, 90, 50, 0.5).transform(new Transform().skewX(20))
+          ).rect([0.3, 0.3], 0.2, 0.3, "center")
+
+          s.strokedPath((attr) =>
+            attr.fill(210, 90, 60, 0.5).transform(new Transform().skewY(20))
+          ).rect([0.3, 0.3], 0.2, 0.3, "center")
         }}
       />
 

@@ -8,6 +8,8 @@
     "start": "next start",
     "export": "next export",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "build:package": "node pre-publish && yarn tsc ./src/lib/index.ts --outDir ./package --lib dom,esnext --target ES2016 --skipLibCheck --moduleResolution Node -d"
   },
   "dependencies": {

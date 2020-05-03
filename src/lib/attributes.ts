@@ -1,4 +1,5 @@
 import { Transform } from "./transforms"
+import { hslToRgb } from "./util/colorCalcs"
 
 /**
 Will support something like: 
@@ -21,80 +22,93 @@ Will support something like:
 */
 export class Attributes {
   private attributes: { [key: string]: string | number } = {}
+  private styleAttributes: { [key: string]: string | number } = {}
 
   opacity(opacity: number): Attributes {
-    this.attributes["opacity"] = opacity
+    this.styleAttributes["opacity"] = opacity
     return this
   }
 
+  /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
+       in render use hex for compatability with Inkscape(!)
+  */
   fill(
     hue: number,
     saturation: number,
     lightness: number,
-    opacity: number = 1.0
+    opacity?: number
   ): Attributes {
-    this.attributes[
-      "fill"
-    ] = `hsla(${hue}, ${saturation}%, ${lightness}%, ${opacity})`
+    this.styleAttributes["fill"] = hslToRgb(
+      hue / 360,
+      saturation / 100,
+      lightness / 100
+    )
+    if (opacity !== undefined) this.styleAttributes["fill-opacity"] = opacity
     return this
   }
 
   noFill(): Attributes {
-    this.attributes["fill"] = "none"
+    this.styleAttributes["fill"] = "none"
     return this
   }
 
   fillOpacity(opacity: number): Attributes {
-    this.attributes["fill-opacity"] = opacity
+    this.styleAttributes["fill-opacity"] = opacity
     return this
   }
 
+  /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
+       in render use hex for compatability with Inkscape(!)
+  */
   stroke(
     hue: number,
     saturation: number,
     lightness: number,
-    opacity: number = 1.0
+    opacity?: number
   ): Attributes {
-    this.attributes[
-      "stroke"
-    ] = `hsla(${hue}, ${saturation}%, ${lightness}%, ${opacity})`
+    this.styleAttributes["stroke"] = hslToRgb(
+      hue / 360,
+      saturation / 100,
+      lightness / 100
+    )
+    if (opacity !== undefined) this.styleAttributes["stroke-opacity"] = opacity
     return this
   }
 
   strokeOpacity(opacity: number): Attributes {
-    this.attributes["stroke-opacity"] = opacity
+    this.styleAttributes["stroke-opacity"] = opacity
     return this
   }
 
   strokeWidth(width: number): Attributes {
-    this.attributes["stroke-width"] = width
+    this.styleAttributes["stroke-width"] = width
     return this
   }
 
   lineCap(cap: "butt" | "round" | "square"): Attributes {
-    this.attributes["stroke-linecap"] = cap
+    this.styleAttributes["stroke-linecap"] = cap
     return this
   }
 
   lineJoin(
     join: "arcs" | "bevel" | "miter" | "miter-clip" | "round"
   ): Attributes {
-    this.attributes["stroke-linejoin"] = join
+    this.styleAttributes["stroke-linejoin"] = join
     return this
   }
 
   miterLimit(limit: number): Attributes {
-    this.attributes["stroke-miterlimit"] = limit
+    this.styleAttributes["stroke-miterlimit"] = limit
     return this
   }
 
   dashArray(...dashes: number[]): Attributes {
-    this.attributes["stroke-dasharray"] = dashes.join(" ")
+    this.styleAttributes["stroke-dasharray"] = dashes.join(" ")
     return this
   }
 
   dashOffset(offset: number) {
-    this.attributes["stroke-dashoffset"] = offset
+    this.styleAttributes["stroke-dashoffset"] = offset
     return this
   }
 
@@ -116,13 +130,20 @@ export class Attributes {
   clone(): Attributes {
     const newAttr = new Attributes()
     newAttr.attributes = { ...this.attributes }
+    newAttr.styleAttributes = { ...this.styleAttributes }
     return newAttr
   }
 
   get string(): string {
-    return Object.entries(this.attributes)
-      .map(([k, v]) => `${k}="${v}"`)
-      .join(" ")
+    return (
+      Object.entries(this.attributes)
+        .map(([k, v]) => `${k}="${v}"`)
+        .join(" ") +
+      " " +
+      `style="${Object.entries(this.styleAttributes)
+        .map(([k, v]) => `${k}:${v};`)
+        .join(" ")}"`
+    )
   }
 
   static stroked(configure?: (attributes: Attributes) => void): Attributes {
