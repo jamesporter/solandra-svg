@@ -70,3 +70,11 @@ Probably just support svg, path and g(roup)
 `cd package`
 
 `npm publish`
+
+## Deploy (this docs/examples site)
+
+I don't really care about old browsers etc so happy to use flatMap and other modern features. If you want to deploy this with SSR you will also need to either use a modern node version e.g. I use Netlify and set in the environment variables:
+
+```
+NODE_VERSION 14
+```
