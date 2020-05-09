@@ -303,7 +303,7 @@ export default function Home() {
             const size = s.gaussian({ sd: 0.2, mean: 0.25 })
             s.strokedPath((attr) =>
               attr.fill(s.sample([130, 200, 210]), 90, 40, 0.2)
-            ).ellipse(s.randomPoint(), size, size / 1.25, "center")
+            ).ellipse(s.randomPoint(), size, size / 1.25)
           })
         }}
       />
@@ -313,7 +313,7 @@ export default function Home() {
   const size = s.gaussian({ sd: 0.2, mean: 0.25 })
   s.strokedPath((attr) =>
     attr.fill(s.sample([130, 200, 210]), 90, 40, 0.2)
-  ).ellipse(s.randomPoint(), size, size / 1.25, "center")
+  ).ellipse(s.randomPoint(), size, size / 1.25)
 })`}
       />
 
@@ -393,27 +393,27 @@ s.times(4, (n) => {
             attr
               .fill(210, 90, 20, 0.5)
               .transform(new Transform().rotate(Math.PI / 8))
-          ).rect([0.3, 0.3], 0.2, 0.3, "center")
+          ).rect([0.3, 0.3], 0.2, 0.3)
 
           s.strokedPath((attr) =>
             attr
               .fill(210, 90, 30, 0.5)
               .transform(new Transform().rotate(Math.PI / 3, 0.3, 0.3))
-          ).rect([0.3, 0.3], 0.2, 0.3, "center")
+          ).rect([0.3, 0.3], 0.2, 0.3)
 
           s.strokedPath((attr) =>
             attr
               .fill(210, 90, 40, 0.5)
               .transform(new Transform().scale(1.5, 1.8))
-          ).rect([0.3, 0.3], 0.2, 0.3, "center")
+          ).rect([0.3, 0.3], 0.2, 0.3)
 
           s.strokedPath((attr) =>
             attr.fill(210, 90, 50, 0.5).transform(new Transform().skewX(20))
-          ).rect([0.3, 0.3], 0.2, 0.3, "center")
+          ).rect([0.3, 0.3], 0.2, 0.3)
 
           s.strokedPath((attr) =>
             attr.fill(210, 90, 60, 0.5).transform(new Transform().skewY(20))
-          ).rect([0.3, 0.3], 0.2, 0.3, "center")
+          ).rect([0.3, 0.3], 0.2, 0.3)
         }}
       />
       <Source
@@ -421,7 +421,7 @@ s.times(4, (n) => {
   attr
     .fill(210, 90, 20, 0.5)
     .transform(new Transform().rotate(Math.PI / 8))
-).rect([0.3, 0.3], 0.2, 0.3, "center")`}
+).rect([0.3, 0.3], 0.2, 0.3)`}
       />
 
       <h2>Hello Clone</h2>
@@ -473,7 +473,7 @@ s.times(20, (n) => {
                   Attributes.of({
                     opacity: (8 - n) / 10,
                   })
-                ).rect([0, 0], 1, 1, "center")
+                ).rect([0, 0], 1, 1)
 
                 s.path(
                   Attributes.of({
@@ -499,7 +499,7 @@ s.times(8, (n) => {
         Attributes.of({
           opacity: (8 - n) / 10,
         })
-      ).rect([0, 0], 1, 1, "center")
+      ).rect([0, 0], 1, 1)
 
       s.path(
         Attributes.of({

@@ -111,7 +111,7 @@ export class Path {
     at: Point2D,
     width: number,
     height: number,
-    align: "topLeft" | "center" = "topLeft"
+    align: "topLeft" | "center" = "center"
   ): Path {
     const start =
       align === "topLeft" ? at : v.subtract(at, [width / 2, height / 2])
