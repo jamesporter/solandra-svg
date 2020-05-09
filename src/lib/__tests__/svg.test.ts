@@ -136,15 +136,15 @@ describe("A very simple SVG", () => {
 
     expect(svg.image).toMatchInlineSnapshot(`
       "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\">
-        <path d=\\"M 0 0 L 0.3 0 L 0.3 0.4 L 0 0.4 L 0 0\\" />
+        <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
         <g style=\\"fill:none; stroke-width:0.005; stroke:#000000;\\">
-          <path d=\\"M 0 0 L 0.3 0 L 0.3 0.4 L 0 0.4 L 0 0\\" />
+          <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
           <g>
             <path d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" />
             <g style=\\"fill:none; stroke-width:0.005; stroke:#000000;\\">
-              <path d=\\"M 0 0 L 0.3 0 L 0.3 0.4 L 0 0.4 L 0 0\\" />
+              <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
             </g>
-            <path d=\\"M 0 0 L 0.3 0 L 0.3 0.4 L 0 0.4 L 0 0\\" />
+            <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
           </g>
         </g>
       </svg>"
