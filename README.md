@@ -51,11 +51,15 @@ Probably just support svg, path and g(roup)
 - [x] clone path
 - [x] squash commits(!), publish to npm, open source
 
-### Post v'1'
+### Post v'0.1'
 
 - [x] Inkscape friendly export (dimensions, colours, ...?)
-- [ ] Groups (have plans for closure based approach for nesting)
+- [x] Groups (have plans for closure based approach for nesting)
 - [x] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
+
+### After
+
+- [x] Object literal apis for attributes and transforms
 
 ## API
 
@@ -66,3 +70,11 @@ Probably just support svg, path and g(roup)
 `cd package`
 
 `npm publish`
+
+## Deploy (this docs/examples site)
+
+I don't really care about old browsers etc so happy to use flatMap and other modern features. If you want to deploy this with SSR you will also need to either use a modern node version e.g. I use Netlify and set in the environment variables:
+
+```
+NODE_VERSION 14
+```

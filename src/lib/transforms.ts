@@ -10,8 +10,10 @@ export class Transform {
     return this
   }
 
-  scale(x: number, y: number): Transform {
-    this.transforms.push(`scale(${x}, ${y})`)
+  scale(a: number): Transform
+  scale(x: number, y: number): Transform
+  scale(x: number, y?: number): Transform {
+    this.transforms.push(`scale(${x}, ${y === undefined ? x : y})`)
     return this
   }
 
@@ -38,5 +40,41 @@ export class Transform {
 
   get string(): string {
     return this.transforms.join(" ")
+  }
+
+  static of({
+    translate,
+    scale,
+    rotate,
+    skewX,
+    skewY,
+  }: {
+    translate?: [number, number]
+    scale?: number | [number, number]
+    rotate?: number | [number, [number, number]]
+    skewX?: number
+    skewY?: number
+  }): Transform {
+    const tr = new Transform()
+
+    if (translate !== undefined) {
+      tr.translate(...translate)
+    }
+    if (scale !== undefined) {
+      typeof scale === "object" ? tr.scale(...scale) : tr.scale(scale)
+    }
+    if (rotate !== undefined) {
+      typeof rotate === "object"
+        ? tr.rotate(rotate[0], ...rotate[1])
+        : tr.rotate(rotate)
+    }
+    if (skewX !== undefined) {
+      tr.skewX(skewX)
+    }
+    if (skewY !== undefined) {
+      tr.skewY(skewY)
+    }
+
+    return tr
   }
 }

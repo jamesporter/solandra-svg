@@ -2,6 +2,7 @@ import { Point2D, CurveConfig, ArcConfig } from "./util/types"
 import { convertToSVGCubicSpec } from "./util/curveCalcs"
 import { Attributes } from "./attributes"
 import { v } from "."
+import { indent } from "./util/internalUtil"
 
 export type PathSegment =
   | { kind: "move"; to: Point2D }
@@ -110,7 +111,7 @@ export class Path {
     at: Point2D,
     width: number,
     height: number,
-    align: "topLeft" | "center" = "topLeft"
+    align: "topLeft" | "center" = "center"
   ): Path {
     const start =
       align === "topLeft" ? at : v.subtract(at, [width / 2, height / 2])
@@ -197,7 +198,7 @@ export class Path {
     return p
   }
 
-  get string(): string {
+  string(depth: number): string {
     if (this.segments.length === 0) throw Error("Must add to path")
     if (this.segments[0].kind !== "move")
       throw Error("Must start path with move to initial position")
@@ -210,7 +211,7 @@ export class Path {
         )
       )
       .join(" ")
-    return `<path ${this.attributes.string} d="${d}" />`
+    return indent(`<path${this.attributes.string} d="${d}" />`, depth)
   }
 
   configureAttributes(configureAttributes: (attributes: Attributes) => void) {
