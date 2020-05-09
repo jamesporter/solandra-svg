@@ -65,7 +65,7 @@ describe("A very simple SVG", () => {
 
   it("should be able to do a group", () => {
     const svg = new SolandraSvg(300, 300)
-    svg.group(Attributes.stroked(), () => {
+    svg.group(Attributes.stroked, () => {
       svg
         .path()
         .moveTo([0.25, 0.25])
@@ -86,7 +86,7 @@ describe("A very simple SVG", () => {
 
   it("should be able to do nested groups", () => {
     const svg = new SolandraSvg(300, 300)
-    svg.group(Attributes.stroked(), () => {
+    svg.group(Attributes.stroked, () => {
       svg.group(Attributes.empty, () => {
         svg
           .path()
@@ -117,7 +117,7 @@ describe("A very simple SVG", () => {
   it("should be able to do complicated nested groups and paths", () => {
     const svg = new SolandraSvg(300, 300)
     svg.path().rect([0, 0], 0.3, 0.4)
-    svg.group(Attributes.stroked(), () => {
+    svg.group(Attributes.stroked, () => {
       svg.path().rect([0, 0], 0.3, 0.4)
       svg.group(Attributes.empty, () => {
         svg
@@ -127,7 +127,7 @@ describe("A very simple SVG", () => {
           .lineTo([0.75, 0.75])
           .lineTo([0.25, 0.75])
           .close()
-        svg.group(Attributes.stroked(), () => {
+        svg.group(Attributes.stroked, () => {
           svg.path().rect([0, 0], 0.3, 0.4)
         })
         svg.path().rect([0, 0], 0.3, 0.4)
