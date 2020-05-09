@@ -465,10 +465,8 @@ s.times(20, (n) => {
           const { center } = s.meta
           s.times(8, (n) => {
             s.group(
-              Attributes.stroked((attr) =>
-                attr.transform(
-                  Transform.of({ translate: center, scale: (4 + n) / 14 })
-                )
+              Attributes.stroked.transform(
+                Transform.of({ translate: center, scale: (4 + n) / 14 })
               ),
               () => {
                 s.path(
@@ -493,10 +491,8 @@ s.times(20, (n) => {
         code={`const { center } = s.meta
 s.times(8, (n) => {
   s.group(
-    Attributes.stroked((attr) =>
-      attr.transform(
-        new Transform().translate(...center).scale((4 + n) / 14)
-      )
+    Attributes.stroked.transform(
+      Transform.of({ translate: center, scale: (4 + n) / 14 })
     ),
     () => {
       s.path(

@@ -157,17 +157,13 @@ export class Attributes {
     return attrString
   }
 
-  static stroked(configure?: (attributes: Attributes) => void): Attributes {
-    const attr = new Attributes().noFill().strokeWidth(0.005).stroke(0, 0, 0)
-    configure?.(attr)
-    return attr
+  static get stroked(): Attributes {
+    return new Attributes().noFill().strokeWidth(0.005).stroke(0, 0, 0)
   }
 
-  // at the moment a bit pointless, maybe remove?
-  static filled(configure?: (attributes: Attributes) => void): Attributes {
-    const attr = new Attributes()
-    configure?.(attr)
-    return attr
+  // in browser will have fill by default, but not in e.g. Inkscape hence this might be useful
+  static get filled(): Attributes {
+    return new Attributes().fill(0, 0, 0)
   }
 
   static transform(transformations: Transform): Attributes {

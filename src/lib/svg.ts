@@ -113,7 +113,7 @@ ${this.elements
   }
 
   strokedPath(configureAttributes?: (attributes: Attributes) => void): Path {
-    const attr = Attributes.stroked()
+    const attr = Attributes.stroked
       .stroke(0, 0, 0)
       .strokeWidth(0.005)
       .strokeOpacity(1)
