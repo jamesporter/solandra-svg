@@ -2,21 +2,37 @@ import Prando from "prando"
 import { Point2D, Vector2D } from "./util/types"
 import { Path } from "./path"
 import { Attributes } from "./attributes"
+import { indent } from "./util/internalUtil"
 
 export class Group {
   children: (Group | Path)[] = []
-
   constructor(readonly attributes: Attributes) {}
 
-  get string() {
-    return ""
+  strings(depth: number): string[] {
+    return [
+      indent(`<g${this.attributes.string}>`, depth),
+      ...this.children.flatMap((el) => {
+        if (el instanceof Group) {
+          return el.strings(depth + 1)
+        } else {
+          return el.string(depth + 1)
+        }
+      }),
+      indent(`</g>`, depth),
+    ]
+  }
+
+  push(element: Group | Path) {
+    this.children.push(element)
   }
 }
 
 export class SolandraSvg {
   readonly aspectRatio: number
   private rng: Prando
-  private elements: (Group | Path)[] = []
+  elements: (Group | Path)[] = []
+  // Basically track current group for paths to be added to, null = no group/top level scope
+  private currentGroup: Group | null = null
 
   constructor(
     readonly width: number,
@@ -30,9 +46,17 @@ export class SolandraSvg {
   get image(): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
-    }" width="${this.width}" height="${this.height}">${this.elements
-      .map((el) => el.string)
-      .join()}</svg>`
+    }" width="${this.width}" height="${this.height}">
+${this.elements
+  .flatMap((el) => {
+    if (el instanceof Group) {
+      return el.strings(1)
+    } else {
+      return el.string(1)
+    }
+  })
+  .join("\n")}
+</svg>`
   }
 
   imageSrc(encode: boolean = true): string {
@@ -44,9 +68,17 @@ export class SolandraSvg {
   get UNSTABLE_imageInkscapeReady(): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
-    }" width="${this.width}mm" height="${this.height}mm">${this.elements
-      .map((el) => el.string)
-      .join()}</svg>`
+    }" width="${this.width}mm" height="${this.height}mm">
+${this.elements
+  .flatMap((el) => {
+    if (el instanceof Group) {
+      return el.strings(1)
+    } else {
+      return el.string(1)
+    }
+  })
+  .join("\n")}    
+</svg>`
   }
 
   UNSTABLE_imageSrcInkscapeReady(encode: boolean = true): string {
@@ -57,12 +89,26 @@ export class SolandraSvg {
     }`
   }
 
-  // Will do fancy nested groups stuff with closure based API but let's keep it simple for now
-  // group(config: GroupConfig, callback: () => void) {}
+  group(attributes: Attributes, contents: () => void) {
+    const parent = this.currentGroup
+    const newGroup = new Group(attributes)
+    this.currentElements.push(newGroup)
+    this.currentGroup = newGroup
+    contents()
+    this.currentGroup = parent
+  }
+
+  get currentElements(): Group | (Group | Path)[] {
+    if (this.currentGroup) {
+      return this.currentGroup
+    } else {
+      return this.elements
+    }
+  }
 
   path(attributes: Attributes = new Attributes()): Path {
     const path = new Path(attributes)
-    this.elements.push(path)
+    this.currentElements.push(path)
     return path
   }
 
@@ -74,13 +120,13 @@ export class SolandraSvg {
       .lineCap("round")
     configureAttributes?.(attr)
     const path = new Path(attr)
-    this.elements.push(path)
+    this.currentElements.push(path)
     return path
   }
 
   clonePath(path: Path, attributes?: Attributes): Path {
     const newPath = path.clone(attributes)
-    this.elements.push(newPath)
+    this.currentElements.push(newPath)
     return newPath
   }
 

@@ -2,8 +2,7 @@ import { Transform } from "./transforms"
 import { hslToRgb } from "./util/colorCalcs"
 
 /**
-Will support something like: 
-
+Supports (via fluent api)
   - [x] "fill"
   - [x] "fill-opacity" 
   - [x] "opacity"
@@ -18,7 +17,8 @@ Will support something like:
   - [x] "transform"
   - [x] "class"
   - [x] "id"
-  
+
+  has a handful of static functions that provide reasonable defaults for common use
 */
 export class Attributes {
   private attributes: { [key: string]: string | number } = {}
@@ -134,16 +134,27 @@ export class Attributes {
     return newAttr
   }
 
+  /**
+   * Adds leading whitespace if non empty as this is tedious elsewhere
+   */
   get string(): string {
-    return (
+    const styleAttributeEntries = Object.entries(this.styleAttributes)
+    // don't want unnecessary spaces if either or both are missing
+    let attrString = [
       Object.entries(this.attributes)
         .map(([k, v]) => `${k}="${v}"`)
-        .join(" ") +
-      " " +
-      `style="${Object.entries(this.styleAttributes)
-        .map(([k, v]) => `${k}:${v};`)
-        .join(" ")}"`
-    )
+        .join(" "),
+      styleAttributeEntries.length > 0
+        ? `style="${styleAttributeEntries
+            .map(([k, v]) => `${k}:${v};`)
+            .join(" ")}"`
+        : "",
+    ]
+      .filter((item) => item.length > 0)
+      .join(" ")
+
+    if (attrString.length > 0) attrString = " " + attrString
+    return attrString
   }
 
   static stroked(configure?: (attributes: Attributes) => void): Attributes {
@@ -157,5 +168,121 @@ export class Attributes {
     const attr = new Attributes()
     configure?.(attr)
     return attr
+  }
+
+  static transform(transformations: Transform): Attributes {
+    return new Attributes().transform(transformations)
+  }
+
+  /**
+   * For when your attributes are only transformations (or you want to start there)
+   * @param transformSpec
+   */
+  static transformOf(
+    ...transformSpec: Parameters<typeof Transform.of>
+  ): Attributes {
+    return new Attributes().transform(Transform.of(...transformSpec))
+  }
+
+  /**
+   * Offer a object based API too. Don't get the fluent API but in many cases easier, plus more like Solandra
+   * @param an object of attributribues
+   */
+  static of({
+    fill,
+    fillOpacity,
+    opacity,
+    stroke,
+    dashArray,
+    dashOffset,
+    lineCap,
+    lineJoin,
+    miterLimit,
+    strokeOpacity,
+    strokeWidth,
+    transform,
+    class: className,
+    id,
+  }: {
+    fill?: { h: number; s: number; l: number; a?: number }
+    fillOpacity?: number
+    opacity?: number
+    stroke?: { h: number; s: number; l: number; a?: number }
+    dashArray?: number[]
+    dashOffset?: number
+    lineCap?: "butt" | "round" | "square"
+    lineJoin?: "arcs" | "bevel" | "miter" | "miter-clip" | "round"
+    miterLimit?: number
+    strokeOpacity?: number
+    strokeWidth?: number
+    transform?: Transform
+    class?: string
+    id?: string
+  }): Attributes {
+    const attr = new Attributes()
+
+    if (fill !== undefined) {
+      const { h, s, l, a } = fill
+      attr.fill(h, s, l, a)
+    }
+
+    if (stroke !== undefined) {
+      const { h, s, l, a } = stroke
+      attr.stroke(h, s, l, a)
+    }
+
+    if (fillOpacity !== undefined) {
+      attr.fillOpacity(fillOpacity)
+    }
+
+    if (opacity !== undefined) {
+      attr.opacity(opacity)
+    }
+
+    if (dashArray !== undefined) {
+      attr.dashArray(...dashArray)
+    }
+
+    if (dashOffset !== undefined) {
+      attr.dashOffset(dashOffset)
+    }
+
+    if (lineCap !== undefined) {
+      attr.lineCap(lineCap)
+    }
+
+    if (lineJoin !== undefined) {
+      attr.lineJoin(lineJoin)
+    }
+
+    if (miterLimit !== undefined) {
+      attr.miterLimit(miterLimit)
+    }
+
+    if (strokeOpacity !== undefined) {
+      attr.strokeOpacity(strokeOpacity)
+    }
+
+    if (strokeWidth !== undefined) {
+      attr.strokeWidth(strokeWidth)
+    }
+
+    if (transform !== undefined) {
+      attr.transform(transform)
+    }
+
+    if (className !== undefined) {
+      attr.class(className)
+    }
+
+    if (id !== undefined) {
+      attr.id(id)
+    }
+
+    return attr
+  }
+
+  static get empty() {
+    return new Attributes()
   }
 }

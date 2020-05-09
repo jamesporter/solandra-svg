@@ -1,7 +1,7 @@
 import Head from "next/head"
 import Link from "next/link"
 import { SVGSketch } from "../src/components/SVGSketch"
-import { v, Point2D, Transform } from "../src/lib"
+import { v, Point2D, Transform, Attributes } from "../src/lib"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import PageWithTransition from "../src/components/PageWithTransition"
@@ -449,6 +449,69 @@ s.times(20, (n) => {
     attr
       .transform(new Transform().scale(n / 2, n / 2))
       .stroke(n * 5, 90, 40)
+  )
+})`}
+      />
+
+      <h2>Hello Groups</h2>
+      <p>
+        solandra-svg offers a closure based API for building svg groups. You use
+        the same fluent Attributes api to set up their attributes.
+      </p>
+      <SVGSketch
+        width={480}
+        height={480}
+        sketch={(s) => {
+          const { center } = s.meta
+          s.times(8, (n) => {
+            s.group(
+              Attributes.stroked((attr) =>
+                attr.transform(
+                  Transform.of({ translate: center, scale: (4 + n) / 14 })
+                )
+              ),
+              () => {
+                s.path(
+                  Attributes.of({
+                    opacity: (8 - n) / 10,
+                  })
+                ).rect([0, 0], 1, 1, "center")
+
+                s.path(
+                  Attributes.of({
+                    stroke: { h: n * 4, s: 90, l: 50 },
+                    transform: Transform.of({ rotate: n }),
+                  })
+                ).ellipse([0, 0], 1, 0.8)
+              }
+            )
+          })
+        }}
+      />
+
+      <Source
+        code={`const { center } = s.meta
+s.times(8, (n) => {
+  s.group(
+    Attributes.stroked((attr) =>
+      attr.transform(
+        new Transform().translate(...center).scale((4 + n) / 14)
+      )
+    ),
+    () => {
+      s.path(
+        Attributes.of({
+          opacity: (8 - n) / 10,
+        })
+      ).rect([0, 0], 1, 1, "center")
+
+      s.path(
+        Attributes.of({
+          stroke: { h: n * 4, s: 90, l: 50 },
+          transform: Transform.of({ rotate: n }),
+        })
+      ).ellipse([0, 0], 1, 0.8)
+    }
   )
 })`}
       />

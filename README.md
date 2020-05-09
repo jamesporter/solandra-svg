@@ -51,11 +51,15 @@ Probably just support svg, path and g(roup)
 - [x] clone path
 - [x] squash commits(!), publish to npm, open source
 
-### Post v'1'
+### Post v'0.1'
 
 - [x] Inkscape friendly export (dimensions, colours, ...?)
-- [ ] Groups (have plans for closure based approach for nesting)
+- [x] Groups (have plans for closure based approach for nesting)
 - [x] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
+
+### After
+
+- [x] Object literal apis for attributes and transforms
 
 ## API
 
