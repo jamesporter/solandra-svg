@@ -21,7 +21,16 @@ export default function Three() {
 
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom } = s.meta
+          s.forTiling({ n: 5, type: "square", margin: 0.1 }, (pt, [dX], at) => {
+            const points = s.shuffle(
+              s.build(s.aroundCircle, { at, r: dX / 12, n: 16 }, (pt) =>
+                s.perturb({ at: pt })
+              )
+            )
+
+            const path = s.strokedPath().moveTo(points[points.length - 1])
+            points.forEach((pt) => path.curveTo(pt))
+          })
         }}
       />
     </PageWithTransition>
