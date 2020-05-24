@@ -142,6 +142,10 @@ export default function Home() {
         <Link href="/two">
           <a>Second collection</a>
         </Link>
+        . And a{" "}
+        <Link href="/three">
+          <a>Third collection</a>
+        </Link>
         .
       </p>
 
