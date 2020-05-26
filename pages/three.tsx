@@ -6,7 +6,69 @@ import PageWithTransition from "../src/components/PageWithTransition"
 import { perlin2 } from "../src/lib/util/noise"
 import { useState } from "react"
 
+const gcd = (n: number, m: number): number => {
+  let a = m
+  let b = n
+
+  while (b !== 0) {
+    let temp = b
+    b = a % b
+    a = temp
+  }
+
+  return a
+}
+
+const makePath = ({
+  s,
+  innerRadius,
+  outerRadius,
+  distance,
+  amount = 1.0,
+  center,
+  scale,
+}: {
+  s: SolandraSvg
+  innerRadius: number
+  outerRadius: number
+  distance: number
+  amount?: number
+  center: Point2D
+  scale: number
+}) => {
+  let divisor = gcd(innerRadius, outerRadius)
+  const difference = innerRadius - outerRadius
+  let endPoint = Math.ceil((2 * Math.PI * outerRadius) / divisor) * amount
+
+  const path = s.strokedPath()
+
+  for (let theta = 0; theta < endPoint; theta += 0.05) {
+    let x =
+      scale *
+      (difference * Math.cos(theta) +
+        distance * Math.cos((difference / outerRadius) * theta))
+    let y =
+      scale *
+      (difference * Math.sin(theta) -
+        distance * Math.sin((difference / outerRadius) * theta))
+
+    x += center[0]
+    y += center[1]
+
+    if (theta == 0) {
+      path.moveTo([x, y])
+    } else {
+      path.lineTo([x, y])
+    }
+  }
+
+  return path
+}
+
 export default function Three() {
+  const [r1, setR1] = useState(29)
+  const [r2, setR2] = useState(14)
+
   return (
     <PageWithTransition>
       <Head>
@@ -34,73 +96,36 @@ export default function Three() {
         }}
       />
 
+      <div className="param">
+        <label>r1</label>&nbsp;
+        <input
+          min={3}
+          max={200}
+          type="number"
+          value={r1}
+          onChange={(evt) => {
+            const n = parseInt(evt.target.value)
+            if (n) setR1(n)
+          }}
+        />
+      </div>
+
+      <div className="param">
+        <label>r2</label>&nbsp;
+        <input
+          min={3}
+          max={200}
+          type="number"
+          value={r2}
+          onChange={(evt) => {
+            const n = parseInt(evt.target.value)
+            if (n) setR2(n)
+          }}
+        />
+      </div>
+
       <A4InkscapeSketch
         sketch={(s) => {
-          const gcd = (n: number, m: number): number => {
-            let a = m
-            let b = n
-
-            while (b !== 0) {
-              let temp = b
-              b = a % b
-              a = temp
-            }
-
-            return a
-          }
-
-          const makePath = ({
-            s,
-            innerRadius,
-            outerRadius,
-            distance,
-            amount = 1.0,
-            center,
-            scale,
-          }: {
-            s: SolandraSvg
-            innerRadius: number
-            outerRadius: number
-            distance: number
-            amount?: number
-            center: Point2D
-            scale: number
-          }) => {
-            let divisor = gcd(innerRadius, outerRadius)
-            const difference = innerRadius - outerRadius
-            let endPoint =
-              Math.ceil((2 * Math.PI * outerRadius) / divisor) * amount
-
-            const path = s.strokedPath()
-
-            for (let theta = 0; theta < endPoint; theta += 0.05) {
-              let x =
-                scale *
-                (difference * Math.cos(theta) +
-                  distance * Math.cos((difference / outerRadius) * theta))
-              let y =
-                scale *
-                (difference * Math.sin(theta) -
-                  distance * Math.sin((difference / outerRadius) * theta))
-
-              x += center[0]
-              y += center[1]
-
-              if (theta == 0) {
-                path.moveTo([x, y])
-                console.log(`Move [${x},${y}]`)
-              } else {
-                path.lineTo([x, y])
-                console.log(`Line [${x},${y}]`)
-              }
-            }
-
-            return path
-          }
-
-          const r1 = 29
-          const r2 = 14
-
           makePath({
             s,
             innerRadius: r1,
@@ -110,6 +135,28 @@ export default function Three() {
             center: s.meta.center,
             scale: 0.18 / Math.max(r1, r2),
           })
+        }}
+      />
+
+      <A4InkscapeSketch
+        sketch={(s) => {
+          s.forTiling(
+            { n: 5, type: "square", margin: 0.05, order: "rowFirst" },
+            (pt, d, center, i) => {
+              const rA = 16 - i
+              const rB = 3 + i
+
+              makePath({
+                s,
+                innerRadius: rA,
+                outerRadius: rB,
+                distance: Math.max(rA, rB),
+                amount: 1.0,
+                center,
+                scale: (0.24 * d[0]) / Math.max(rA, rB),
+              })
+            }
+          )
         }}
       />
     </PageWithTransition>
