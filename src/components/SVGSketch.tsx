@@ -49,10 +49,12 @@ export function A4ishSketch({
 
 export function A4InkscapeSketch({
   sketch,
+  seed = 1,
 }: {
   sketch: (sol: SolandraSvg) => void
+  seed?: number
 }) {
-  const svg = new SolandraSvg(297, 210, 1)
+  const svg = new SolandraSvg(297, 210, seed)
   sketch(svg)
 
   return (
