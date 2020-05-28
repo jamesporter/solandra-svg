@@ -5,6 +5,7 @@ import Link from "next/link"
 import PageWithTransition from "../src/components/PageWithTransition"
 import { perlin2 } from "../src/lib/util/noise"
 import { useState } from "react"
+import { arrayOf } from "../src/lib/util/collectionOps"
 
 const gcd = (n: number, m: number): number => {
   let a = m
@@ -155,6 +156,129 @@ export default function Three() {
                 center,
                 scale: (0.24 * d[0]) / Math.max(rA, rB),
               })
+            }
+          )
+        }}
+      />
+
+      <A4InkscapeSketch
+        sketch={(s) => {
+          s.forMargin(0.2, (start, size) => {
+            const end = v.add(start, size)
+
+            const path = s.strokedPath()
+            s.times(20, () => {
+              path.moveTo(start).curveTo(end, {
+                curveSize: s.gaussian({ sd: 0.2 }),
+                curveAngle: s.gaussian(),
+                twist: s.gaussian(),
+                bulbousness: s.gaussian({ mean: 1 }),
+              })
+            })
+          })
+        }}
+      />
+
+      <A4InkscapeSketch
+        sketch={(s) => {
+          const path = s.strokedPath()
+          s.forTiling(
+            { margin: 0.1, n: 15, type: "square" },
+            ([x, y], [dX]) => {
+              let points: [Point2D, Point2D]
+
+              s.proportionately([
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x, y],
+                      [x + dX, y + dX],
+                    ]),
+                ],
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x + dX, y],
+                      [x, y + dX],
+                    ]),
+                ],
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x, y + dX],
+                      [x + dX, y],
+                    ]),
+                ],
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x + dX, y + dX],
+                      [x, y],
+                    ]),
+                ],
+              ])
+
+              const [start, end] = points!
+              path.moveTo(start).arcTo(end)
+            }
+          )
+        }}
+      />
+
+      <A4InkscapeSketch
+        sketch={(s) => {
+          const path = s.strokedPath()
+          s.forTiling(
+            { margin: 0.1, n: 15, type: "square" },
+            ([x_, y_], [dX_]) => {
+              let points: [Point2D, Point2D]
+
+              const eN = s.gaussian({ mean: 0.02, sd: 0.01 })
+              const x = x_ - eN
+              const y = y_ - eN
+              const dX = dX_ + eN * 2
+
+              s.proportionately([
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x, y],
+                      [x + dX, y + dX],
+                    ]),
+                ],
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x + dX, y],
+                      [x, y + dX],
+                    ]),
+                ],
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x, y + dX],
+                      [x + dX, y],
+                    ]),
+                ],
+                [
+                  1,
+                  () =>
+                    (points = [
+                      [x + dX, y + dX],
+                      [x, y],
+                    ]),
+                ],
+              ])
+
+              const [start, end] = points!
+              path.moveTo(start).arcTo(end)
             }
           )
         }}
