@@ -111,7 +111,7 @@ export default function One() {
                 }
               }
             )
-            path.curveTo(end, {})
+            path.curveTo(end!, {})
           })
         }}
       />
