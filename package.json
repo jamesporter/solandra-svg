@@ -1,6 +1,6 @@
 {
   "name": "solandra-svg",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,12 +10,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build:package": "node pre-publish && yarn tsc ./src/lib/index.ts --outDir ./package --lib dom,esnext --target ES2016 --skipLibCheck --moduleResolution Node -d"
+    "build:esm": "yarn tsc -p tsconfig-esm.json",
+    "build:cjs": "yarn tsc -p tsconfig-cjs.json",
+    "build:package": "node pre-publish && yarn build:esm && yarn build:cjs"
   },
   "dependencies": {
     "framer-motion": "^1.10.3",
     "next": "9.4.0",
-    "prando": "^5.1.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-syntax-highlighter": "^12.2.1"

@@ -1,8 +1,8 @@
-import Prando from "prando"
 import { Point2D, Vector2D } from "./util/types"
 import { Path } from "./path"
 import { Attributes } from "./attributes"
 import { indent } from "./util/internalUtil"
+import { RNG } from "./rng"
 
 export class Group {
   children: (Group | Path)[] = []
@@ -29,18 +29,14 @@ export class Group {
 
 export class SolandraSvg {
   readonly aspectRatio: number
-  private rng: Prando
+  private rng: RNG
   elements: (Group | Path)[] = []
   // Basically track current group for paths to be added to, null = no group/top level scope
   private currentGroup: Group | null = null
 
-  constructor(
-    readonly width: number,
-    readonly height: number,
-    seed?: string | number
-  ) {
+  constructor(readonly width: number, readonly height: number, seed?: number) {
     this.aspectRatio = width / height
-    this.rng = new Prando(seed)
+    this.rng = new RNG(seed)
   }
 
   get image(): string {
@@ -331,7 +327,7 @@ ${this.elements
   }
 
   doProportion(p: number, callback: () => void) {
-    if (this.rng.next() < p) {
+    if (this.rng.number() < p) {
       callback()
     }
   }
@@ -369,7 +365,7 @@ ${this.elements
   proportionately<T>(cases: [number, () => T][]): T {
     const total = cases.map((c) => c[0]).reduce((a, b) => a + b, 0)
     if (total <= 0) throw new Error("Must be positive total")
-    let r = this.rng.next() * total
+    let r = this.rng.number() * total
 
     for (let i = 0; i < cases.length; i++) {
       if (cases[i][0] > r) {
@@ -383,7 +379,7 @@ ${this.elements
   }
 
   randomPoint(): Point2D {
-    return [this.rng.next(), this.rng.next() / this.aspectRatio]
+    return [this.rng.number(), this.rng.number() / this.aspectRatio]
   }
 
   range(
@@ -412,7 +408,7 @@ ${this.elements
    * A uniform random number betweeon 0 and 1
    */
   random = (): number => {
-    return this.rng.next()
+    return this.rng.number()
   }
 
   /**
@@ -453,14 +449,14 @@ ${this.elements
    * A coin toss with result either -1 or 1
    */
   randomPolarity = (): 1 | -1 => {
-    return this.rng.next() > 0.5 ? 1 : -1
+    return this.rng.number() > 0.5 ? 1 : -1
   }
 
   /**
    * Sample uniformly from an array
    */
   sample = <T>(from: T[]): T => {
-    return from[Math.floor(this.rng.next() * from.length)]
+    return from[Math.floor(this.rng.number() * from.length)]
   }
 
   /**
@@ -483,7 +479,7 @@ ${this.elements
     let randomIndex = 0
 
     while (0 !== currentIndex) {
-      randomIndex = Math.floor(this.rng.next() * currentIndex)
+      randomIndex = Math.floor(this.rng.number() * currentIndex)
       currentIndex -= 1
 
       // And swap it with the current element.
@@ -506,8 +502,8 @@ ${this.elements
       magnitude = 0.1,
     } = config
     return [
-      x + magnitude * (this.rng.next() - 0.5),
-      y + magnitude * (this.rng.next() - 0.5),
+      x + magnitude * (this.rng.number() - 0.5),
+      y + magnitude * (this.rng.number() - 0.5),
     ]
   }
 
@@ -516,8 +512,8 @@ ${this.elements
    */
   gaussian = (config?: { mean?: number; sd?: number }): number => {
     const { mean = 0, sd = 1 } = config || {}
-    const a = this.rng.next()
-    const b = this.rng.next()
+    const a = this.rng.number()
+    const b = this.rng.number()
     const n = Math.sqrt(-2.0 * Math.log(a)) * Math.cos(2.0 * Math.PI * b)
     return mean + n * sd
   }
@@ -527,11 +523,11 @@ ${this.elements
    */
   poisson = (lambda: number): number => {
     const limit = Math.exp(-lambda)
-    let prod = this.rng.next()
+    let prod = this.rng.number()
     let n = 0
     while (prod >= limit) {
       n++
-      prod *= this.rng.next()
+      prod *= this.rng.number()
     }
     return n
   }
