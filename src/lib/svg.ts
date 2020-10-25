@@ -1,8 +1,8 @@
-import Prando from "prando"
 import { Point2D, Vector2D } from "./util/types"
 import { Path } from "./path"
 import { Attributes } from "./attributes"
 import { indent } from "./util/internalUtil"
+import { RNG } from "./rng"
 
 export class Group {
   children: (Group | Path)[] = []
@@ -29,18 +29,14 @@ export class Group {
 
 export class SolandraSvg {
   readonly aspectRatio: number
-  private rng: Prando
+  private rng: RNG
   elements: (Group | Path)[] = []
   // Basically track current group for paths to be added to, null = no group/top level scope
   private currentGroup: Group | null = null
 
-  constructor(
-    readonly width: number,
-    readonly height: number,
-    seed?: string | number
-  ) {
+  constructor(readonly width: number, readonly height: number, seed?: number) {
     this.aspectRatio = width / height
-    this.rng = new Prando(seed)
+    this.rng = new RNG(seed)
   }
 
   get image(): string {

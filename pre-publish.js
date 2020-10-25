@@ -12,12 +12,11 @@ const packageTemplate = {
   name: "solandra-svg",
   author: "James Porter <james@amimetic.co.uk>",
   version,
-  main: "index.js",
+  main: "./cjs/index.js",
+  module: "./esm/index.js",
   license: "MIT",
-  dependencies: {
-    prando: "5.1.2",
-  },
-  types: "index.d.ts",
+  dependencies: {},
+  types: "./esm/index.d.ts",
 }
 
 fs.writeFileSync(
