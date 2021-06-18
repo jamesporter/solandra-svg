@@ -153,6 +153,13 @@ export default function Home() {
         .
       </p>
 
+      <p>
+        I also did some for laser printing, because plotters are slow:{" "}
+        <Link href="/five">
+          <a>Mono Print Collection</a>
+        </Link>
+      </p>
+
       <div className="ctas">
         <div>
           <a href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl">
