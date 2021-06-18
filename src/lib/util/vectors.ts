@@ -10,6 +10,16 @@ export const subtract = ([x1, y1]: Point2D, [x2, y2]: Point2D): Point2D => [
   y1 - y2,
 ]
 
+export const multiply = ([x1, y1]: Point2D, [x2, y2]: Point2D): Point2D => [
+  x1 * x2,
+  y1 * y2,
+]
+
+export const divide = ([x1, y1]: Point2D, [x2, y2]: Point2D): Point2D => [
+  x1 * x2,
+  y1 * y2,
+]
+
 export const magnitude = ([x, y]: Point2D): number => Math.sqrt(x ** 2 + y ** 2)
 
 export const distance = (a: Point2D, b: Point2D): number =>
@@ -50,6 +60,8 @@ export const dot = ([x1, y1]: Point2D, [x2, y2]: Point2D): number =>
 export default {
   add,
   subtract,
+  multiply,
+  divide,
   magnitude,
   rotate,
   normalise,
