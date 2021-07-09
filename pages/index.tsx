@@ -133,25 +133,35 @@ export default function Home() {
 
       <p>A little library for drawing in SVG, but with a nicer API.</p>
 
-      <p>
-        Basically I made this to generate stuff to plot.{" "}
-        <Link href="/one">
-          <a>My first generated drawings for a 2D plotter</a>
-        </Link>
-        . And my{" "}
-        <Link href="/two">
-          <a>Second collection</a>
-        </Link>
-        . And a{" "}
-        <Link href="/three">
-          <a>Third collection</a>
-        </Link>
-        . And a{" "}
-        <Link href="/four">
-          <a>Fourth collection</a>
-        </Link>
-        .
-      </p>
+      <p>Basically I made this to generate stuff to plot.</p>
+
+      <ul>
+        <li>
+          <Link href="/one">
+            <a>My first generated drawings for a 2D plotter</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/two">
+            <a>Second collection</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/three">
+            <a>Third collection</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/four">
+            <a>Fourth collection</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/lines">
+            <a>Fifth collection</a>
+          </Link>
+        </li>
+      </ul>
 
       <div className="ctas">
         <div>
