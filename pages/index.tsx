@@ -135,22 +135,37 @@ export default function Home() {
 
       <p>
         Basically I made this to generate stuff to plot.{" "}
-        <Link href="/one">
-          <a>My first generated drawings for a 2D plotter</a>
-        </Link>
-        . And my{" "}
-        <Link href="/two">
-          <a>Second collection</a>
-        </Link>
-        . And a{" "}
-        <Link href="/three">
-          <a>Third collection</a>
-        </Link>
-        . And a{" "}
-        <Link href="/four">
-          <a>Fourth collection</a>
-        </Link>
-        .
+        <ol>
+          <li>
+            <Link href="/one">
+              <a>My first generated drawings for a 2D plotter</a>
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/two">
+              <a>Second collection</a>
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/three">
+              <a>Third collection</a>
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/four">
+              <a>Fourth collection</a>
+            </Link>
+          </li>
+
+          <li>
+            <Link href="/cutouts">
+              <a>Images for cutter</a>
+            </Link>
+          </li>
+        </ol>
       </p>
 
       <div className="ctas">

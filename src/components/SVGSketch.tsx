@@ -22,7 +22,6 @@ export function SVGSketch({
       style={{
         width,
         height,
-        maxWidth: "90%",
         display: "block",
         margin: "20px auto",
         ...style,
