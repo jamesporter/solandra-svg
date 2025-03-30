@@ -1,28 +1,18 @@
-import Head from "next/head"
-import { A4ishSketch, A4InkscapeSketch } from "../src/components/SVGSketch"
-import { v, Point2D } from "../src/lib"
-import Link from "next/link"
-import PageWithTransition from "../src/components/PageWithTransition"
-import { perlin2 } from "../src/lib/util/noise"
-import { useState } from "react"
+import { A4InkscapeSketch } from "@/components/SVGSketch"
+import { perlin2, Point2D, v } from "@/lib"
 
-export default function One() {
+import { useState } from "react"
+import { PageLayout } from "@/components/PageLayout"
+
+export default function Two() {
   const [nMaze, setNMaze] = useState(64)
   const [n, setN] = useState(48)
   const [depth, setDepth] = useState(200)
   const [noiseX, setNoiseX] = useState(0)
 
   return (
-    <PageWithTransition>
-      <Head>
-        <title>More plots</title>
-      </Head>
+    <PageLayout>
       <h1>More plots</h1>
-      <p>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-      </p>
       <p>With new, hopefully more Inkscape ready approach</p>
       <h2>Third Set</h2>
       <A4InkscapeSketch
@@ -211,6 +201,6 @@ export default function One() {
           })
         }}
       />
-    </PageWithTransition>
+    </PageLayout>
   )
 }

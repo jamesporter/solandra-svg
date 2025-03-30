@@ -1,23 +1,10 @@
-import Head from "next/head"
-import { A4ishSketch, A4InkscapeSketch } from "../src/components/SVGSketch"
-import { v, Point2D, isoTransform, Transform } from "../src/lib"
-import Link from "next/link"
-import PageWithTransition from "../src/components/PageWithTransition"
-import { perlin2 } from "../src/lib/util/noise"
-import { useState } from "react"
-import { Point } from "framer-motion"
+import { PageLayout } from "@/components/PageLayout"
+import { A4InkscapeSketch } from "@/components/SVGSketch"
+import { isoTransform, Point2D, Transform, v } from "@/lib"
 
-export default function One() {
-  const [nMaze, setNMaze] = useState(64)
-  const [n, setN] = useState(48)
-  const [depth, setDepth] = useState(200)
-  const [noiseX, setNoiseX] = useState(0)
-
+export default function Four() {
   return (
-    <PageWithTransition>
-      <Head>
-        <title>More plots</title>
-      </Head>
+    <PageLayout>
       <h1>More plots</h1>
       <h2>Early ideas for different colours</h2>
       <A4InkscapeSketch
@@ -118,7 +105,6 @@ export default function One() {
 
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
           const pathOne = s.strokedPath()
           const pathTwo = s.strokedPath((attr) => attr.stroke(220, 90, 40))
 
@@ -253,6 +239,6 @@ export default function One() {
           )
         }}
       />
-    </PageWithTransition>
+    </PageLayout>
   )
 }

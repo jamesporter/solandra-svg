@@ -1,23 +1,11 @@
-import Head from "next/head"
-import { A4ishSketch } from "../src/components/SVGSketch"
-import { v, Point2D } from "../src/lib"
-import Link from "next/link"
-import PageWithTransition from "../src/components/PageWithTransition"
+import { PageLayout } from "@/components/PageLayout"
+import { A4ishSketch } from "@/components/SVGSketch"
+import { Point2D, v } from "@/lib"
 
 export default function One() {
   return (
-    <PageWithTransition>
-      <Head>
-        <title>Solandra SVG</title>
-      </Head>
-
+    <PageLayout>
       <h1>First Prints</h1>
-
-      <p>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-      </p>
 
       <p>Some things to try out on plotter</p>
 
@@ -69,7 +57,6 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          const { center, bottom } = s.meta
           s.forMargin(0.1, ([sX, sY], [w, h], [cX, cY]) => {
             s.times(32, () => {
               const x1 = s.random() * w + sX
@@ -225,18 +212,15 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          s.forHorizontal(
-            { n: 12, margin: 0.1 },
-            ([x, y], [dX, dY], [cX, cY], i) => {
-              s.strokedPath()
-                .moveTo([x - dX, y + dY])
-                .lineTo(s.perturb({ at: [x + dX, y] }))
-                .lineTo([x + 2 * dX, y + dY])
-                .lineTo([x + dX, y])
-            }
-          )
+          s.forHorizontal({ n: 12, margin: 0.1 }, ([x, y], [dX, dY]) => {
+            s.strokedPath()
+              .moveTo([x - dX, y + dY])
+              .lineTo(s.perturb({ at: [x + dX, y] }))
+              .lineTo([x + 2 * dX, y + dY])
+              .lineTo([x + dX, y])
+          })
         }}
       />
-    </PageWithTransition>
+    </PageLayout>
   )
 }

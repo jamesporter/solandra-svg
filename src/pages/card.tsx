@@ -1,18 +1,10 @@
-import Head from "next/head"
-import { A4ishSketch, A4InkscapeSketch } from "../src/components/SVGSketch"
-import { v, Point2D, Transform } from "../src/lib"
-import Link from "next/link"
-import PageWithTransition from "../src/components/PageWithTransition"
-import { perlin2 } from "../src/lib/util/noise"
-import { useState } from "react"
+import { PageLayout } from "@/components/PageLayout"
+import { A4InkscapeSketch } from "@/components/SVGSketch"
+import { Point2D, Transform } from "@/lib"
 
 export default function Card() {
   return (
-    <PageWithTransition>
-      <Head>
-        <title>Card</title>
-      </Head>
-
+    <PageLayout>
       <h2>A Card</h2>
       <p>In layers</p>
 
@@ -84,6 +76,6 @@ export default function Card() {
           points.slice(1).forEach((pt) => p2.curveTo(pt, { curveSize: 0.2 }))
         }}
       />
-    </PageWithTransition>
+    </PageLayout>
   )
 }

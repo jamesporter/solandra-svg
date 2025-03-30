@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/849bb53e-a72b-40cf-b3d0-ccaf4f53068b/deploy-status)](https://app.netlify.com/sites/solandra-svg/deploys)
+
 # solandra-svg
 
 [Try out](https://codesandbox.io/s/simple-solandra-svg-demo-obinl)
@@ -61,20 +63,19 @@ Probably just support svg, path and g(roup)
 
 - [x] Object literal apis for attributes and transforms
 
+### Next gen
+
+- [x] Vite
+- [ ] get deploying
+- [ ] new lib stuff for cut and fold
+- [ ] cut and fold examples
+
 ## API
 
 ## Publishing
 
-`yarn build:package`
+`pnpm build:package`
 
 `cd package`
 
 `npm publish`
-
-## Deploy (this docs/examples site)
-
-I don't really care about old browsers etc so happy to use flatMap and other modern features. If you want to deploy this with SSR you will also need to either use a modern node version e.g. I use Netlify and set in the environment variables:
-
-```
-NODE_VERSION 14
-```

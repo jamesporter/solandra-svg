@@ -1,3 +1,4 @@
+import { expect, it, describe } from "vitest"
 import { SolandraSvg } from "../svg"
 import { Attributes } from "../attributes"
 
@@ -5,10 +6,10 @@ describe("A very simple SVG", () => {
   it("should be possible to instantiate and get meta", () => {
     const svg = new SolandraSvg(200, 100, 1)
     expect(svg.meta).toMatchInlineSnapshot(`
-      Object {
+      {
         "aspectRatio": 2,
         "bottom": 0.5,
-        "center": Array [
+        "center": [
           0.5,
           0.25,
         ],
@@ -39,8 +40,8 @@ describe("A very simple SVG", () => {
     expect(output).toMatch(/.*viewBox="0 0 1 0.5".*/)
     expect(output).toMatch(/.*0\.25 0.*/)
     expect(output).toMatchInlineSnapshot(`
-      "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 0.5\\" width=\\"200\\" height=\\"100\\">
-        <path class=\\"square\\" id=\\"test-square\\" style=\\"stroke:#0A47C2; opacity:0.9;\\" d=\\"M 0.25 0 L 0.25 0.5 L 0.75 0.5 L 0.75 0 Z\\" />
+      "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 0.5" width="200" height="100">
+        <path class="square" id="test-square" style="stroke:#0A47C2; opacity:0.9;" d="M 0.25 0 L 0.25 0.5 L 0.75 0.5 L 0.75 0 Z" />
       </svg>"
     `)
   })
@@ -57,8 +58,8 @@ describe("A very simple SVG", () => {
     const output = svg.image
     expect(output).toMatch(/.*viewBox="0 0 1 1".*/)
     expect(output).toMatchInlineSnapshot(`
-      "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\">
-        <path style=\\"fill:none; stroke-width:0.005; stroke:#000000; stroke-opacity:1; stroke-linecap:round;\\" d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" />
+      "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" width="300" height="300">
+        <path style="fill:none; stroke-width:0.005; stroke:#000000; stroke-opacity:1; stroke-linecap:round;" d="M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z" />
       </svg>"
     `)
   })
@@ -76,9 +77,9 @@ describe("A very simple SVG", () => {
     })
     const output = svg.image
     expect(output).toMatchInlineSnapshot(`
-      "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\">
-        <g style=\\"fill:none; stroke-width:0.005; stroke:#000000;\\">
-          <path d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" />
+      "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" width="300" height="300">
+        <g style="fill:none; stroke-width:0.005; stroke:#000000;">
+          <path d="M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z" />
         </g>
       </svg>"
     `)
@@ -104,10 +105,10 @@ describe("A very simple SVG", () => {
 
     const output = svg.image
     expect(output).toMatchInlineSnapshot(`
-      "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\">
-        <g style=\\"fill:none; stroke-width:0.005; stroke:#000000;\\">
+      "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" width="300" height="300">
+        <g style="fill:none; stroke-width:0.005; stroke:#000000;">
           <g>
-            <path d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" />
+            <path d="M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z" />
           </g>
         </g>
       </svg>"
@@ -135,16 +136,16 @@ describe("A very simple SVG", () => {
     })
 
     expect(svg.image).toMatchInlineSnapshot(`
-      "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 1 1\\" width=\\"300\\" height=\\"300\\">
-        <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
-        <g style=\\"fill:none; stroke-width:0.005; stroke:#000000;\\">
-          <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
+      "<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" width="300" height="300">
+        <path d="M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2" />
+        <g style="fill:none; stroke-width:0.005; stroke:#000000;">
+          <path d="M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2" />
           <g>
-            <path d=\\"M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z\\" />
-            <g style=\\"fill:none; stroke-width:0.005; stroke:#000000;\\">
-              <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
+            <path d="M 0.25 0.25 L 0.75 0.25 L 0.75 0.75 L 0.25 0.75 Z" />
+            <g style="fill:none; stroke-width:0.005; stroke:#000000;">
+              <path d="M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2" />
             </g>
-            <path d=\\"M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2\\" />
+            <path d="M -0.15 -0.2 L 0.15 -0.2 L 0.15 0.2 L -0.15 0.2 L -0.15 -0.2" />
           </g>
         </g>
       </svg>"
