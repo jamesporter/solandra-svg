@@ -1,47 +1,36 @@
-import Head from "next/head"
-import Link from "next/link"
-import { SVGSketch } from "../src/components/SVGSketch"
-import { v, Point2D, Transform, Attributes } from "../src/lib"
-import { motion } from "framer-motion"
+import { PageLayout } from "@/components/PageLayout"
+import Source from "@/components/Source"
+import { SVGSketch } from "@/components/SVGSketch"
+
+import { Slider } from "@/components/ui/slider"
+import { Attributes, Point2D, Transform, v } from "@/lib"
 import { useState } from "react"
-import PageWithTransition from "../src/components/PageWithTransition"
-import Source from "../src/components/Source"
+import { Link } from "react-router"
 
-function SeeSource() {
-  return (
-    <p>
-      The full code for all these examples is{" "}
-      <a href="https://github.com/jamesporter/solandra-svg/blob/master/pages/index.tsx">
-        available on GitHub
-      </a>
-      .
-    </p>
-  )
-}
-
-export default function Home() {
+export function Home() {
   const [n, setN] = useState(25)
   const [h, setH] = useState(20)
 
   return (
-    <PageWithTransition>
-      <Head>
-        <title>Solandra SVG</title>
-      </Head>
+    <PageLayout>
+      <div className="flex flex-col lg:flex-row gap-8 justify-center">
+        <SVGSketch
+          width={480}
+          height={480}
+          sketch={(s) => {
+            s.times(n, () => {
+              s.strokedPath((attr) =>
+                attr.fill(s.sample([h - 20, h, h + 20]), 90, 50, 0.2)
+              )
+                .moveTo(s.randomPoint())
+                .arcTo(s.randomPoint())
+            })
+          }}
+        />
 
-      <div
-        className="hideIfNotLarge"
-        style={{
-          position: "relative",
-          top: 340,
-          marginTop: -120,
-          marginLeft: 720,
-          color: "hsla(0, 0%, 0%, 0.65)",
-          width: 320,
-        }}
-      >
-        <Source
-          code={`s.times(${n}, () => {
+        <div className="flex lg:justify-center flex-col">
+          <Source
+            code={`s.times(${n}, () => {
   s.strokedPath((attr) =>
     attr.fill(
       s.sample([${h - 20}, ${h}, ${h + 20}]), 90, 50, 0.2)
@@ -49,131 +38,93 @@ export default function Home() {
     .moveTo(s.randomPoint())
     .arcTo(s.randomPoint())
 })`}
-        />
+          />
+
+          <div className="flex flex-col gap-8">
+            <Slider
+              value={[n]}
+              onValueChange={(v) => {
+                const newN = v[0]
+                setN(newN)
+              }}
+              min={1}
+              max={100}
+              step={1}
+            />
+
+            <Slider
+              value={[h]}
+              onValueChange={(v) => {
+                const newH = v[0]
+                setH(newH)
+              }}
+              min={1}
+              max={100}
+              step={1}
+            />
+          </div>
+        </div>
       </div>
 
-      <SVGSketch
-        width={480}
-        height={480}
-        sketch={(s) => {
-          s.times(n, () => {
-            s.strokedPath((attr) =>
-              attr.fill(s.sample([h - 20, h, h + 20]), 90, 50, 0.2)
-            )
-              .moveTo(s.randomPoint())
-              .arcTo(s.randomPoint())
-          })
-        }}
-      />
-
-      <div
-        style={{
-          width: 300,
-          height: 40,
-          borderRadius: 20,
-          backgroundColor: "#fcf0f0",
-          margin: "auto",
-        }}
-      >
-        <motion.div
-          style={{
-            height: 40,
-            width: 40,
-            borderRadius: 20,
-            background: "#991414",
-          }}
-          drag="x"
-          dragElastic={0}
-          dragMomentum={false}
-          dragConstraints={{ left: 0, right: 260 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onDrag={(event, info) => {
-            const x = info.point.x
-            const newN = Math.floor(25 + x / 8)
-            // 'throttling'!
-            if (newN !== n) setN(newN)
-          }}
-        />
-      </div>
-
-      <br />
-
-      <div
-        style={{
-          width: 300,
-          height: 40,
-          borderRadius: 20,
-          backgroundColor: "#fcf0f0",
-          margin: "auto",
-        }}
-      >
-        <motion.div
-          style={{
-            height: 40,
-            width: 40,
-            borderRadius: 20,
-            background: "#991414",
-          }}
-          drag="x"
-          dragElastic={0}
-          dragMomentum={false}
-          dragConstraints={{ left: 0, right: 260 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onDrag={(event, info) => {
-            const x = info.point.x
-            const newH = Math.floor(20 + x)
-            // 'throttling'!
-            if (newH !== h) setH(newH)
-          }}
-        />
-      </div>
-      <h1 style={{ textAlign: "center", paddingTop: 40 }}>solandra-svg</h1>
+      <h1 style={{ textAlign: "center", paddingTop: 40 }}>Solandra-SVG</h1>
 
       <p>A little library for drawing in SVG, but with a nicer API.</p>
 
       <p>
         Basically I made this to generate stuff to plot.{" "}
-        <Link href="/one">
+        <Link to="/one">
           <a>My first generated drawings for a 2D plotter</a>
         </Link>
         . And my{" "}
-        <Link href="/two">
+        <Link to="/two">
           <a>Second collection</a>
         </Link>
         . And a{" "}
-        <Link href="/three">
+        <Link to="/three">
           <a>Third collection</a>
         </Link>
         . And a{" "}
-        <Link href="/four">
+        <Link to="/four">
           <a>Fourth collection</a>
         </Link>
         .
       </p>
 
-      <div className="ctas">
-        <div>
-          <a href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl">
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="bg-rose-100 rounded p-4">
+          <a
+            className="mb-4"
+            href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl"
+          >
             Try out
           </a>
 
           <p>A ready to play with CodeSandbox.</p>
         </div>
 
-        <div>
-          <a href="https://github.com/jamesporter/solandra-svg">GitHub</a>
+        <div className="bg-rose-100 rounded p-4">
+          <a
+            className="mb-4"
+            href="https://github.com/jamesporter/solandra-svg"
+          >
+            GitHub
+          </a>
           <p>Full soure code for the library and this site</p>
         </div>
 
-        <div>
-          <a href="https://www.npmjs.com/package/solandra-svg">Install</a>
-          <p>
+        <div className="bg-rose-100 rounded p-4">
+          <a className="mb-4" href="https://www.npmjs.com/package/solandra-svg">
+            Install
+          </a>
+          <pre className="font-mono text-zinc-700">
             npm install solandra-svg
-            <br />
-            yarn add solandra-svg
-          </p>
+          </pre>
+
+          <pre className="font-mono text-zinc-700">
+            pnpm install solandra-svg
+          </pre>
+
+          <pre className="font-mono text-zinc-700">yarn add solandra-svg</pre>
         </div>
       </div>
 
@@ -187,28 +138,25 @@ export default function Home() {
         width={480}
         height={480}
         sketch={(s) => {
-          s.forTiling(
-            { n: 5, type: "square", margin: 0.1 },
-            ([x, y], [dX], c, i) => {
-              const path = s
-                .strokedPath((attr) =>
-                  attr.stroke(355, 10, 10, 0.9).fill(340, 90, 70, 0.2)
-                )
-                .moveTo([0.5, 0.5])
+          s.forTiling({ n: 5, type: "square", margin: 0.1 }, ([x, y], [dX]) => {
+            const path = s
+              .strokedPath((attr) =>
+                attr.stroke(355, 10, 10, 0.9).fill(340, 90, 70, 0.2)
+              )
+              .moveTo([0.5, 0.5])
 
-              s.times(10, () => {
-                const pt = s.randomPoint()
-                path.lineTo([x + pt[0] * dX, y + pt[1] * dX])
-              })
-            }
-          )
+            s.times(10, () => {
+              const pt = s.randomPoint()
+              path.lineTo([x + pt[0] * dX, y + pt[1] * dX])
+            })
+          })
         }}
       />
 
       <Source
         code={`s.forTiling(
   { n: 5, type: "square", margin: 0.1 },
-  ([x, y], [dX], c, i) => {
+  ([x, y], [dX]) => {
     const path = s
       .strokedPath((attr) =>
         attr.stroke(355, 10, 10, 0.9).fill(340, 90, 70, 0.2)
@@ -234,17 +182,17 @@ export default function Home() {
         width={480}
         height={480}
         sketch={(s) => {
-          const { center, bottom } = s.meta
+          const { bottom } = s.meta
 
           s.times(15, () => {
-            let start = [s.random(), bottom] as Point2D
-            let end = [s.random(), bottom] as Point2D
+            let start: Point2D = [s.random(), bottom]
+            let end: Point2D = [s.random(), bottom]
             s.strokedPath((attr) => attr.stroke(20, 90, 60, 0.5))
               .moveTo(start)
               .curveTo(end, { curveSize: 3 })
 
-            start = [s.random(), 0] as Point2D
-            end = [s.random(), 0] as Point2D
+            start = [s.random(), 0]
+            end = [s.random(), 0]
             s.strokedPath((attr) => attr.stroke(0, 90, 60, 0.5))
               .moveTo(start)
               .curveTo(end, { polarlity: -1, curveSize: 3 })
@@ -521,6 +469,18 @@ s.times(8, (n) => {
       />
 
       <SeeSource />
-    </PageWithTransition>
+    </PageLayout>
+  )
+}
+
+function SeeSource() {
+  return (
+    <p>
+      The full code for all these examples is{" "}
+      <a href="https://github.com/jamesporter/solandra-svg/blob/master/src/pages/Home.tsx">
+        available on GitHub
+      </a>
+      .
+    </p>
   )
 }

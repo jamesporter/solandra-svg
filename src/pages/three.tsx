@@ -1,10 +1,16 @@
-import Head from "next/head"
-import { A4ishSketch, A4InkscapeSketch } from "../src/components/SVGSketch"
-import { v, Point2D, SolandraSvg, Transform, isoTransform } from "../src/lib"
-import Link from "next/link"
-import PageWithTransition from "../src/components/PageWithTransition"
-import { perlin2 } from "../src/lib/util/noise"
+import { A4InkscapeSketch } from "@/components/SVGSketch"
+import {
+  isoTransform,
+  perlin2,
+  Point2D,
+  SolandraSvg,
+  Transform,
+  v,
+} from "@/lib"
+
 import { useState } from "react"
+import { PageLayout } from "@/components/PageLayout"
+
 const gcd = (n: number, m: number): number => {
   let a = m
   let b = n
@@ -69,17 +75,7 @@ export default function Three() {
   const [r2, setR2] = useState(14)
 
   return (
-    <PageWithTransition>
-      <Head>
-        <title>Even more plots</title>
-      </Head>
-      <h1>Even more plots</h1>
-      <p>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-      </p>
-
+    <PageLayout>
       <h2>Little Patterns</h2>
 
       <A4InkscapeSketch
@@ -669,7 +665,7 @@ export default function Three() {
         sketch={(s) => {
           s.forTiling(
             { n: 11, type: "square", margin: 0.075 },
-            ([sX, sY], [dX], c, i) => {
+            (_, [dX], c, i) => {
               s.doProportion(0.66, () => {
                 const path = s.strokedPath((attr) =>
                   attr.strokeWidth(0.0035).transform(
@@ -947,6 +943,6 @@ export default function Three() {
           )
         }}
       />
-    </PageWithTransition>
+    </PageLayout>
   )
 }

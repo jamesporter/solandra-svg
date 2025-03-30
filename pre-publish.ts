@@ -1,8 +1,8 @@
-const fs = require("fs"),
-  path = require("path"),
-  rimraf = require("rimraf")
+import fs from "fs"
+import path from "path"
+import { sync as rimrafSync } from "rimraf"
 
-rimraf.sync("package")
+rimrafSync("package")
 fs.mkdirSync("package")
 
 const mainPackage = JSON.parse(fs.readFileSync("./package.json").toString())

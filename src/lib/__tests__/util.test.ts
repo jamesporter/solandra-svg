@@ -1,3 +1,4 @@
+import { expect, it, describe } from "vitest"
 import { hslToRgb } from "../util/colorCalcs"
 
 describe("Colour calc", () => {

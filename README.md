@@ -1,80 +1,54 @@
-# solandra-svg
+# React + TypeScript + Vite
 
-[Try out](https://codesandbox.io/s/simple-solandra-svg-demo-obinl)
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-[Site](https://solandra-svg.netlify.app/)
+Currently, two official plugins are available:
 
-[Install](https://www.npmjs.com/package/solandra-svg)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-![Sample](./sample.svg)
+## Expanding the ESLint configuration
 
-```typescript
-s.times(25, () => {
-  s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2))
-    .moveTo(s.randomPoint())
-    .arcTo(s.randomPoint())
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
 })
 ```
 
-## To develop or run locally
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-First, run the development server:
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-```bash
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## The Plan
-
-Core, relevant bits of Solandra applied to SVG for static renders. Include html-ish stuff like classes, ids. Do groups, layers, ...
-
-Don't do fill/draw separately (as Solandra)
-
-Main short term goal is for plotting type stuff.
-
-Keep it minimal
-
-Output in various ways: inital focus preview/sketch-book + svg file (or something equiv)
-
-Probably just support svg, path and g(roup)
-
-## TO DO/Roadmap
-
-- [x] Basics
-- [x] Transforms
-- [x] Arcs (within path)
-- [x] Ellipse (as move, arc)
-- [x] Custom path transform (i.e. user supplied functiont to transform; at least points, maybe other aspects of path spec?)
-- [x] Chaiken
-- [x] clone path
-- [x] squash commits(!), publish to npm, open source
-
-### Post v'0.1'
-
-- [x] Inkscape friendly export (dimensions, colours, ...?)
-- [x] Groups (have plans for closure based approach for nesting)
-- [x] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
-
-### After
-
-- [x] Object literal apis for attributes and transforms
-
-## API
-
-## Publishing
-
-`yarn build:package`
-
-`cd package`
-
-`npm publish`
-
-## Deploy (this docs/examples site)
-
-I don't really care about old browsers etc so happy to use flatMap and other modern features. If you want to deploy this with SSR you will also need to either use a modern node version e.g. I use Netlify and set in the environment variables:
-
-```
-NODE_VERSION 14
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
 ```

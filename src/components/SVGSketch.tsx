@@ -1,4 +1,3 @@
-import React from "react"
 import { SolandraSvg } from "../lib/index"
 
 export function SVGSketch({
