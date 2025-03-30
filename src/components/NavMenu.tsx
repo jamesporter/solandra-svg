@@ -11,7 +11,24 @@ import { cn } from "@/lib/utils"
 import { forwardRef } from "react"
 import { Link } from "react-router"
 
-const examples: { title: string; to: string; description: string }[] = [
+const examples: {
+  title: string
+  to: string
+  description: string
+  new?: boolean
+}[] = [
+  {
+    to: "/cut-and-fold",
+    title: "Cut and Fold",
+    description: "Building cut and fold desings",
+    new: true,
+  },
+  {
+    to: "/favicon",
+    title: "Favicon",
+    description: "A favicon for Solandra-SVG",
+    new: true,
+  },
   {
     to: "/one",
     title: "First Set for Plotter",
@@ -29,8 +46,8 @@ const examples: { title: string; to: string; description: string }[] = [
   },
   {
     to: "/four",
-    title: "Fourth Set for Plotter",
-    description: "Fourth set of prints for the plotter",
+    title: "Multi coloured plots",
+    description: "Plots designed to use more than one colour",
   },
   {
     to: "/card",
@@ -41,7 +58,7 @@ const examples: { title: string; to: string; description: string }[] = [
 
 export function NavMenu() {
   return (
-    <div className="p-4 bg-gradient-to-r from-rose-100 to-rose-300">
+    <div className="p-4 bg-gradient-to-r from-amber-100 to-rose-300">
       <NavigationMenu>
         <NavigationMenuList>
           <div className="font-semibold mr-4 text-rose-600">Solandra-SVG</div>
@@ -57,7 +74,12 @@ export function NavMenu() {
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                 {examples.map((item) => (
-                  <ListItem key={item.title} title={item.title} to={item.to}>
+                  <ListItem
+                    key={item.title}
+                    title={item.title}
+                    to={item.to}
+                    isNew={item.new}
+                  >
                     {item.description}
                   </ListItem>
                 ))}
@@ -87,8 +109,15 @@ const ListItem = forwardRef(
       title,
       to,
       children,
+      isNew,
       ...props
-    }: { className?: string; title: string; children: string; to: string },
+    }: {
+      className?: string
+      title: string
+      children: string
+      to: string
+      isNew?: boolean
+    },
     ref
   ) => {
     return (
@@ -98,13 +127,18 @@ const ListItem = forwardRef(
             ref={ref as any}
             to={to}
             className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground relative",
               className
             )}
             {...props}
           >
             <div className="text-sm font-medium leading-none text-rose-700">
               {title}
+              {isNew && (
+                <div className="absolute top-2 right-2 bg-amber-600 text-amber-50 py-1 px-2 rounded-full">
+                  New
+                </div>
+              )}
             </div>
             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
               {children}

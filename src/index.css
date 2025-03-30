@@ -24,6 +24,7 @@ a{
     padding: 1em;
     margin: 1em 0;
     border-radius: 0.5em;
+    overflow-x: auto;
   }
 
   code {

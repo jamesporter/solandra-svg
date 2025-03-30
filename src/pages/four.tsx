@@ -1,14 +1,8 @@
 import { PageLayout } from "@/components/PageLayout"
 import { A4InkscapeSketch } from "@/components/SVGSketch"
 import { isoTransform, Point2D, Transform, v } from "@/lib"
-import { useState } from "react"
 
 export default function Four() {
-  const [nMaze, setNMaze] = useState(64)
-  const [n, setN] = useState(48)
-  const [depth, setDepth] = useState(200)
-  const [noiseX, setNoiseX] = useState(0)
-
   return (
     <PageLayout>
       <h1>More plots</h1>
