@@ -412,6 +412,13 @@ ${this.elements
   }
 
   /**
+   * A uniform random number betweeon 0 and 2π
+   */
+  randomAngle = (): number => {
+    return this.rng.number() * Math.PI * 2
+  }
+
+  /**
    * A uniform random integer. Default lower bound is 0.
    * Upper bound can be inclusive (default) or exclusive
    */

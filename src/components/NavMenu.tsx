@@ -61,7 +61,14 @@ export function NavMenu() {
     <div className="p-4 bg-gradient-to-r from-amber-100 to-rose-300">
       <NavigationMenu>
         <NavigationMenuList>
-          <div className="font-semibold mr-4 text-rose-600">Solandra-SVG</div>
+          <div>
+            <Link
+              to="/"
+              className="font-semibold mr-4 text-rose-600 text-lg lg:text-xl"
+            >
+              Solandra-SVG
+            </Link>
+          </div>
           <NavigationMenuItem>
             <Link to="/">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>

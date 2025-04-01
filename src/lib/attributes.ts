@@ -1,5 +1,6 @@
 import { Transform } from "./transforms"
 import { hslToRgb } from "./util/colorCalcs"
+import { Point2D } from "./util/types"
 
 /**
 Supports (via fluent api)
@@ -124,6 +125,15 @@ export class Attributes {
 
   transform(transformations: Transform): Attributes {
     this.attributes["transform"] = transformations.string
+    return this
+  }
+
+  transformOrigin(location: Point2D | "center"): Attributes {
+    if (typeof location === "string") {
+      this.attributes["transform-origin"] = location
+    } else {
+      this.attributes["transform-origin"] = `${location[0]} ${location[1]}`
+    }
     return this
   }
 
