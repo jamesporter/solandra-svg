@@ -18,15 +18,25 @@ s.times(25, () => {
 })
 ```
 
+## Updates
+
+### 0.4.0
+
+- `groupWithId` to easily build out groups in SVGs (where you only care about logically separating)
+- `cutPath` and `creasePath` for convenient paths for cut and fold patterns
+- `randomAngle`
+- `transformOrigin` attribute (so can easily rotate things)
+
 ## To develop or run locally
 
 First, run the development server:
 
 ```bash
-yarn dev
+pnpm i
+pnpm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Should open browser.
 
 ## The Plan
 
@@ -66,9 +76,9 @@ Probably just support svg, path and g(roup)
 ### Next gen
 
 - [x] Vite
-- [ ] get deploying
-- [ ] new lib stuff for cut and fold
-- [ ] cut and fold examples
+- [x] get deploying
+- [x] new lib stuff for cut and fold
+- [x] cut and fold example
 
 ## API
 

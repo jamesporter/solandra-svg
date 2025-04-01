@@ -3,10 +3,17 @@ import Source from "@/components/Source"
 import { Slider } from "@/components/ui/slider"
 
 import { Attributes, SolandraSvg, Transform } from "@/lib"
-import { useState } from "react"
+import { useControls } from "leva"
 
 export default function Favicon() {
-  const [seed, setSeed] = useState(0)
+  const { seed } = useControls({
+    seed: {
+      value: 0,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+  })
 
   return (
     <PageLayout>
@@ -257,15 +264,6 @@ s.forTiling(
       })
   }
 )`}
-        />
-      </div>
-      <div className="fixed z-10 bottom-4 right-4 bg-rose-100 rounded w-40 p-4">
-        <p className="font-semibold">Seed</p>
-        <Slider
-          value={[seed]}
-          onValueChange={([v]: number[]) => setSeed(v)}
-          max={100}
-          step={1}
         />
       </div>
     </PageLayout>

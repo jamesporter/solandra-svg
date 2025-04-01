@@ -94,6 +94,10 @@ ${this.elements
     this.currentGroup = parent
   }
 
+  groupWithId(id: string, contents: () => void) {
+    this.group(new Attributes().id(id), contents)
+  }
+
   get currentElements(): Group | (Group | Path)[] {
     if (this.currentGroup) {
       return this.currentGroup
@@ -124,6 +128,24 @@ ${this.elements
     const newPath = path.clone(attributes)
     this.currentElements.push(newPath)
     return newPath
+  }
+
+  /**
+   * @returns Simple preset path for cut and fold designs
+   */
+  cutPath() {
+    return this.strokedPath((a) =>
+      a.lineCap("round").lineJoin("round").stroke(0, 0, 60).strokeWidth(0.005)
+    )
+  }
+
+  /**
+   * @returns Simple preset path for cut and fold designs
+   */
+  creasePath() {
+    return this.strokedPath((a) =>
+      a.lineCap("round").lineJoin("round").stroke(0, 0, 90).strokeWidth(0.005)
+    )
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
