@@ -131,21 +131,23 @@ ${this.elements
   }
 
   /**
-   * @returns Simple preset path for cut and fold designs
+   * @returns Simple preset path for cut and fold designs; optionally provide a function to further configure the attributes
    */
-  cutPath() {
-    return this.strokedPath((a) =>
+  cutPath(configureAttributes?: (attributes: Attributes) => void) {
+    return this.strokedPath((a) => {
       a.lineCap("round").lineJoin("round").stroke(0, 0, 60).strokeWidth(0.005)
-    )
+      configureAttributes?.(a)
+    })
   }
 
   /**
-   * @returns Simple preset path for cut and fold designs
+   * @returns Simple preset path for cut and fold designs; optionally provide a function to further configure the attributes
    */
-  creasePath() {
-    return this.strokedPath((a) =>
+  creasePath(configureAttributes?: (attributes: Attributes) => void) {
+    return this.strokedPath((a) => {
       a.lineCap("round").lineJoin("round").stroke(0, 0, 90).strokeWidth(0.005)
-    )
+      configureAttributes?.(a)
+    })
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -7,6 +7,12 @@ export default function CutAndFold() {
     <PageLayout>
       <h1>Cut and Fold</h1>
 
+      <a
+        href="https://github.com/jamesporter/solandra-svg/blob/main/src/pages/CutAndFold.tsx"
+        target="_blank"
+      >
+        Source Code on GitHub
+      </a>
       <RegularTree />
     </PageLayout>
   )

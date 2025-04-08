@@ -1,10 +1,13 @@
+import { OkLCHExample } from "@/components/examples"
 import { FooterLayout } from "@/components/FooterLayout"
 import { PageLayout } from "@/components/PageLayout"
+import { SmallCopyText } from "@/components/SmallCopyText"
 import Source from "@/components/Source"
 import { SVGSketch } from "@/components/SVGSketch"
 
 import { Slider } from "@/components/ui/slider"
 import { Attributes, Point2D, Transform, v } from "@/lib"
+import { ChevronsLeftRight, Play, Sparkles } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"
 
@@ -70,7 +73,10 @@ export function Home() {
 
         <h1 className="pt-12">Solandra-SVG</h1>
 
-        <p>A little library for drawing in SVG, but with a nicer API.</p>
+        <p>
+          A little library for drawing in SVG, but with a fluent TypeScript
+          (many things use chained methods).
+        </p>
 
         <p>
           Basically I made this to generate stuff to plot.{" "}
@@ -89,49 +95,55 @@ export function Home() {
           <Link to="/four">
             <a>Fourth collection</a>
           </Link>
-          .
+          . I've been using it more recently for creating cut and fold
+          scupltures/pop ups.
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="bg-rose-100 rounded p-4">
+        <div className="flex flex-col md:flex-row gap-4 ">
+          <div className="bg-rose-100 rounded p-4 flex-[1.2]">
             <a
-              className="mb-4"
+              className="mb-4 flex flex-row gap-2 items-center"
               href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl"
             >
-              Try out
+              <Play /> Try out
             </a>
 
             <p>A ready to play with CodeSandbox.</p>
           </div>
 
-          <div className="bg-rose-100 rounded p-4">
+          <div className="bg-rose-100 rounded p-4 flex-[1.2]">
             <a
-              className="mb-4"
+              className="mb-4 flex flex-row gap-2 items-center"
               href="https://github.com/jamesporter/solandra-svg"
             >
+              <ChevronsLeftRight />
               GitHub
             </a>
             <p>Full soure code for the library and this site</p>
           </div>
 
-          <div className="bg-rose-100 rounded p-4">
+          <div className="bg-rose-100 rounded p-4 flex-[2]">
             <a
-              className="mb-4"
+              className="mb-4 flex flex-row gap-2 items-center"
               href="https://www.npmjs.com/package/solandra-svg"
             >
+              <Sparkles />
               Install
             </a>
-            <pre className="font-mono text-zinc-700">
-              npm install solandra-svg
-            </pre>
 
-            <pre className="font-mono text-zinc-700">
-              pnpm install solandra-svg
-            </pre>
-
-            <pre className="font-mono text-zinc-700">yarn add solandra-svg</pre>
+            <div className="flex flex-col gap-2">
+              <SmallCopyText text="npm install solandra-svg" />
+              <SmallCopyText text="pnpm install solandra-svg" />
+              <SmallCopyText text="yarn add solandra-svg" />
+            </div>
           </div>
         </div>
+
+        <h2>New</h2>
+
+        <p>Support for OkLCH colours.</p>
+
+        <OkLCHExample />
 
         <h2>Tiling</h2>
 
