@@ -1,4 +1,4 @@
-import { OkLCHExample } from "@/components/examples"
+import { OkLCHExample, PolygonExample } from "@/components/examples"
 import { FooterLayout } from "@/components/FooterLayout"
 import { PageLayout } from "@/components/PageLayout"
 import { SmallCopyText } from "@/components/SmallCopyText"
@@ -140,10 +140,17 @@ export function Home() {
         </div>
 
         <h2>New</h2>
+        <div className="flex flex-col md:flex-row gap-4 justify-between">
+          <div className="">
+            <p>Support for OkLCH colours.</p>
 
-        <p>Support for OkLCH colours.</p>
-
-        <OkLCHExample />
+            <OkLCHExample />
+          </div>
+          <div className="">
+            <p>Easy Regular Polygons.</p>
+            <PolygonExample />
+          </div>
+        </div>
 
         <h2>Tiling</h2>
 

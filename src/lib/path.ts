@@ -123,6 +123,33 @@ export class Path {
     return this
   }
 
+  regularPolygon(
+    at: Point2D,
+    n: number,
+    radius: number,
+    rotate: number = 0,
+    align: "topLeft" | "center" = "center"
+  ): Path {
+    const c = align === "topLeft" ? v.add(at, [radius, radius]) : at
+
+    let start: Point2D = [
+      c[0] + radius * Math.cos(rotate),
+      c[1] + radius * Math.sin(rotate),
+    ]
+
+    this.segments.push({ kind: "move", to: start })
+
+    for (let i = 1; i <= n; i++) {
+      const angle = (i * Math.PI * 2) / n + rotate
+      this.segments.push({
+        kind: "line",
+        to: [c[0] + radius * Math.cos(angle), c[1] + radius * Math.sin(angle)],
+      })
+    }
+
+    return this
+  }
+
   ellipse(
     at: Point2D,
     width: number,
