@@ -220,6 +220,8 @@ export class Attributes {
   /**
    * For when your attributes are only transformations (or you want to start there)
    * @param transformSpec
+   *
+   * @deprecated Don't think this is needed
    */
   static transformOf(
     ...transformSpec: Parameters<typeof Transform.of>
@@ -230,6 +232,8 @@ export class Attributes {
   /**
    * Offer a object based API too. Don't get the fluent API but in many cases easier, plus more like Solandra
    * @param an object of attributribues
+   *
+   * @deprecated Plan to drop this as new s.A is consistent with other things and about as concise/better completion support
    */
   static of({
     fill,

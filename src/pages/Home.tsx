@@ -373,29 +373,25 @@ s.times(4, (n) => {
             )
 
             s.strokedPath((attr) =>
-              attr
-                .fill(210, 90, 20, 0.5)
-                .transform(new Transform().rotate(Math.PI / 8))
+              attr.fill(210, 90, 20, 0.5).transform(s.T.rotate(Math.PI / 8))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
               attr
                 .fill(210, 90, 30, 0.5)
-                .transform(new Transform().rotate(Math.PI / 3, 0.3, 0.3))
+                .transform(s.T.rotate(Math.PI / 3, 0.3, 0.3))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr
-                .fill(210, 90, 40, 0.5)
-                .transform(new Transform().scale(1.5, 1.8))
+              attr.fill(210, 90, 40, 0.5).transform(s.T.scale(1.5, 1.8))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 50, 0.5).transform(new Transform().skewX(20))
+              attr.fill(210, 90, 50, 0.5).transform(s.T.skewX(20))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 60, 0.5).transform(new Transform().skewY(20))
+              attr.fill(210, 90, 60, 0.5).transform(s.T.skewY(20))
             ).rect([0.3, 0.3], 0.2, 0.3)
           }}
         />
@@ -403,7 +399,7 @@ s.times(4, (n) => {
           code={`s.strokedPath((attr) =>
   attr
     .fill(210, 90, 20, 0.5)
-    .transform(new Transform().rotate(Math.PI / 8))
+    .transform(s.T.rotate(Math.PI / 8))
 ).rect([0.3, 0.3], 0.2, 0.3)`}
         />
 
@@ -416,9 +412,7 @@ s.times(4, (n) => {
 
             s.times(20, (n) => {
               s.clonePath(path).configureAttributes((attr) =>
-                attr
-                  .transform(new Transform().scale(n / 2, n / 2))
-                  .stroke(n * 5, 90, 40)
+                attr.transform(s.T.scale(n / 2, n / 2)).stroke(n * 5, 90, 40)
               )
             })
           }}
@@ -430,7 +424,7 @@ s.times(4, (n) => {
 s.times(20, (n) => {
   s.clonePath(path).configureAttributes((attr) =>
     attr
-      .transform(new Transform().scale(n / 2, n / 2))
+      .transform(s.T.scale(n / 2, n / 2))
       .stroke(n * 5, 90, 40)
   )
 })`}
@@ -449,20 +443,13 @@ s.times(20, (n) => {
             s.times(8, (n) => {
               s.group(
                 Attributes.stroked.transform(
-                  Transform.of({ translate: center, scale: (4 + n) / 14 })
+                  s.T.translate(...center).scale((4 + n) / 14)
                 ),
                 () => {
-                  s.path(
-                    Attributes.of({
-                      opacity: (8 - n) / 10,
-                    })
-                  ).rect([0, 0], 1, 1)
+                  s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
 
                   s.path(
-                    Attributes.of({
-                      stroke: { h: n * 4, s: 90, l: 50 },
-                      transform: Transform.of({ rotate: n }),
-                    })
+                    s.A.stroke(n * 4, 90, 50).transform(s.T.rotate(n))
                   ).ellipse([0, 0], 1, 0.8)
                 }
               )
@@ -475,20 +462,13 @@ s.times(20, (n) => {
 s.times(8, (n) => {
   s.group(
     Attributes.stroked.transform(
-      Transform.of({ translate: center, scale: (4 + n) / 14 })
+      s.T.translate(...center).scale((4 + n) / 14)
     ),
     () => {
-      s.path(
-        Attributes.of({
-          opacity: (8 - n) / 10,
-        })
-      ).rect([0, 0], 1, 1)
+      s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
 
       s.path(
-        Attributes.of({
-          stroke: { h: n * 4, s: 90, l: 50 },
-          transform: Transform.of({ rotate: n }),
-        })
+        s.A.stroke(n * 4, 90, 50).transform(s.T.rotate(n))
       ).ellipse([0, 0], 1, 0.8)
     }
   )

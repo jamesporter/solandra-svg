@@ -25,9 +25,8 @@ export default function Favicon() {
           sketch={(s) => {
             s.forMargin(0.2, ([sX, sY], [w, h]) => {
               s.path(
-                new Attributes()
-                  .fill(220, 90, 50, 0.5)
-                  .transform(new Transform().rotate(Math.PI / 4))
+                s.A.fill(220, 90, 50, 0.5)
+                  .transform(s.T.rotate(Math.PI / 4))
                   .transformOrigin("center")
               )
                 .moveTo([sX, sY])
@@ -39,9 +38,9 @@ export default function Favicon() {
           }}
           codeSnippet={`s.forMargin(0.2, ([sX, sY], [w, h]) => {
 s.path(
-  new Attributes()
+  s.A
     .fill(220, 90, 50, 0.5)
-    .transform(new Transform().rotate(Math.PI / 4))
+    .transform(s.T.rotate(Math.PI / 4))
     .transformOrigin("center")
 )
   .moveTo([sX, sY])
@@ -55,7 +54,7 @@ s.path(
           seed={seed}
           sketch={(s) => {
             s.forMargin(0.2, ([sX, sY], [w, h], [cX, cY]) => {
-              s.path(new Attributes().fill(350, 90, 50, 0.5))
+              s.path(s.A.fill(350, 90, 50, 0.5))
                 .moveTo([sX, sY])
                 .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
                 .curveTo([sX + w, sY + h], {
@@ -67,7 +66,7 @@ s.path(
             })
           }}
           codeSnippet={`s.forMargin(0.2, ([sX, sY], [w, h], [cX, cY]) => {
-s.path(new Attributes().fill(350, 90, 50, 0.5))
+s.path(s.A.fill(350, 90, 50, 0.5))
   .moveTo([sX, sY])
   .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
   .curveTo([sX + w, sY + h], {
@@ -88,7 +87,7 @@ s.path(new Attributes().fill(350, 90, 50, 0.5))
                 margin: 0.2,
               },
               ([sX, sY], [w, h], [cX, cY], i) => {
-                s.path(new Attributes().fill(350, 90, 50, 0.5))
+                s.path(s.A.fill(350, 90, 50, 0.5))
                   .moveTo([sX, sY])
                   .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
                   .curveTo([sX + w, sY + h], {
@@ -107,7 +106,7 @@ s.path(new Attributes().fill(350, 90, 50, 0.5))
     margin: 0.2,
   },
   ([sX, sY], [w, h], [cX, cY], i) => {
-    s.path(new Attributes().fill(350, 90, 50, 0.5))
+    s.path(s.A.fill(350, 90, 50, 0.5))
       .moveTo([sX, sY])
       .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
       .curveTo([sX + w, sY + h], {
@@ -133,9 +132,8 @@ s.path(new Attributes().fill(350, 90, 50, 0.5))
                 const hue = (330 + 60 * s.random()) % 360
 
                 s.path(
-                  new Attributes()
-                    .fill(hue, 90, 50, 0.5)
-                    .transform(new Transform().scale(0.75 + 2 * s.random()))
+                  s.A.fill(hue, 90, 50, 0.5)
+                    .transform(s.T.scale(0.75 + 2 * s.random()))
                     .transformOrigin("center")
                 )
                   .moveTo([sX, sY])
@@ -159,9 +157,9 @@ s.path(new Attributes().fill(350, 90, 50, 0.5))
     const hue = (330 + 60 * s.random()) % 360
 
     s.path(
-      new Attributes()
+      s.A
         .fill(hue, 90, 50, 0.5)
-        .transform(new Transform().scale(0.75 + 2 * s.random()))
+        .transform(s.T.scale(0.75 + 2 * s.random()))
         .transformOrigin("center")
     )
       .moveTo([sX, sY])
@@ -193,12 +191,9 @@ s.path(new Attributes().fill(350, 90, 50, 0.5))
                 const dY = 0.3 * (center[1] - c[1])
 
                 s.path(
-                  new Attributes()
-                    .fill(hue, 90, 50, 0.5)
+                  s.A.fill(hue, 90, 50, 0.5)
                     .transform(
-                      new Transform()
-                        .scale(0.75 + 2 * s.random())
-                        .rotate(s.randomAngle())
+                      s.T.scale(0.75 + 2 * s.random()).rotate(s.randomAngle())
                     )
                     .transformOrigin("center")
                 )
@@ -236,10 +231,10 @@ s.forTiling(
     const dY = 0.3 * (center[1] - c[1])
 
     s.path(
-      new Attributes()
+      s.A
         .fill(hue, 90, 50, 0.5)
         .transform(
-          new Transform()
+          s.T
             .scale(0.75 + 2 * s.random())
             .rotate(s.randomAngle())
         )

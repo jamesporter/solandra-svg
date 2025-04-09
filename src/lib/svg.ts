@@ -3,6 +3,7 @@ import { Path } from "./path"
 import { Attributes } from "./attributes"
 import { indent } from "./util/internalUtil"
 import { RNG } from "./rng"
+import { Transform } from "./transforms"
 
 export class Group {
   children: (Group | Path)[] = []
@@ -572,5 +573,13 @@ ${this.elements
       aspectRatio: this.aspectRatio,
       center: [0.5, 0.5 / this.aspectRatio] as Point2D,
     }
+  }
+
+  get A(): Attributes {
+    return new Attributes()
+  }
+
+  get T(): Transform {
+    return new Transform()
   }
 }

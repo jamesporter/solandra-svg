@@ -42,6 +42,9 @@ export class Transform {
     return this.transforms.join(" ")
   }
 
+  /**
+   * @deprecated plan to remove this, can use s.T and will be comparably concise, more consistent and often better completions
+   */
   static of({
     translate,
     scale,
