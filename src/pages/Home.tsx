@@ -74,8 +74,8 @@ export function Home() {
         <h1 className="pt-12">Solandra-SVG</h1>
 
         <p>
-          A little library for drawing in SVG, but with a fluent TypeScript
-          (many things use chained methods).
+          A little, zero dependency, library for drawing in SVG, with a fluent
+          TypeScript (many things use chained methods).
         </p>
 
         <p>

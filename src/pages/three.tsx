@@ -376,7 +376,7 @@ export default function Three() {
               const path = s.strokedPath((attr) =>
                 attr
                   .strokeWidth(0.0035)
-                  .transform(Transform.of({ rotate: [Math.PI / 3, c] }))
+                  .transform(s.T.rotate(Math.PI / 3, c[0], c[1]))
               )
               s.proportionately([
                 [
@@ -414,11 +414,15 @@ export default function Three() {
             { n: 10, type: "square", margin: 0.05 },
             ([sX, sY], [dX], c, i) => {
               const path = s.strokedPath((attr) =>
-                attr.strokeWidth(0.0035).transform(
-                  Transform.of({
-                    rotate: [s.sample([0, Math.PI / 3, (Math.PI * 2) / 3]), c],
-                  })
-                )
+                attr
+                  .strokeWidth(0.0035)
+                  .transform(
+                    s.T.rotate(
+                      s.sample([0, Math.PI / 3, (Math.PI * 2) / 3]),
+                      c[0],
+                      c[1]
+                    )
+                  )
               )
               s.proportionately([
                 [
@@ -457,11 +461,9 @@ export default function Three() {
             ([sX, sY], [dX], c, i) => {
               s.doProportion(0.85, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [(i * Math.PI) / 32 / 3, c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(s.T.rotate((i * Math.PI) / 32 / 3, c[0], c[1]))
                 )
 
                 s.range(
@@ -482,11 +484,9 @@ export default function Three() {
             { n: 8, type: "square", margin: 0.075, order: "rowFirst" },
             ([sX, sY], [dX], c, i) => {
               const path = s.strokedPath((attr) =>
-                attr.strokeWidth(0.0035).transform(
-                  Transform.of({
-                    rotate: [(i * Math.PI) / 19, c],
-                  })
-                )
+                attr
+                  .strokeWidth(0.0035)
+                  .transform(s.T.rotate((i * Math.PI) / 19, c[0], c[1]))
               )
 
               s.range({ from: sX, to: sX + dX, n: 8, inclusive: true }, (x) => {
@@ -504,11 +504,9 @@ export default function Three() {
             ([sX, sY], [dX], c, i) => {
               s.doProportion(0.85, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [(i * Math.PI) / 32 / 3, c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(s.T.rotate((i * Math.PI) / 32 / 3, c[0], c[1]))
                 )
 
                 s.range(
@@ -532,11 +530,9 @@ export default function Three() {
             ([sX, sY], [dX], c, i) => {
               s.doProportion(0.85, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [(i * Math.PI) / 14 / 3, c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(s.T.rotate((i * Math.PI) / 14 / 3, c[0], c[1]))
                 )
 
                 s.range(
@@ -561,11 +557,9 @@ export default function Three() {
             ([sX, sY], [dX], c, i) => {
               s.doProportion(0.85, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [(i * Math.PI) / 14 / 3, c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(s.T.rotate((i * Math.PI) / 14 / 3, c[0], c[1]))
                 )
 
                 s.range(
@@ -599,11 +593,11 @@ export default function Three() {
             ([sX, sY], [dX], c, i) => {
               s.doProportion(0.8, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [s.gaussian({ sd: Math.PI }), c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(
+                      s.T.rotate(s.gaussian({ sd: Math.PI }), c[0], c[1])
+                    )
                 )
 
                 s.range(
@@ -637,11 +631,11 @@ export default function Three() {
             ([sX, sY], [dX], c, i) => {
               s.doProportion(0.8, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [s.gaussian({ sd: Math.PI }), c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(
+                      s.T.rotate(s.gaussian({ sd: Math.PI }), c[0], c[1])
+                    )
                 )
 
                 s.range(
@@ -668,11 +662,11 @@ export default function Three() {
             (_, [dX], c, i) => {
               s.doProportion(0.66, () => {
                 const path = s.strokedPath((attr) =>
-                  attr.strokeWidth(0.0035).transform(
-                    Transform.of({
-                      rotate: [s.gaussian({ sd: Math.PI }), c],
-                    })
-                  )
+                  attr
+                    .strokeWidth(0.0035)
+                    .transform(
+                      s.T.rotate(s.gaussian({ sd: Math.PI }), c[0], c[1])
+                    )
                 )
 
                 s.range(
@@ -704,11 +698,7 @@ export default function Three() {
           const { bottom, center } = s.meta
 
           const path = s.strokedPath((attr) =>
-            attr.transform(
-              Transform.of({
-                translate: [0.4, bottom * 0.75],
-              })
-            )
+            attr.transform(s.T.translate(0.4, bottom * 0.75))
           )
 
           path
@@ -743,11 +733,7 @@ export default function Three() {
           }
 
           const path = s.strokedPath((attr) =>
-            attr.transform(
-              Transform.of({
-                translate: [0.5, bottom * 0.5],
-              })
-            )
+            attr.transform(s.T.translate(0.5, bottom * 0.5))
           )
 
           path.moveTo(isofy([0, 0, 0]))
@@ -767,11 +753,7 @@ export default function Three() {
           const { bottom, center } = s.meta
 
           const path = s.strokedPath((attr) =>
-            attr.transform(
-              Transform.of({
-                translate: [0.5, bottom * 0.5],
-              })
-            )
+            attr.transform(s.T.translate(0.5, bottom * 0.5))
           )
 
           s.forGrid({ minX: -15, maxX: 15, minY: -15, maxY: 15 }, (pt) => {
@@ -789,11 +771,7 @@ export default function Three() {
           const { bottom, center } = s.meta
 
           const path = s.strokedPath((attr) =>
-            attr.transform(
-              Transform.of({
-                translate: [0.5, bottom * 0.5],
-              })
-            )
+            attr.transform(s.T.translate(0.5, bottom * 0.5))
           )
 
           s.forGrid({ minX: -15, maxX: 15, minY: -15, maxY: 15 }, (pt) => {
@@ -845,11 +823,7 @@ export default function Three() {
               ])
             }
             const path = s.strokedPath((attr) =>
-              attr.transform(
-                Transform.of({
-                  translate: [0.5, bottom * 0.5],
-                })
-              )
+              attr.transform(s.T.translate(0.5, bottom * 0.5))
             )
             path.moveTo(isofy([0, n * 1.6 - 8, 0]))
 
@@ -866,11 +840,7 @@ export default function Three() {
           const isofy = isoTransform(0.05)
 
           const path = s.strokedPath((attr) =>
-            attr.transform(
-              Transform.of({
-                translate: [0.5, bottom * 0.5],
-              })
-            )
+            attr.transform(s.T.translate(0.5, bottom * 0.5))
           )
 
           s.range({ from: 5, to: 3, n: 7, inclusive: true }, (n) => {
@@ -892,11 +862,7 @@ export default function Three() {
           const isofy = isoTransform(0.05)
 
           const path = s.strokedPath((attr) =>
-            attr.transform(
-              Transform.of({
-                translate: [0.5, bottom * 0.55],
-              })
-            )
+            attr.transform(s.T.translate(0.5, bottom * 0.55))
           )
 
           s.range({ from: -5, to: 5, n: 21, inclusive: true }, (n) => {
