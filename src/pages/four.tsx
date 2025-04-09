@@ -15,7 +15,7 @@ export default function Four() {
             const isofy = isoTransform(scale)
 
             const path = s.strokedPath((attr) =>
-              attr.transform(s.T.translate(...start))
+              attr.transform(s.T.translate(start))
             )
 
             path

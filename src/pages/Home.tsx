@@ -75,11 +75,46 @@ export function Home() {
 
         <p>
           A little, zero dependency, library for drawing in SVG, with a fluent
-          TypeScript (many things use chained methods).
+          TypeScript (many things use chained methods). This style is a little
+          unconventional but has some interesting benefits with fewer imports or
+          things you have to remember.
         </p>
 
+        <p>There are four key parts</p>
+
+        <h3>SolandraSvg class</h3>
+
         <p>
-          Basically I made this to generate stuff to plot.{" "}
+          This is the main class. It is the thing that creates SVGs, but it also
+          offers many convenient functions and handles pseudo-randomness. In
+          most examples an instance of this is accessed via{" "}
+          <span className="font-mono text-rose-700">s</span>.
+        </p>
+
+        <h3>Path class</h3>
+
+        <p>
+          The main thing that allows you to assemble drawings. Get started with{" "}
+          <span className="font-mono text-rose-700">s.path</span> or another
+          more specific call.
+        </p>
+
+        <h3>Attributes class and Transform class</h3>
+
+        <p>
+          These set up things like strokes and fills and transforms. You can
+          create a new instance of each with{" "}
+          <span className="font-mono text-rose-700">s.T</span> or{" "}
+          <span className="font-mono text-rose-700">s.A</span> and start using
+          chained calls to configure.
+        </p>
+
+        <h2>Why this library?</h2>
+
+        <p>Because you want to create SVGs with TypeScript.</p>
+
+        <p>
+          I initially made this to create things with an AxiDraw plotter.{" "}
           <Link to="/one">
             <a>My first generated drawings for a 2D plotter</a>
           </Link>
@@ -96,8 +131,10 @@ export function Home() {
             <a>Fourth collection</a>
           </Link>
           . I've been using it more recently for creating cut and fold
-          scupltures/pop ups.
+          scupltures/pop ups with a Cricut machine.
         </p>
+
+        <h2>Try it</h2>
 
         <div className="flex flex-col md:flex-row gap-4 ">
           <div className="bg-rose-100 rounded p-4 flex-[1.2]">
@@ -443,7 +480,7 @@ s.times(20, (n) => {
             s.times(8, (n) => {
               s.group(
                 Attributes.stroked.transform(
-                  s.T.translate(...center).scale((4 + n) / 14)
+                  s.T.translate(center).scale((4 + n) / 14)
                 ),
                 () => {
                   s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
@@ -462,7 +499,7 @@ s.times(20, (n) => {
 s.times(8, (n) => {
   s.group(
     Attributes.stroked.transform(
-      s.T.translate(...center).scale((4 + n) / 14)
+      s.T.translate(center).scale((4 + n) / 14)
     ),
     () => {
       s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
