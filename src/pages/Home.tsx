@@ -1,10 +1,13 @@
+import { OkLCHExample, PolygonExample } from "@/components/examples"
 import { FooterLayout } from "@/components/FooterLayout"
 import { PageLayout } from "@/components/PageLayout"
+import { SmallCopyText } from "@/components/SmallCopyText"
 import Source from "@/components/Source"
 import { SVGSketch } from "@/components/SVGSketch"
 
 import { Slider } from "@/components/ui/slider"
 import { Attributes, Point2D, Transform, v } from "@/lib"
+import { ChevronsLeftRight, Play, Sparkles } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"
 
@@ -70,10 +73,48 @@ export function Home() {
 
         <h1 className="pt-12">Solandra-SVG</h1>
 
-        <p>A little library for drawing in SVG, but with a nicer API.</p>
+        <p>
+          A little, zero dependency, library for drawing in SVG, with a fluent
+          TypeScript (many things use chained methods). This style is a little
+          unconventional but has some interesting benefits with fewer imports or
+          things you have to remember.
+        </p>
+
+        <p>There are four key parts</p>
+
+        <h3>SolandraSvg class</h3>
 
         <p>
-          Basically I made this to generate stuff to plot.{" "}
+          This is the main class. It is the thing that creates SVGs, but it also
+          offers many convenient functions and handles pseudo-randomness. In
+          most examples an instance of this is accessed via{" "}
+          <span className="font-mono text-rose-700">s</span>.
+        </p>
+
+        <h3>Path class</h3>
+
+        <p>
+          The main thing that allows you to assemble drawings. Get started with{" "}
+          <span className="font-mono text-rose-700">s.path</span> or another
+          more specific call.
+        </p>
+
+        <h3>Attributes class and Transform class</h3>
+
+        <p>
+          These set up things like strokes and fills and transforms. You can
+          create a new instance of each with{" "}
+          <span className="font-mono text-rose-700">s.T</span> or{" "}
+          <span className="font-mono text-rose-700">s.A</span> and start using
+          chained calls to configure.
+        </p>
+
+        <h2>Why this library?</h2>
+
+        <p>Because you want to create SVGs with TypeScript.</p>
+
+        <p>
+          I initially made this to create things with an AxiDraw plotter.{" "}
           <Link to="/one">
             <a>My first generated drawings for a 2D plotter</a>
           </Link>
@@ -89,47 +130,62 @@ export function Home() {
           <Link to="/four">
             <a>Fourth collection</a>
           </Link>
-          .
+          . I've been using it more recently for creating cut and fold
+          scupltures/pop ups with a Cricut machine.
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="bg-rose-100 rounded p-4">
+        <h2>Try it</h2>
+
+        <div className="flex flex-col md:flex-row gap-4 ">
+          <div className="bg-rose-100 rounded p-4 flex-[1.2]">
             <a
-              className="mb-4"
+              className="mb-4 flex flex-row gap-2 items-center"
               href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl"
             >
-              Try out
+              <Play /> Try out
             </a>
 
             <p>A ready to play with CodeSandbox.</p>
           </div>
 
-          <div className="bg-rose-100 rounded p-4">
+          <div className="bg-rose-100 rounded p-4 flex-[1.2]">
             <a
-              className="mb-4"
+              className="mb-4 flex flex-row gap-2 items-center"
               href="https://github.com/jamesporter/solandra-svg"
             >
+              <ChevronsLeftRight />
               GitHub
             </a>
             <p>Full soure code for the library and this site</p>
           </div>
 
-          <div className="bg-rose-100 rounded p-4">
+          <div className="bg-rose-100 rounded p-4 flex-[2]">
             <a
-              className="mb-4"
+              className="mb-4 flex flex-row gap-2 items-center"
               href="https://www.npmjs.com/package/solandra-svg"
             >
+              <Sparkles />
               Install
             </a>
-            <pre className="font-mono text-zinc-700">
-              npm install solandra-svg
-            </pre>
 
-            <pre className="font-mono text-zinc-700">
-              pnpm install solandra-svg
-            </pre>
+            <div className="flex flex-col gap-2">
+              <SmallCopyText text="npm install solandra-svg" />
+              <SmallCopyText text="pnpm install solandra-svg" />
+              <SmallCopyText text="yarn add solandra-svg" />
+            </div>
+          </div>
+        </div>
 
-            <pre className="font-mono text-zinc-700">yarn add solandra-svg</pre>
+        <h2>New</h2>
+        <div className="flex flex-col md:flex-row gap-4 justify-between">
+          <div className="">
+            <p>Support for OkLCH colours.</p>
+
+            <OkLCHExample />
+          </div>
+          <div className="">
+            <p>Easy Regular Polygons.</p>
+            <PolygonExample />
           </div>
         </div>
 
@@ -354,29 +410,25 @@ s.times(4, (n) => {
             )
 
             s.strokedPath((attr) =>
-              attr
-                .fill(210, 90, 20, 0.5)
-                .transform(new Transform().rotate(Math.PI / 8))
+              attr.fill(210, 90, 20, 0.5).transform(s.T.rotate(Math.PI / 8))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
               attr
                 .fill(210, 90, 30, 0.5)
-                .transform(new Transform().rotate(Math.PI / 3, 0.3, 0.3))
+                .transform(s.T.rotate(Math.PI / 3, 0.3, 0.3))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr
-                .fill(210, 90, 40, 0.5)
-                .transform(new Transform().scale(1.5, 1.8))
+              attr.fill(210, 90, 40, 0.5).transform(s.T.scale(1.5, 1.8))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 50, 0.5).transform(new Transform().skewX(20))
+              attr.fill(210, 90, 50, 0.5).transform(s.T.skewX(20))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 60, 0.5).transform(new Transform().skewY(20))
+              attr.fill(210, 90, 60, 0.5).transform(s.T.skewY(20))
             ).rect([0.3, 0.3], 0.2, 0.3)
           }}
         />
@@ -384,7 +436,7 @@ s.times(4, (n) => {
           code={`s.strokedPath((attr) =>
   attr
     .fill(210, 90, 20, 0.5)
-    .transform(new Transform().rotate(Math.PI / 8))
+    .transform(s.T.rotate(Math.PI / 8))
 ).rect([0.3, 0.3], 0.2, 0.3)`}
         />
 
@@ -397,9 +449,7 @@ s.times(4, (n) => {
 
             s.times(20, (n) => {
               s.clonePath(path).configureAttributes((attr) =>
-                attr
-                  .transform(new Transform().scale(n / 2, n / 2))
-                  .stroke(n * 5, 90, 40)
+                attr.transform(s.T.scale(n / 2, n / 2)).stroke(n * 5, 90, 40)
               )
             })
           }}
@@ -411,7 +461,7 @@ s.times(4, (n) => {
 s.times(20, (n) => {
   s.clonePath(path).configureAttributes((attr) =>
     attr
-      .transform(new Transform().scale(n / 2, n / 2))
+      .transform(s.T.scale(n / 2, n / 2))
       .stroke(n * 5, 90, 40)
   )
 })`}
@@ -430,20 +480,13 @@ s.times(20, (n) => {
             s.times(8, (n) => {
               s.group(
                 Attributes.stroked.transform(
-                  Transform.of({ translate: center, scale: (4 + n) / 14 })
+                  s.T.translate(center).scale((4 + n) / 14)
                 ),
                 () => {
-                  s.path(
-                    Attributes.of({
-                      opacity: (8 - n) / 10,
-                    })
-                  ).rect([0, 0], 1, 1)
+                  s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
 
                   s.path(
-                    Attributes.of({
-                      stroke: { h: n * 4, s: 90, l: 50 },
-                      transform: Transform.of({ rotate: n }),
-                    })
+                    s.A.stroke(n * 4, 90, 50).transform(s.T.rotate(n))
                   ).ellipse([0, 0], 1, 0.8)
                 }
               )
@@ -456,20 +499,13 @@ s.times(20, (n) => {
 s.times(8, (n) => {
   s.group(
     Attributes.stroked.transform(
-      Transform.of({ translate: center, scale: (4 + n) / 14 })
+      s.T.translate(center).scale((4 + n) / 14)
     ),
     () => {
-      s.path(
-        Attributes.of({
-          opacity: (8 - n) / 10,
-        })
-      ).rect([0, 0], 1, 1)
+      s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
 
       s.path(
-        Attributes.of({
-          stroke: { h: n * 4, s: 90, l: 50 },
-          transform: Transform.of({ rotate: n }),
-        })
+        s.A.stroke(n * 4, 90, 50).transform(s.T.rotate(n))
       ).ellipse([0, 0], 1, 0.8)
     }
   )

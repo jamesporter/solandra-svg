@@ -3,6 +3,7 @@ import { Path } from "./path"
 import { Attributes } from "./attributes"
 import { indent } from "./util/internalUtil"
 import { RNG } from "./rng"
+import { Transform } from "./transforms"
 
 export class Group {
   children: (Group | Path)[] = []
@@ -131,21 +132,23 @@ ${this.elements
   }
 
   /**
-   * @returns Simple preset path for cut and fold designs
+   * @returns Simple preset path for cut and fold designs; optionally provide a function to further configure the attributes
    */
-  cutPath() {
-    return this.strokedPath((a) =>
+  cutPath(configureAttributes?: (attributes: Attributes) => void) {
+    return this.strokedPath((a) => {
       a.lineCap("round").lineJoin("round").stroke(0, 0, 60).strokeWidth(0.005)
-    )
+      configureAttributes?.(a)
+    })
   }
 
   /**
-   * @returns Simple preset path for cut and fold designs
+   * @returns Simple preset path for cut and fold designs; optionally provide a function to further configure the attributes
    */
-  creasePath() {
-    return this.strokedPath((a) =>
+  creasePath(configureAttributes?: (attributes: Attributes) => void) {
+    return this.strokedPath((a) => {
       a.lineCap("round").lineJoin("round").stroke(0, 0, 90).strokeWidth(0.005)
-    )
+      configureAttributes?.(a)
+    })
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -570,5 +573,13 @@ ${this.elements
       aspectRatio: this.aspectRatio,
       center: [0.5, 0.5 / this.aspectRatio] as Point2D,
     }
+  }
+
+  get A(): Attributes {
+    return new Attributes()
+  }
+
+  get T(): Transform {
+    return new Transform()
   }
 }

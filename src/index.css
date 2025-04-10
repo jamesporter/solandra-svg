@@ -11,6 +11,10 @@ h2 {
   @apply text-rose-700 text-xl lg:text-3xl my-4;
 }
 
+h3 {
+  @apply text-rose-800 text-lg lg:text-xl my-4;
+}
+
 p {
   @apply text-zinc-800 mb-2;
 }

@@ -41,10 +41,7 @@ export default function Card() {
             const p3 = s
               .strokedPath((a) =>
                 a.transform(
-                  Transform.of({
-                    translate: [-0.125, 0.175 + (n - 1) * 0.2],
-                    scale: [0.5, 0.5],
-                  })
+                  s.T.translate(-0.125, 0.175 + (n - 1) * 0.2).scale(0.5, 0.5)
                 )
               )
               .moveTo(points[0])

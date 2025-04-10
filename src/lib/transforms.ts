@@ -1,3 +1,5 @@
+import { Point2D } from "./util/types"
+
 /**
  * Simple class for svg transforms,
  * might expand/make safer?
@@ -5,15 +7,26 @@
 export class Transform {
   transforms: string[] = []
 
-  translate(x: number, y: number): Transform {
-    this.transforms.push(`translate(${x}, ${y})`)
+  translate(by: Point2D): Transform
+  translate(x: number, y: number): Transform
+  translate(x: number | Point2D, y?: number): Transform {
+    if (Array.isArray(x)) {
+      this.transforms.push(`translate(${x[0]}, ${x[1]})`)
+    } else {
+      this.transforms.push(`translate(${x}, ${y})`)
+    }
     return this
   }
 
+  scale(by: Point2D): Transform
   scale(a: number): Transform
   scale(x: number, y: number): Transform
-  scale(x: number, y?: number): Transform {
-    this.transforms.push(`scale(${x}, ${y === undefined ? x : y})`)
+  scale(x: number | Point2D, y?: number): Transform {
+    if (Array.isArray(x)) {
+      this.transforms.push(`scale(${x[0]}, ${x[1]})`)
+    } else {
+      this.transforms.push(`scale(${x}, ${y === undefined ? x : y})`)
+    }
     return this
   }
 
@@ -42,6 +55,9 @@ export class Transform {
     return this.transforms.join(" ")
   }
 
+  /**
+   * @deprecated plan to remove this, can use s.T and will be comparably concise, more consistent and often better completions
+   */
   static of({
     translate,
     scale,
@@ -58,7 +74,7 @@ export class Transform {
     const tr = new Transform()
 
     if (translate !== undefined) {
-      tr.translate(...translate)
+      tr.translate(translate)
     }
     if (scale !== undefined) {
       typeof scale === "object" ? tr.scale(...scale) : tr.scale(scale)

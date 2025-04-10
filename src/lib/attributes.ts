@@ -58,6 +58,29 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Use OkLCH colour space
+   *
+   * NB this is not as widely supported as other approaches but for modern browser use should be fine
+   *
+   * @param lightness
+   * @param chroma
+   * @param hue
+   * @param opacity
+   * @returns
+   */
+  fillOklch(
+    lightness: number,
+    chroma: number,
+    hue: number,
+    alpha: number
+  ): Attributes {
+    this.styleAttributes["fill"] = `oklch(${lightness} ${chroma} ${hue}${
+      typeof alpha === "number" ? ` / ${alpha * 100}%` : ""
+    })`
+    return this
+  }
+
   /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
        in render use hex for compatability with Inkscape(!)
   */
@@ -65,14 +88,28 @@ export class Attributes {
     hue: number,
     saturation: number,
     lightness: number,
-    opacity?: number
+    alpha?: number
   ): Attributes {
     this.styleAttributes["stroke"] = hslToRgb(
       hue / 360,
       saturation / 100,
       lightness / 100
     )
-    if (opacity !== undefined) this.styleAttributes["stroke-opacity"] = opacity
+    if (alpha !== undefined) this.styleAttributes["stroke-opacity"] = alpha
+    return this
+  }
+
+  strokeOklch(
+    lightness: number,
+    chroma: number,
+    hue: number,
+    alpha: number
+  ): Attributes {
+    this.styleAttributes["stroke"] = `oklch(${lightness} ${chroma} ${hue})`
+
+    if (typeof alpha === "number")
+      this.styleAttributes["stroke-opacity"] = alpha
+
     return this
   }
 
@@ -183,6 +220,8 @@ export class Attributes {
   /**
    * For when your attributes are only transformations (or you want to start there)
    * @param transformSpec
+   *
+   * @deprecated Don't think this is needed
    */
   static transformOf(
     ...transformSpec: Parameters<typeof Transform.of>
@@ -193,9 +232,12 @@ export class Attributes {
   /**
    * Offer a object based API too. Don't get the fluent API but in many cases easier, plus more like Solandra
    * @param an object of attributribues
+   *
+   * @deprecated Plan to drop this as new s.A is consistent with other things and about as concise/better completion support
    */
   static of({
     fill,
+    fillOKLCH,
     fillOpacity,
     opacity,
     stroke,
@@ -207,10 +249,17 @@ export class Attributes {
     strokeOpacity,
     strokeWidth,
     transform,
+    transformOrigin,
     class: className,
     id,
   }: {
     fill?: { h: number; s: number; l: number; a?: number }
+    fillOKLCH?: {
+      l: number
+      c: number
+      h: number
+      a: number
+    }
     fillOpacity?: number
     opacity?: number
     stroke?: { h: number; s: number; l: number; a?: number }
@@ -224,12 +273,18 @@ export class Attributes {
     transform?: Transform
     class?: string
     id?: string
+    transformOrigin?: Point2D | "center"
   }): Attributes {
     const attr = new Attributes()
 
     if (fill !== undefined) {
       const { h, s, l, a } = fill
       attr.fill(h, s, l, a)
+    }
+
+    if (fillOKLCH !== undefined) {
+      const { l, c, h, a } = fillOKLCH
+      attr.fillOklch(l, c, h, a)
     }
 
     if (stroke !== undefined) {
@@ -275,6 +330,10 @@ export class Attributes {
 
     if (transform !== undefined) {
       attr.transform(transform)
+    }
+
+    if (transformOrigin !== undefined) {
+      attr.transformOrigin(transformOrigin)
     }
 
     if (className !== undefined) {

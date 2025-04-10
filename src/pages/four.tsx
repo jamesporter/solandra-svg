@@ -15,11 +15,7 @@ export default function Four() {
             const isofy = isoTransform(scale)
 
             const path = s.strokedPath((attr) =>
-              attr.transform(
-                Transform.of({
-                  translate: start,
-                })
-              )
+              attr.transform(s.T.translate(start))
             )
 
             path
@@ -220,11 +216,7 @@ export default function Four() {
                 attr
                   .strokeWidth(0.0035)
                   .stroke(140 + i * 24, 80, 40)
-                  .transform(
-                    Transform.of({
-                      rotate: [(i * Math.PI) / 4 / 3, c],
-                    })
-                  )
+                  .transform(s.T.rotate((i * Math.PI) / 4 / 3, ...c))
               )
 
               s.range(
