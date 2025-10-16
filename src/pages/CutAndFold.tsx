@@ -81,7 +81,7 @@ function sketch(
   })
 
   s.groupWithId("base-cuts", () => {
-    // only need on three sides, as alreay will have enough on LHS from tree cuts
+    // only need on three sides, as already will have enough on LHS from tree cuts
     s.cutPath()
       .moveTo([1 - baseProportion, 0])
       .lineTo([1, 0])

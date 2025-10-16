@@ -27,7 +27,7 @@ export default function One() {
                     x + dX * (s.random() - 0.5),
                     y + (dX / 2) * (s.random() - 0.5),
                   ],
-                  { polarlity: -1 }
+                  { polarity: -1 }
                 )
                 .curveTo([
                   x + (dX / 2) * (s.random() - 0.5),

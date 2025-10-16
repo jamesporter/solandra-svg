@@ -48,7 +48,7 @@ Main short term goal is for plotting type stuff.
 
 Keep it minimal
 
-Output in various ways: inital focus preview/sketch-book + svg file (or something equiv)
+Output in various ways: initial focus preview/sketch-book + svg file (or something equiv)
 
 Probably just support svg, path and g(roup)
 
@@ -58,7 +58,7 @@ Probably just support svg, path and g(roup)
 - [x] Transforms
 - [x] Arcs (within path)
 - [x] Ellipse (as move, arc)
-- [x] Custom path transform (i.e. user supplied functiont to transform; at least points, maybe other aspects of path spec?)
+- [x] Custom path transform (i.e. user supplied function to transform; at least points, maybe other aspects of path spec?)
 - [x] Chaiken
 - [x] clone path
 - [x] squash commits(!), publish to npm, open source
