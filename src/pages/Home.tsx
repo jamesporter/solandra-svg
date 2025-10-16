@@ -131,7 +131,7 @@ export function Home() {
             <a>Fourth collection</a>
           </Link>
           . I've been using it more recently for creating cut and fold
-          scupltures/pop ups with a Cricut machine.
+          sculptures/pop ups with a Cricut machine.
         </p>
 
         <h2>Try it</h2>
@@ -156,7 +156,7 @@ export function Home() {
               <ChevronsLeftRight />
               GitHub
             </a>
-            <p>Full soure code for the library and this site</p>
+            <p>Full source code for the library and this site</p>
           </div>
 
           <div className="bg-rose-100 rounded p-4 flex-[2]">
@@ -193,7 +193,7 @@ export function Home() {
 
         <p>
           Quickly create graphics that tile the canvas without having to worry
-          about all the low lever details.
+          about all the low level details.
         </p>
         <SVGSketch
           width={480}
