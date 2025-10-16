@@ -10,6 +10,12 @@
 
 ![Sample](./sample.svg)
 
+## For LLMs
+
+This repo contains a `llm.md` file that can be used to provide context to a Large Language Model. It contains a markdown description of solandra-svg along with annotated code examples and a tutorial based on examples within/used by `src/pages`.
+
+[LLM Documentation](./llm.md)
+
 ```typescript
 s.times(25, () => {
   s.strokedPath((attr) => attr.fill(20, 90, 50, 0.2))
