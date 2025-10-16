@@ -89,7 +89,7 @@ export default function Four() {
                 } else {
                   path.curveTo(pt, {
                     curveSize: s.gaussian({ mean: 2, sd: 0.4 }),
-                    polarlity: s.randomPolarity(),
+                    polarity: s.randomPolarity(),
                   })
                 }
               }

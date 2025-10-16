@@ -259,7 +259,7 @@ export function Home() {
               end = [s.random(), 0]
               s.strokedPath((attr) => attr.stroke(0, 90, 60, 0.5))
                 .moveTo(start)
-                .curveTo(end, { polarlity: -1, curveSize: 3 })
+                .curveTo(end, { polarity: -1, curveSize: 3 })
             })
           }}
         />
@@ -276,7 +276,7 @@ export function Home() {
   end = [s.random(), 0] as Point2D
   s.strokedPath((attr) => attr.stroke(0, 90, 60, 0.5))
     .moveTo(start)
-    .curveTo(end, { polarlity: -1, curveSize: 3 })
+    .curveTo(end, { polarity: -1, curveSize: 3 })
 })`}
         />
 
