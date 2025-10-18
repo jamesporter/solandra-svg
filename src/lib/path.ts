@@ -176,6 +176,32 @@ export class Path {
     return this
   }
 
+  spiral(
+    at: Point2D,
+    l: number,
+    n: number,
+    angle: number = 0,
+    rate: number = 0.005
+  ) {
+    let a = angle
+    let r = l
+
+    this.segments.push({
+      kind: "move",
+      to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
+    })
+
+    for (let i = 0; i < n; i++) {
+      const dA = 2 * Math.asin(l / (r * 2))
+      r += rate * dA
+      a += dA
+      this.segments.push({
+        kind: "line",
+        to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
+      })
+    }
+  }
+
   close(): Path {
     this.segments.push({ kind: "close" })
     return this

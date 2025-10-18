@@ -125,6 +125,14 @@ ${this.elements
     return path
   }
 
+  filledPath(configureAttributes?: (attributes: Attributes) => void): Path {
+    const attr = Attributes.filled.fill(0, 0, 0).fillOpacity(1)
+    configureAttributes?.(attr)
+    const path = new Path(attr)
+    this.currentElements.push(path)
+    return path
+  }
+
   clonePath(path: Path, attributes?: Attributes): Path {
     const newPath = path.clone(attributes)
     this.currentElements.push(newPath)
