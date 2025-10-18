@@ -170,7 +170,7 @@ export function Home() {
 
             <div className="flex flex-col gap-2">
               <SmallCopyText text="npm install solandra-svg" />
-              <SmallCopyText text="pnpm install solandra-svg" />
+              <SmallCopyText text="pnpm add solandra-svg" />
               <SmallCopyText text="yarn add solandra-svg" />
             </div>
           </div>
