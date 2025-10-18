@@ -8,7 +8,7 @@ export function convertToSVGCubicSpec({
   curveSize,
   curveAngle,
   bulbousness,
-  polarlity,
+  polarity,
   twist,
 }: { from: Point2D; to: Point2D } & Required<CurveConfig>): string {
   const u = v.subtract(to, from)
@@ -18,7 +18,7 @@ export function convertToSVGCubicSpec({
   const rotatedPerp = v.rotate(perp, curveAngle)
   const controlMid = v.add(
     m,
-    v.scale(rotatedPerp, curveSize * polarlity * d * 0.5)
+    v.scale(rotatedPerp, curveSize * polarity * d * 0.5)
   )
   const perpOfRot = v.normalise(v.rotate(rotatedPerp, -Math.PI / 2 - twist))
 

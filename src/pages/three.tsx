@@ -690,7 +690,7 @@ export default function Three() {
         seed={18}
       />
 
-      <h2>Isometics</h2>
+      <h2>Isometrics</h2>
 
       <A4InkscapeSketch
         sketch={(s) => {

@@ -1,20 +1,14 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/849bb53e-a72b-40cf-b3d0-ccaf4f53068b/deploy-status)](https://app.netlify.com/sites/solandra-svg/deploys)
-
 # solandra-svg
 
-[Try out](https://codesandbox.io/s/simple-solandra-svg-demo-obinl)
+Solandra is a declarative, fluent, concise, type-safe SVG drawing library.
 
-[Site](https://solandra-svg.netlify.app/)
+You can use it to create dynamic or static generative graphics for use on the web or via other JavaScript runtimes.
 
-[Install](https://www.npmjs.com/package/solandra-svg)
+- [Try out](https://codesandbox.io/s/simple-solandra-svg-demo-obinl)
+- [Site](https://solandra-svg.netlify.app/)
+- [Install](https://www.npmjs.com/package/solandra-svg)
 
-![Sample](./sample.svg)
-
-## For LLMs
-
-This repo contains a `llm.md` file that can be used to provide context to a Large Language Model. It contains a markdown description of solandra-svg along with annotated code examples and a tutorial based on examples within/used by `src/pages`.
-
-[LLM Documentation](./llm.md)
+## Example
 
 ```typescript
 s.times(25, () => {
@@ -24,7 +18,26 @@ s.times(25, () => {
 })
 ```
 
+![Sample](./sample.svg)
+
+## For LLMs
+
+This repo contains a `llm.md` file that can be used to provide context to a Large Language Model. It contains a markdown description of solandra-svg along with annotated code examples and a tutorial based on examples within/used by `src/pages`.
+
+[LLM Documentation](./llm.md)
+
 ## Updates
+
+### 0.5.1
+
+- Minor typo fixes and updated documentation on using with AIs.
+
+### 0.5.0
+
+- OkLCH
+- Regular Polygon helper
+- more convenient APIs: `A` and `T` for concise Attributes and Transforms
+- tweaks
 
 ### 0.4.0
 
@@ -44,7 +57,7 @@ pnpm start
 
 Should open browser.
 
-## The Plan
+## History
 
 Core, relevant bits of Solandra applied to SVG for static renders. Include html-ish stuff like classes, ids. Do groups, layers, ...
 
@@ -54,7 +67,7 @@ Main short term goal is for plotting type stuff.
 
 Keep it minimal
 
-Output in various ways: inital focus preview/sketch-book + svg file (or something equiv)
+Output in various ways: initial focus preview/sketch-book + svg file (or something equiv)
 
 Probably just support svg, path and g(roup)
 
@@ -64,7 +77,7 @@ Probably just support svg, path and g(roup)
 - [x] Transforms
 - [x] Arcs (within path)
 - [x] Ellipse (as move, arc)
-- [x] Custom path transform (i.e. user supplied functiont to transform; at least points, maybe other aspects of path spec?)
+- [x] Custom path transform (i.e. user supplied function to transform; at least points, maybe other aspects of path spec?)
 - [x] Chaiken
 - [x] clone path
 - [x] squash commits(!), publish to npm, open source

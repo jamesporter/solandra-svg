@@ -64,7 +64,7 @@ export class Path {
   curveTo(point: Point2D, config: CurveConfig = {}): Path {
     const {
       curveSize = 1,
-      polarlity = 1,
+      polarity = 1,
       bulbousness = 1,
       curveAngle = 0,
       twist = 0,
@@ -73,7 +73,7 @@ export class Path {
     this.segments.push({
       kind: "cubicCurve",
       to: point,
-      config: { curveSize, polarlity, bulbousness, curveAngle, twist },
+      config: { curveSize, polarity, bulbousness, curveAngle, twist },
     })
     return this
   }
