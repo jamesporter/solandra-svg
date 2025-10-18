@@ -7,6 +7,7 @@ import Four from "./four"
 import Card from "./card"
 import CutAndFold from "./CutAndFold"
 import Favicon from "./FavIcon"
+import APIReference from "./APIReference"
 
 export function App() {
   return (
@@ -19,6 +20,7 @@ export function App() {
       <Route path="/card" element={<Card />} />
       <Route path="/cut-and-fold" element={<CutAndFold />} />
       <Route path="/favicon" element={<Favicon />} />
+      <Route path="/api" element={<APIReference />} />
     </Routes>
   )
 }
