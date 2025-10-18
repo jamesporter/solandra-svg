@@ -77,6 +77,13 @@ export function NavMenu() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
+            <Link to="/api">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                API Reference
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuTrigger>Examples</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
