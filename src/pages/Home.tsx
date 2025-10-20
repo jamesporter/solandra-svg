@@ -177,15 +177,26 @@ export function Home() {
         </div>
 
         <h2>New</h2>
-        <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="flex flex-col md:flex-row md:flex-wrap gap-4 justify-between">
           <div className="">
-            <p>Support for OkLCH colours.</p>
+            <p className="font-semibold">Support for OkLCH colours.</p>
 
             <OkLCHExample />
           </div>
           <div className="">
-            <p>Easy Regular Polygons.</p>
+            <p className="font-semibold">Easy Regular Polygons.</p>
             <PolygonExample />
+          </div>
+
+          <div>
+            <p className="font-semibold">Use with AI</p>
+            <p>
+              Add a prompt like{" "}
+              <a href="https://github.com/jamesporter/solandra-svg/blob/main/llm.md">
+                LLM.md
+              </a>{" "}
+              to help generate code for Solandra SVG.
+            </p>
           </div>
         </div>
 
