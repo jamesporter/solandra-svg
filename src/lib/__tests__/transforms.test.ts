@@ -110,7 +110,9 @@ describe("Transform", () => {
 
     it("should combine multiple transforms with space", () => {
       const t = new Transform()
-      t.translate([10, 20]).scale(2).rotate(Math.PI / 4)
+      t.translate([10, 20])
+        .scale(2)
+        .rotate(Math.PI / 4)
       expect(t.string).toBe("translate(10, 20) scale(2, 2) rotate(45)")
     })
   })
@@ -160,7 +162,7 @@ describe("Transform", () => {
         skewY: 5,
       })
       expect(t.string).toBe(
-        "translate(10, 20) scale(2, 2) rotate(45) skewX(10) skewY(5)"
+        "translate(10, 20) scale(2, 2) rotate(45) skewX(10) skewY(5)",
       )
     })
 
