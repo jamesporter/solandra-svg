@@ -200,6 +200,8 @@ export class Path {
         to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
       })
     }
+
+    return this
   }
 
   close(): Path {
