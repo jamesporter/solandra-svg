@@ -149,7 +149,7 @@ const ListItem = forwardRef(
             )}
             {...props}
           >
-            <div className="text-sm font-medium leading-none text-rose-700">
+            <div className="text-sm font-medium leading-none text-sky-700">
               {title}
               {isNew && (
                 <div className="absolute top-2 right-2 bg-sky-600 text-sky-50 py-1 px-2 rounded-full">
