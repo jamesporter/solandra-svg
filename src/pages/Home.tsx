@@ -88,15 +88,15 @@ export function Home() {
           This is the main class. It is the thing that creates SVGs, but it also
           offers many convenient functions and handles pseudo-randomness. In
           most examples an instance of this is accessed via{" "}
-          <span className="font-mono text-rose-700">s</span>.
+          <span className="font-mono text-sky-700">s</span>.
         </p>
 
         <h3>Path class</h3>
 
         <p>
           The main thing that allows you to assemble drawings. Get started with{" "}
-          <span className="font-mono text-rose-700">s.path</span> or another
-          more specific call.
+          <span className="font-mono text-sky-700">s.path</span> or another more
+          specific call.
         </p>
 
         <h3>Attributes class and Transform class</h3>
@@ -104,8 +104,8 @@ export function Home() {
         <p>
           These set up things like strokes and fills and transforms. You can
           create a new instance of each with{" "}
-          <span className="font-mono text-rose-700">s.T</span> or{" "}
-          <span className="font-mono text-rose-700">s.A</span> and start using
+          <span className="font-mono text-sky-700">s.T</span> or{" "}
+          <span className="font-mono text-sky-700">s.A</span> and start using
           chained calls to configure.
         </p>
 
@@ -137,7 +137,7 @@ export function Home() {
         <h2>Try it</h2>
 
         <div className="flex flex-col md:flex-row gap-4 ">
-          <div className="bg-rose-100 rounded p-4 flex-[1.2]">
+          <div className="bg-sky-100 rounded p-4 flex-[1.2]">
             <a
               className="mb-4 flex flex-row gap-2 items-center"
               href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl"
@@ -148,7 +148,7 @@ export function Home() {
             <p>A ready to play with CodeSandbox.</p>
           </div>
 
-          <div className="bg-rose-100 rounded p-4 flex-[1.2]">
+          <div className="bg-sky-100 rounded p-4 flex-[1.2]">
             <a
               className="mb-4 flex flex-row gap-2 items-center"
               href="https://github.com/jamesporter/solandra-svg"
@@ -159,7 +159,7 @@ export function Home() {
             <p>Full source code for the library and this site</p>
           </div>
 
-          <div className="bg-rose-100 rounded p-4 flex-[2]">
+          <div className="bg-sky-100 rounded p-4 flex-[2]">
             <a
               className="mb-4 flex flex-row gap-2 items-center"
               href="https://www.npmjs.com/package/solandra-svg"
