@@ -37,7 +37,9 @@ const svg = new SolandraSvg(width, height, 1)`}
         className="bg-zinc-100"
       />
       <h3>Regular Polygon</h3>
-      <Source code={`s.strokedPath().regularPolygon(s.meta.center, 5, 100)`} />
+      <Source
+        code={`s.strokedPath().regularPolygon(s.meta.center, 8, 0.2)`}
+      />
       <SVGSketch
         width={320}
         height={320}
@@ -82,6 +84,11 @@ const svg = new SolandraSvg(width, height, 1)`}
         verbose, repetitive bit of code.
       </p>
       <h3>forMargin</h3>
+      <Source
+        code={`s.forMargin(0.1, (_, d, c) => {
+  s.strokedPath().rect(c, ...d)
+})`}
+      />
       <SVGSketch
         width={320}
         height={320}
@@ -93,6 +100,11 @@ const svg = new SolandraSvg(width, height, 1)`}
         className="bg-zinc-100"
       />
       <h3>forTiling</h3>
+      <Source
+        code={`s.forTiling({ n: 5, type: "square" }, (_, d, c, i) => {
+  s.filledPath((a) => a.fill(210 - i * 6, 80, 50)).rect(c, ...d)
+})`}
+      />
       <SVGSketch
         width={320}
         height={320}
@@ -104,6 +116,11 @@ const svg = new SolandraSvg(width, height, 1)`}
         className="bg-zinc-100"
       />
       <h3>forHorizontal</h3>
+      <Source
+        code={`s.forHorizontal({ n: 40, margin: 0.1 }, (_, d, c, i) => {
+  s.filledPath((a) => a.fill(210, 80 - i, 50)).rect(s.perturb({ at: c }), ...d)
+})`}
+      />
       <SVGSketch
         width={320}
         height={320}
@@ -125,6 +142,15 @@ const svg = new SolandraSvg(width, height, 1)`}
       <h3>build</h3>
       <p>Higher order utility</p>
       <h3>aroundCircle</h3>
+      <Source
+        code={`s.aroundCircle({ n: 40 }, (p, i) => {
+  s.filledPath((a) => a.fill(340 - i, 80, 50, 0.8)).regularPolygon(
+    s.perturb({ at: p }),
+    6,
+    0.05
+  )
+})`}
+      />
       <SVGSketch
         width={320}
         height={320}
