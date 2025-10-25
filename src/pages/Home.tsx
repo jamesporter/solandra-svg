@@ -176,6 +176,10 @@ export function Home() {
           </div>
         </div>
 
+        <h1>Solandra SVG API Highlights</h1>
+
+        <p>Here are a few highlights from the Solandra SVG API.</p>
+
         <h2>New</h2>
         <div className="flex flex-col md:flex-row md:flex-wrap gap-4 justify-between">
           <div className="">
@@ -246,7 +250,7 @@ export function Home() {
 )`}
         />
 
-        <h2>Hello Curves</h2>
+        <h2>Curves</h2>
 
         <p>
           Curves are easy and fun to draw with an API from{" "}
@@ -291,7 +295,7 @@ export function Home() {
 })`}
         />
 
-        <h2>Hello Rectangles</h2>
+        <h2>Rectangles</h2>
 
         <p>
           Rectangles are easy to draw and the framework takes care of alignment.
@@ -320,7 +324,7 @@ export function Home() {
 })`}
         />
 
-        <h2>Hello Ellipses</h2>
+        <h2>Ellipses</h2>
 
         <p>
           Ellipses are easy to draw and the framework takes care of alignment.
@@ -348,7 +352,7 @@ export function Home() {
 })`}
         />
 
-        <h2>Hello Chaiken</h2>
+        <h2>Chaiken</h2>
 
         <p>
           An elegant algorithm for smooth a path of lines. Repeatedly cut the
@@ -408,7 +412,7 @@ s.times(4, (n) => {
 })`}
         />
 
-        <h2>Hello Transforms</h2>
+        <h2>Transforms</h2>
         <SVGSketch
           width={480}
           height={480}
@@ -451,7 +455,7 @@ s.times(4, (n) => {
 ).rect([0.3, 0.3], 0.2, 0.3)`}
         />
 
-        <h2>Hello Clone</h2>
+        <h2>Clone</h2>
         <SVGSketch
           width={480}
           height={480}
@@ -478,7 +482,7 @@ s.times(20, (n) => {
 })`}
         />
 
-        <h2>Hello Groups</h2>
+        <h2>Groups</h2>
         <p>
           solandra-svg offers a closure based API for building svg groups. You
           use the same fluent Attributes api to set up their attributes.
