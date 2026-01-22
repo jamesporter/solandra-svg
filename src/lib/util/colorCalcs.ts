@@ -1,5 +1,15 @@
+/**
+ * Color conversion utilities for HSL to RGB conversion
+ */
 import { arrayOf } from "./collectionOps"
 
+/**
+ * Converts hue to RGB component value (internal helper)
+ * @param p - Lower RGB component
+ * @param q - Upper RGB component
+ * @param t - Normalized hue position
+ * @returns RGB component value (0-1)
+ */
 function hue2rgb(p: number, q: number, t: number): number {
   if (t < 0) t += 1
   if (t > 1) t -= 1
@@ -9,6 +19,12 @@ function hue2rgb(p: number, q: number, t: number): number {
   return p
 }
 
+/**
+ * Pads a number or string with leading zeros
+ * @param n - The number or string to pad
+ * @param digits - Target number of digits
+ * @returns Zero-padded string
+ */
 function padZeros(n: string | number, digits: number): string {
   const nAsString = n.toString()
   if (nAsString.length < digits) {
@@ -19,6 +35,11 @@ function padZeros(n: string | number, digits: number): string {
   }
 }
 
+/**
+ * Converts a 0-1 color component to a 2-digit hex string
+ * @param n - Color component (0-1)
+ * @returns Two-digit uppercase hex string
+ */
 function toHexPart(n: number): string {
   return padZeros(
     Math.round(n * 255)
@@ -28,6 +49,13 @@ function toHexPart(n: number): string {
   )
 }
 
+/**
+ * Converts HSL color values to RGB hex color string
+ * @param h - Hue (0-1, where 1 represents 360 degrees)
+ * @param s - Saturation (0-1)
+ * @param l - Lightness (0-1)
+ * @returns Hex color string in format #RRGGBB
+ */
 export function hslToRgb(h: number, s: number, l: number): string {
   let r, g, b
 

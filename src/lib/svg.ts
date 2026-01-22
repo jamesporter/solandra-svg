@@ -5,10 +5,20 @@ import { indent } from "./util/internalUtil"
 import { RNG } from "./rng"
 import { Transform } from "./transforms"
 
+/**
+ * Represents an SVG group element (<g>) that can contain paths and nested groups.
+ * Groups allow you to organize related elements and apply common attributes/transformations
+ * to multiple elements at once.
+ */
 export class Group {
   children: (Group | Path)[] = []
   constructor(readonly attributes: Attributes) {}
 
+  /**
+   * Generates SVG string representation of the group and its children
+   * @param depth - Indentation depth for formatting
+   * @returns Array of strings representing the SVG group element
+   */
   strings(depth: number): string[] {
     return [
       indent(`<g${this.attributes.string}>`, depth),
@@ -23,11 +33,29 @@ export class Group {
     ]
   }
 
+  /**
+   * Adds a path or nested group to this group
+   * @param element - The Path or Group to add
+   */
   push(element: Group | Path) {
     this.children.push(element)
   }
 }
 
+/**
+ * Main entry point for creating SVG graphics with Solandra.
+ *
+ * SolandraSvg provides a fluent, declarative API for building SVG graphics programmatically.
+ * It uses normalized coordinates (0 to 1 for x, 0 to 1/aspectRatio for y) which are automatically
+ * scaled to the specified pixel dimensions.
+ *
+ * @example
+ * ```typescript
+ * const svg = new SolandraSvg(800, 600, 42); // width, height, optional random seed
+ * svg.path().moveTo([0.1, 0.1]).lineTo([0.9, 0.9]);
+ * console.log(svg.image); // Get SVG string
+ * ```
+ */
 export class SolandraSvg {
   readonly aspectRatio: number
   private rng: RNG
@@ -35,11 +63,21 @@ export class SolandraSvg {
   // Basically track current group for paths to be added to, null = no group/top level scope
   private currentGroup: Group | null = null
 
+  /**
+   * Creates a new SolandraSvg instance
+   * @param width - Width in pixels
+   * @param height - Height in pixels
+   * @param seed - Optional random seed for deterministic randomness
+   */
   constructor(readonly width: number, readonly height: number, seed?: number) {
     this.aspectRatio = width / height
     this.rng = new RNG(seed)
   }
 
+  /**
+   * Generates the complete SVG document as a string
+   * @returns Complete SVG markup including all paths and groups
+   */
   get image(): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
@@ -56,12 +94,22 @@ ${this.elements
 </svg>`
   }
 
+  /**
+   * Generates a data URI for the SVG that can be used in img src or CSS
+   * @param encode - Whether to URL-encode the SVG (default: true). Set to false for better readability
+   * @returns Data URI string suitable for use in img src attributes
+   */
   imageSrc(encode: boolean = true): string {
     return `data:image/svg+xml;utf8,${
       encode ? encodeURIComponent(this.image) : this.image.replace(/\#/g, "%23")
     }`
   }
 
+  /**
+   * Generates SVG with millimeter units for better Inkscape compatibility
+   * @unstable This API may change in future versions
+   * @returns SVG markup with mm units instead of pixels
+   */
   get UNSTABLE_imageInkscapeReady(): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
@@ -74,10 +122,16 @@ ${this.elements
       return el.string(1)
     }
   })
-  .join("\n")}    
+  .join("\n")}
 </svg>`
   }
 
+  /**
+   * Generates a data URI for Inkscape-compatible SVG
+   * @unstable This API may change in future versions
+   * @param encode - Whether to URL-encode the SVG (default: true)
+   * @returns Data URI with Inkscape-ready SVG
+   */
   UNSTABLE_imageSrcInkscapeReady(encode: boolean = true): string {
     return `data:image/svg+xml;utf8,${
       encode
@@ -86,6 +140,18 @@ ${this.elements
     }`
   }
 
+  /**
+   * Creates an SVG group to organize related elements and apply common transformations
+   * @param attributes - Attributes to apply to the group (e.g., transforms, opacity)
+   * @param contents - Callback function that creates the group's contents
+   * @example
+   * ```typescript
+   * svg.group(svg.A.opacity(0.5), () => {
+   *   svg.path().circle([0.5, 0.5], 0.2);
+   *   svg.path().rect([0.3, 0.3], [0.4, 0.4]);
+   * });
+   * ```
+   */
   group(attributes: Attributes, contents: () => void) {
     const parent = this.currentGroup
     const newGroup = new Group(attributes)
@@ -95,10 +161,19 @@ ${this.elements
     this.currentGroup = parent
   }
 
+  /**
+   * Creates an SVG group with a specific ID attribute
+   * @param id - The ID to assign to the group
+   * @param contents - Callback function that creates the group's contents
+   */
   groupWithId(id: string, contents: () => void) {
     this.group(new Attributes().id(id), contents)
   }
 
+  /**
+   * Gets the current container for elements (either a group or the root elements array)
+   * @returns The current group if inside a group() call, otherwise the root elements array
+   */
   get currentElements(): Group | (Group | Path)[] {
     if (this.currentGroup) {
       return this.currentGroup
@@ -107,12 +182,30 @@ ${this.elements
     }
   }
 
+  /**
+   * Creates a new path with the specified attributes
+   * @param attributes - Styling attributes for the path (default: empty attributes)
+   * @returns A new Path instance that can be drawn on
+   * @example
+   * ```typescript
+   * svg.path(svg.A.fill(180, 50, 50)).circle([0.5, 0.5], 0.2);
+   * ```
+   */
   path(attributes: Attributes = new Attributes()): Path {
     const path = new Path(attributes)
     this.currentElements.push(path)
     return path
   }
 
+  /**
+   * Creates a path with preset stroke styling (black, 0.005 width, round caps)
+   * @param configureAttributes - Optional callback to further customize the stroke attributes
+   * @returns A new stroked Path instance
+   * @example
+   * ```typescript
+   * svg.strokedPath(a => a.stroke(200, 50, 50)).lineTo([0.5, 0.5]);
+   * ```
+   */
   strokedPath(configureAttributes?: (attributes: Attributes) => void): Path {
     const attr = Attributes.stroked
       .stroke(0, 0, 0)
@@ -125,6 +218,12 @@ ${this.elements
     return path
   }
 
+  /**
+   * Clones an existing path and adds it to the current container
+   * @param path - The path to clone
+   * @param attributes - Optional new attributes to apply (if omitted, uses original attributes)
+   * @returns The cloned Path instance
+   */
   clonePath(path: Path, attributes?: Attributes): Path {
     const newPath = path.clone(attributes)
     this.currentElements.push(newPath)
@@ -157,6 +256,11 @@ ${this.elements
   //                                                                                              //
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Executes a callback with a single centered tile with the specified margin
+   * @param margin - Margin around the edges (in normalized coordinates)
+   * @param callback - Function called with position, size, center, and index
+   */
   forMargin = (
     margin: number,
     callback: (
@@ -167,6 +271,21 @@ ${this.elements
     ) => void
   ) => this.forTiling({ n: 1, margin }, callback)
 
+  /**
+   * Iterates over a grid of tiles with configurable layout
+   * @param config - Configuration object
+   * @param config.n - Number of columns
+   * @param config.type - "square" for square tiles or "proportionate" to fill the canvas (default: "proportionate")
+   * @param config.margin - Margin around edges (default: 0)
+   * @param config.order - "columnFirst" or "rowFirst" iteration order (default: "columnFirst")
+   * @param callback - Function called for each tile with (position, size, center, index)
+   * @example
+   * ```typescript
+   * svg.forTiling({ n: 5, margin: 0.1 }, (pos, size, center) => {
+   *   svg.path().rect(pos, size);
+   * });
+   * ```
+   */
   forTiling = (
     config: {
       n: number
@@ -225,6 +344,13 @@ ${this.elements
     }
   }
 
+  /**
+   * Iterates over n horizontal tiles in a single row
+   * @param config - Configuration object
+   * @param config.n - Number of tiles
+   * @param config.margin - Margin around edges (default: 0)
+   * @param callback - Function called for each tile with (position, size, center, index)
+   */
   forHorizontal = (
     config: {
       n: number
@@ -255,6 +381,13 @@ ${this.elements
     }
   }
 
+  /**
+   * Iterates over n vertical tiles in a single column
+   * @param config - Configuration object
+   * @param config.n - Number of tiles
+   * @param config.margin - Margin around edges (default: 0)
+   * @param callback - Function called for each tile with (position, size, center, index)
+   */
   forVertical = (
     config: {
       n: number
@@ -285,6 +418,16 @@ ${this.elements
     }
   }
 
+  /**
+   * Iterates over integer grid coordinates within the specified bounds
+   * @param config - Configuration object
+   * @param config.minX - Minimum x coordinate (inclusive)
+   * @param config.maxX - Maximum x coordinate (inclusive)
+   * @param config.minY - Minimum y coordinate (inclusive)
+   * @param config.maxY - Maximum y coordinate (inclusive)
+   * @param config.order - "columnFirst" or "rowFirst" iteration order (default: "columnFirst")
+   * @param callback - Function called for each grid point with (point, index)
+   */
   forGrid = (
     config: {
       minX: number
@@ -315,11 +458,18 @@ ${this.elements
     }
   }
 
-  /*
-    Build something using other iteration utlities rather than drawing within callback
-
-    I tried a  curried version with first argument so could compose with random order etc, but TypeScript wasn't figuring out types properly at use site. Would probably require explicit annotation so don't want that.
-  */
+  /**
+   * Transforms an iteration function into a builder that collects results
+   * Instead of executing side effects in the callback, returns an array of results
+   * @param iterFn - An iteration function like forTiling, forGrid, etc.
+   * @param config - Configuration for the iteration function
+   * @param cb - Callback that returns a value for each iteration
+   * @returns Array of all returned values
+   * @example
+   * ```typescript
+   * const points = svg.build(svg.forTiling, { n: 5 }, (pos) => pos);
+   * ```
+   */
   build = <C, T extends any[], U>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
@@ -332,9 +482,18 @@ ${this.elements
     return res
   }
 
-  /*
-    Take existing iteration function and apply in random order
-  */
+  /**
+   * Wraps an iteration function to execute callbacks in random order
+   * @param iterFn - An iteration function like forTiling, forGrid, etc.
+   * @param config - Configuration for the iteration function
+   * @param cb - Callback to execute for each iteration (in random order)
+   * @example
+   * ```typescript
+   * svg.withRandomOrder(svg.forTiling, { n: 5 }, (pos) => {
+   *   svg.path().circle(pos, 0.05);
+   * });
+   * ```
+   */
   withRandomOrder<C, T extends any[]>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
@@ -351,24 +510,47 @@ ${this.elements
     }
   }
 
+  /**
+   * Executes a callback with the given probability
+   * @param p - Probability between 0 and 1
+   * @param callback - Function to execute if random check passes
+   */
   doProportion(p: number, callback: () => void) {
     if (this.rng.number() < p) {
       callback()
     }
   }
 
+  /**
+   * Executes a callback n times, passing the iteration index (0 to n-1)
+   * @param n - Number of iterations
+   * @param callback - Function called with iteration index
+   */
   times(n: number, callback: (n: number) => void) {
     for (let i = 0; i < n; i++) {
       callback(i)
     }
   }
 
+  /**
+   * Executes a callback n times counting down from n to 1
+   * @param n - Starting number (counts down to 1)
+   * @param callback - Function called with current count
+   */
   downFrom(n: number, callback: (n: number) => void) {
     for (let i = n; i > 0; i--) {
       callback(i)
     }
   }
 
+  /**
+   * Iterates over n points evenly distributed around a circle
+   * @param config - Configuration object
+   * @param config.n - Number of points
+   * @param config.at - Center of circle (default: center of canvas)
+   * @param config.r - Radius (default: 0.25)
+   * @param callback - Function called for each point with (point, index)
+   */
   aroundCircle = (
     config: {
       at?: Point2D
@@ -387,6 +569,18 @@ ${this.elements
     }
   }
 
+  /**
+   * Randomly selects and executes one case based on weighted probabilities
+   * @param cases - Array of [weight, callback] tuples
+   * @returns The result of the selected callback
+   * @example
+   * ```typescript
+   * const color = svg.proportionately([
+   *   [0.7, () => 'red'],    // 70% chance
+   *   [0.3, () => 'blue']    // 30% chance
+   * ]);
+   * ```
+   */
   proportionately<T>(cases: [number, () => T][]): T {
     const total = cases.map((c) => c[0]).reduce((a, b) => a + b, 0)
     if (total <= 0) throw new Error("Must be positive total")
@@ -403,10 +597,23 @@ ${this.elements
     return cases[0][1]()
   }
 
+  /**
+   * Generates a random point within the canvas bounds
+   * @returns A random Point2D within the normalized coordinate space
+   */
   randomPoint(): Point2D {
     return [this.rng.number(), this.rng.number() / this.aspectRatio]
   }
 
+  /**
+   * Iterates over n evenly-spaced values in a range
+   * @param config - Configuration object
+   * @param config.from - Starting value
+   * @param config.to - Ending value
+   * @param config.n - Number of steps
+   * @param config.inclusive - Whether to include the final value (default: true)
+   * @param callback - Function called with each value
+   */
   range(
     config: { from: number; to: number; n: number; inclusive?: boolean },
     callback: (n: number) => void
@@ -420,6 +627,11 @@ ${this.elements
     }
   }
 
+  /**
+   * Checks if a point is within the canvas bounds
+   * @param point - The point to check
+   * @returns true if the point is within bounds, false otherwise
+   */
   inDrawing = (point: Point2D): boolean => {
     const { left, right, top, bottom } = this.meta
     return (
@@ -564,6 +776,10 @@ ${this.elements
     return n
   }
 
+  /**
+   * Gets metadata about the canvas dimensions and bounds
+   * @returns Object containing top, bottom, left, right bounds, aspectRatio, and center point
+   */
   get meta() {
     return {
       top: 0,
@@ -575,10 +791,26 @@ ${this.elements
     }
   }
 
+  /**
+   * Convenience getter for creating new Attributes instances
+   * @returns A new Attributes instance
+   * @example
+   * ```typescript
+   * svg.path(svg.A.fill(180, 50, 50).opacity(0.5));
+   * ```
+   */
   get A(): Attributes {
     return new Attributes()
   }
 
+  /**
+   * Convenience getter for creating new Transform instances
+   * @returns A new Transform instance
+   * @example
+   * ```typescript
+   * svg.group(svg.A.transform(svg.T.translate(0.5, 0.5)), () => { ... });
+   * ```
+   */
   get T(): Transform {
     return new Transform()
   }

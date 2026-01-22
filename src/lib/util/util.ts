@@ -1,5 +1,16 @@
+/**
+ * General utility functions for graphics and geometry
+ */
 import { Point2D } from "./types"
 
+/**
+ * Clamps a number to be within a specified range
+ * @param config - Configuration object
+ * @param config.from - Minimum value
+ * @param config.to - Maximum value
+ * @param n - The number to clamp
+ * @returns The clamped value
+ */
 export const clamp = (
   { from, to }: { from: number; to: number },
   n: number
@@ -14,6 +25,15 @@ type ScaleConfig = {
   maxRange: number
 }
 
+/**
+ * Creates a function that maps values from one range (domain) to another (range)
+ * @param config - Configuration object
+ * @param config.minDomain - Minimum value in input domain
+ * @param config.maxDomain - Maximum value in input domain
+ * @param config.minRange - Minimum value in output range
+ * @param config.maxRange - Maximum value in output range
+ * @returns A function that scales values from domain to range
+ */
 export const scaler = ({
   minDomain,
   maxDomain,
@@ -25,6 +45,12 @@ export const scaler = ({
   return (n) => minRange + (rangeS * (n - minDomain)) / domainS
 }
 
+/**
+ * Creates a function that maps 2D points from one coordinate space to another
+ * @param c1 - Scale configuration for x coordinate
+ * @param c2 - Scale configuration for y coordinate
+ * @returns A function that scales Point2D from domain to range
+ */
 export const scaler2d = (
   c1: ScaleConfig,
   c2: ScaleConfig
@@ -46,6 +72,13 @@ export const isoTransform = (height: number) => {
   ]
 }
 
+/**
+ * Calculates the centroid (geometric center) of a set of points
+ * If the first and last points are the same, treats as a closed polygon and excludes the duplicate
+ * @param points - Array of points
+ * @returns The centroid point
+ * @throws Error if points array is empty
+ */
 export const centroid = (points: Point2D[]): Point2D => {
   const n = points.length
   if (n === 0) {
@@ -71,8 +104,12 @@ export const centroid = (points: Point2D[]): Point2D => {
 const cp6 = Math.cos(Math.PI / 6)
 
 /**
- * NB Assumes integer grid
- * Supply a radius and boolean for whether it should be vertical (vertex at top) or not
+ * Creates a function that transforms integer grid coordinates to hexagonal grid positions
+ * @param config - Configuration object
+ * @param config.r - Radius of each hexagon
+ * @param config.vertical - If true, hexagons have vertex at top; if false, flat top (default: true)
+ * @returns A function that maps [x, y] grid coordinates to hexagonal positions
+ * @note Assumes integer grid coordinates
  */
 export const hexTransform = ({
   r,
@@ -89,7 +126,11 @@ export const hexTransform = ({
 }
 
 /**
- * NB Assumes integer grid, returns function that will return center of triangle and whether it should be flipped
+ * Creates a function that transforms integer grid coordinates to triangular grid positions
+ * @param config - Configuration object
+ * @param config.s - Side length of each triangle
+ * @returns A function that maps [x, y] grid coordinates to triangle center and orientation
+ * @note Assumes integer grid coordinates. Returns object with center position and flip status
  */
 export const triTransform = ({ s }: { s: number }) => {
   const r = s / (2 * Math.sin(Math.PI / 3))

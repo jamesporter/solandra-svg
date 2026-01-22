@@ -3,36 +3,48 @@ import { hslToRgb } from "./util/colorCalcs"
 import { Point2D } from "./util/types"
 
 /**
-Supports (via fluent api)
-  - [x] "fill"
-  - [x] "fill-opacity" 
-  - [x] "opacity"
-  - [x] "stroke"
-  - [x] "stroke-dasharray" a lot of these in viewBox dimensions
-  - [x] "stroke-dashoffset"
-  - [x] "stroke-linecap"
-  - [x] "stroke-linejoin"
-  - [x] "stroke-miterlimit"
-  - [x] "stroke-opacity"
-  - [x] "stroke-width" NB this has to be really low if going to work with 1 h dimensions?
-  - [x] "transform"
-  - [x] "class"
-  - [x] "id"
-
-  has a handful of static functions that provide reasonable defaults for common use
-*/
+ * Manages SVG element attributes and styling with a fluent API.
+ *
+ * Supports all common SVG attributes including:
+ * - Fill and stroke colors (HSL and OkLCH color spaces)
+ * - Opacity (fill, stroke, and overall)
+ * - Stroke properties (width, line cap, line join, miter limit, dash patterns)
+ * - Transformations
+ * - Class and ID attributes
+ *
+ * Provides static factory methods for common attribute combinations.
+ *
+ * @example
+ * ```typescript
+ * const attrs = new Attributes()
+ *   .fill(180, 50, 50)
+ *   .strokeWidth(0.01)
+ *   .opacity(0.8);
+ * ```
+ */
 export class Attributes {
   private attributes: { [key: string]: string | number } = {}
   private styleAttributes: { [key: string]: string | number } = {}
 
+  /**
+   * Sets the overall opacity of the element
+   * @param opacity - Opacity value from 0 (transparent) to 1 (opaque)
+   * @returns This Attributes instance for method chaining
+   */
   opacity(opacity: number): Attributes {
     this.styleAttributes["opacity"] = opacity
     return this
   }
 
-  /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
-       in render use hex for compatability with Inkscape(!)
-  */
+  /**
+   * Sets the fill color using HSL color space
+   * @param hue - Hue angle from 0 to 360 degrees
+   * @param saturation - Saturation from 0 to 100
+   * @param lightness - Lightness from 0 to 100
+   * @param opacity - Optional fill opacity from 0 to 1
+   * @returns This Attributes instance for method chaining
+   * @note Rendered as hex color for Inkscape compatibility
+   */
   fill(
     hue: number,
     saturation: number,
@@ -48,11 +60,20 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Removes the fill (sets fill to none)
+   * @returns This Attributes instance for method chaining
+   */
   noFill(): Attributes {
     this.styleAttributes["fill"] = "none"
     return this
   }
 
+  /**
+   * Sets the fill opacity independently of the fill color
+   * @param opacity - Fill opacity from 0 (transparent) to 1 (opaque)
+   * @returns This Attributes instance for method chaining
+   */
   fillOpacity(opacity: number): Attributes {
     this.styleAttributes["fill-opacity"] = opacity
     return this
@@ -81,9 +102,15 @@ export class Attributes {
     return this
   }
 
-  /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
-       in render use hex for compatability with Inkscape(!)
-  */
+  /**
+   * Sets the stroke (outline) color using HSL color space
+   * @param hue - Hue angle from 0 to 360 degrees
+   * @param saturation - Saturation from 0 to 100
+   * @param lightness - Lightness from 0 to 100
+   * @param alpha - Optional stroke opacity from 0 to 1
+   * @returns This Attributes instance for method chaining
+   * @note Rendered as hex color for Inkscape compatibility
+   */
   stroke(
     hue: number,
     saturation: number,
@@ -99,6 +126,15 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Sets the stroke color using OkLCH color space
+   * @param lightness - Lightness value
+   * @param chroma - Chroma (colorfulness) value
+   * @param hue - Hue angle
+   * @param alpha - Opacity from 0 to 1
+   * @returns This Attributes instance for method chaining
+   * @note OkLCH is not as widely supported but works in modern browsers
+   */
   strokeOklch(
     lightness: number,
     chroma: number,
@@ -113,21 +149,41 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Sets the stroke opacity independently of the stroke color
+   * @param opacity - Stroke opacity from 0 (transparent) to 1 (opaque)
+   * @returns This Attributes instance for method chaining
+   */
   strokeOpacity(opacity: number): Attributes {
     this.styleAttributes["stroke-opacity"] = opacity
     return this
   }
 
+  /**
+   * Sets the width of the stroke
+   * @param width - Stroke width in normalized coordinates (use small values like 0.005 for typical use)
+   * @returns This Attributes instance for method chaining
+   */
   strokeWidth(width: number): Attributes {
     this.styleAttributes["stroke-width"] = width
     return this
   }
 
+  /**
+   * Sets the style of line endings
+   * @param cap - Line cap style: "butt" (default), "round", or "square"
+   * @returns This Attributes instance for method chaining
+   */
   lineCap(cap: "butt" | "round" | "square"): Attributes {
     this.styleAttributes["stroke-linecap"] = cap
     return this
   }
 
+  /**
+   * Sets the style of line joins
+   * @param join - Line join style: "arcs", "bevel", "miter" (default), "miter-clip", or "round"
+   * @returns This Attributes instance for method chaining
+   */
   lineJoin(
     join: "arcs" | "bevel" | "miter" | "miter-clip" | "round"
   ): Attributes {
@@ -135,36 +191,75 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Sets the miter limit ratio for miter line joins
+   * @param limit - Miter limit value (default is usually 4)
+   * @returns This Attributes instance for method chaining
+   */
   miterLimit(limit: number): Attributes {
     this.styleAttributes["stroke-miterlimit"] = limit
     return this
   }
 
+  /**
+   * Sets the dash pattern for the stroke
+   * @param dashes - Sequence of dash and gap lengths (in viewBox dimensions)
+   * @returns This Attributes instance for method chaining
+   * @example
+   * ```typescript
+   * attr.dashArray(0.01, 0.02) // Creates a dashed line
+   * ```
+   */
   dashArray(...dashes: number[]): Attributes {
     this.styleAttributes["stroke-dasharray"] = dashes.join(" ")
     return this
   }
 
+  /**
+   * Sets the offset for the dash pattern
+   * @param offset - Dash offset value
+   * @returns This Attributes instance for method chaining
+   */
   dashOffset(offset: number) {
     this.styleAttributes["stroke-dashoffset"] = offset
     return this
   }
 
+  /**
+   * Sets the CSS class attribute
+   * @param name - Class name to apply
+   * @returns This Attributes instance for method chaining
+   */
   class(name: string): Attributes {
     this.attributes["class"] = name
     return this
   }
 
+  /**
+   * Sets the element ID attribute
+   * @param name - ID to assign to the element
+   * @returns This Attributes instance for method chaining
+   */
   id(name: string): Attributes {
     this.attributes["id"] = name
     return this
   }
 
+  /**
+   * Applies transformations to the element
+   * @param transformations - Transform instance with one or more transformations
+   * @returns This Attributes instance for method chaining
+   */
   transform(transformations: Transform): Attributes {
     this.attributes["transform"] = transformations.string
     return this
   }
 
+  /**
+   * Sets the origin point for transformations
+   * @param location - Either "center" or a Point2D [x, y] position
+   * @returns This Attributes instance for method chaining
+   */
   transformOrigin(location: Point2D | "center"): Attributes {
     if (typeof location === "string") {
       this.attributes["transform-origin"] = location
@@ -174,6 +269,10 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Creates a deep copy of this Attributes instance
+   * @returns A new Attributes instance with the same properties
+   */
   clone(): Attributes {
     const newAttr = new Attributes()
     newAttr.attributes = { ...this.attributes }
@@ -204,15 +303,28 @@ export class Attributes {
     return attrString
   }
 
+  /**
+   * Creates attributes preset for stroked (outlined) shapes with no fill
+   * @returns Attributes with black stroke, 0.005 width, and no fill
+   */
   static get stroked(): Attributes {
     return new Attributes().noFill().strokeWidth(0.005).stroke(0, 0, 0)
   }
 
-  // in browser will have fill by default, but not in e.g. Inkscape hence this might be useful
+  /**
+   * Creates attributes preset for filled shapes
+   * @returns Attributes with black fill
+   * @note Useful for Inkscape compatibility (browsers fill by default, Inkscape doesn't)
+   */
   static get filled(): Attributes {
     return new Attributes().fill(0, 0, 0)
   }
 
+  /**
+   * Creates attributes with only transformations applied
+   * @param transformations - Transform instance to apply
+   * @returns New Attributes instance with the specified transformations
+   */
   static transform(transformations: Transform): Attributes {
     return new Attributes().transform(transformations)
   }
@@ -347,6 +459,10 @@ export class Attributes {
     return attr
   }
 
+  /**
+   * Creates an empty Attributes instance with no properties set
+   * @returns A new empty Attributes instance
+   */
   static get empty() {
     return new Attributes()
   }

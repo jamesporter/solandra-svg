@@ -1,7 +1,17 @@
-// Based on https://github.com/thomcc/pcg-random
-// see also http://www.pcg-random.org/
+/**
+ * Pseudo-random number generator using the PCG algorithm
+ * Based on https://github.com/thomcc/pcg-random
+ * See also http://www.pcg-random.org/
+ */
 
-// multiply two 64 bit numbers (given in parts), and store the result in `out`.
+/**
+ * Multiplies two 64-bit numbers (given as 32-bit parts) and stores result in output array
+ * @param out - Output array for result
+ * @param aHi - High 32 bits of first number
+ * @param aLo - Low 32 bits of first number
+ * @param bHi - High 32 bits of second number
+ * @param bLo - Low 32 bits of second number
+ */
 function mul64_(
   out: Int32Array,
   aHi: number,
@@ -34,7 +44,14 @@ function mul64_(
   out[1] = lo
 }
 
-// add two 64 bit numbers (given in parts), and store the result in `out`.
+/**
+ * Adds two 64-bit numbers (given as 32-bit parts) and stores result in output array
+ * @param out - Output array for result
+ * @param aHi - High 32 bits of first number
+ * @param aLo - Low 32 bits of first number
+ * @param bHi - High 32 bits of second number
+ * @param bLo - Low 32 bits of second number
+ */
 function add64_(
   out: Int32Array,
   aHi: number,
@@ -60,9 +77,27 @@ const MUL_LO = 0x4c957f2d >>> 0
 const BIT_53 = 9007199254740992.0
 const BIT_27 = 134217728.0
 
+/**
+ * Seeded pseudo-random number generator using the PCG algorithm.
+ * Provides deterministic random sequences when given the same seed.
+ *
+ * @example
+ * ```typescript
+ * const rng = new RNG(42); // Create with seed 42
+ * const value = rng.number(); // Get random number 0-1
+ * const int = rng.integer(100); // Get random integer 0-99
+ * ```
+ */
 export class RNG {
   private state: Int32Array
 
+  /**
+   * Creates a new random number generator
+   * @param seedHi - High 32 bits of seed (or full seed if seedLo is omitted)
+   * @param seedLo - Low 32 bits of seed (optional)
+   * @param incHi - High 32 bits of increment (default: internal constant)
+   * @param incLo - Low 32 bits of increment (default: internal constant)
+   */
   constructor(
     seedHi?: number,
     seedLo?: number,
@@ -89,10 +124,19 @@ export class RNG {
     this.next()
   }
 
+  /**
+   * Gets the current internal state of the RNG
+   * @returns Four 32-bit integers representing the internal state
+   */
   getState(): [number, number, number, number] {
     return [this.state[0], this.state[1], this.state[2], this.state[3]]
   }
 
+  /**
+   * Sets the internal state of the RNG
+   * Useful for restoring a previously saved state
+   * @param state - Four 32-bit integers representing the state to restore
+   */
   setState(state: [number, number, number, number]) {
     this.state[0] = state[0]
     this.state[1] = state[1]
@@ -100,7 +144,11 @@ export class RNG {
     this.state[3] = state[3] | 1
   }
 
-  // Generate a random 32 bit integer. This uses the PCG algorithm, described here: http://www.pcg-random.org/
+  /**
+   * Generates a random 32-bit integer using the PCG algorithm
+   * @returns A random 32-bit unsigned integer
+   * @see http://www.pcg-random.org/
+   */
   next(): number {
     // save current state (what we'll use for this number)
     var oldHi = this.state[0] >>> 0
@@ -129,7 +177,11 @@ export class RNG {
     return ((xorshifted >>> rot) | (xorshifted << rot2)) >>> 0
   }
 
-  /// Get a uniformly distributed 32 bit integer between [0, max).
+  /**
+   * Generates a uniformly distributed random integer in the range [0, max)
+   * @param max - Upper bound (exclusive). If 0 or omitted, returns full 32-bit integer
+   * @returns A random integer from 0 to max-1 (inclusive)
+   */
   integer(max: number): number {
     if (!max) {
       return this.next()
@@ -148,8 +200,11 @@ export class RNG {
     return num % max
   }
 
-  /// Get a uniformly distributed IEEE-754 double between 0.0 and 1.0, with
-  /// 53 bits of precision (every bit of the mantissa is randomized).
+  /**
+   * Generates a uniformly distributed random double-precision float in [0, 1)
+   * Uses 53 bits of precision (every bit of the mantissa is randomized)
+   * @returns A random IEEE-754 double between 0.0 (inclusive) and 1.0 (exclusive)
+   */
   number(): number {
     var hi = (this.next() & 0x03ffffff) * 1.0
     var lo = (this.next() & 0x07ffffff) * 1.0

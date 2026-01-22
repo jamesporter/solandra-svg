@@ -4,6 +4,10 @@ import { Attributes } from "./attributes"
 import { v } from "."
 import { indent } from "./util/internalUtil"
 
+/**
+ * Represents a segment in an SVG path.
+ * Can be a move, line, cubic curve, arc, or close command.
+ */
 export type PathSegment =
   | { kind: "move"; to: Point2D }
   | {
@@ -21,6 +25,12 @@ export type PathSegment =
 // To force types later, a bit nasty but to cover most potential errors with runtime checks
 type Toable = { to: Point2D }
 
+/**
+ * Converts a path segment to its SVG string representation
+ * @param segment - The path segment to convert
+ * @param previous - The previous point in the path (needed for curves)
+ * @returns SVG path command string
+ */
 function segmentToString(segment: PathSegment, previous?: Point2D): string {
   switch (segment.kind) {
     case "move":
@@ -46,21 +56,57 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
   }
 }
 
+/**
+ * Represents an SVG path that can contain lines, curves, arcs, and shapes.
+ *
+ * Path provides a fluent API for building complex SVG path elements.
+ * All methods return the Path instance to enable method chaining.
+ *
+ * @example
+ * ```typescript
+ * svg.path()
+ *   .moveTo([0.1, 0.1])
+ *   .lineTo([0.9, 0.1])
+ *   .curveTo([0.9, 0.9], { polarity: -1 })
+ *   .close();
+ * ```
+ */
 export class Path {
   segments: PathSegment[] = []
 
   constructor(readonly attributes: Attributes) {}
 
+  /**
+   * Moves the drawing cursor to a point without drawing
+   * @param point - The point to move to
+   * @returns This path for method chaining
+   */
   moveTo(point: Point2D): Path {
     this.segments.push({ kind: "move", to: point })
     return this
   }
 
+  /**
+   * Draws a straight line to a point
+   * @param point - The endpoint of the line
+   * @returns This path for method chaining
+   */
   lineTo(point: Point2D): Path {
     this.segments.push({ kind: "line", to: point })
     return this
   }
 
+  /**
+   * Draws a cubic Bezier curve to a point with configurable characteristics
+   * @param point - The endpoint of the curve
+   * @param config - Curve configuration options
+   * @param config.curveSize - Size/amplitude of the curve (default: 1)
+   * @param config.polarity - Direction of curve, 1 or -1 (default: 1)
+   * @param config.bulbousness - How bulbous vs flat the curve is (default: 1)
+   * @param config.curveAngle - Angle offset for the curve (default: 0)
+   * @param config.twist - Additional twist to apply (default: 0)
+   * @returns This path for method chaining
+   */
   curveTo(point: Point2D, config: CurveConfig = {}): Path {
     const {
       curveSize = 1,
@@ -78,6 +124,16 @@ export class Path {
     return this
   }
 
+  /**
+   * Draws an elliptical arc to a point
+   * @param point - The endpoint of the arc
+   * @param config - Arc configuration options
+   * @param config.rX - Horizontal radius (default: horizontal distance to endpoint)
+   * @param config.rY - Vertical radius (default: vertical distance to endpoint)
+   * @param config.largeArc - Whether to use the larger arc (default: false)
+   * @param config.xAxisRotation - Rotation of the arc's x-axis in degrees (default: 0)
+   * @returns This path for method chaining
+   */
   arcTo(point: Point2D, config: ArcConfig = {}): Path {
     try {
       const previous: Point2D = (this.segments[this.segments.length - 1] as any)
@@ -107,6 +163,14 @@ export class Path {
     }
   }
 
+  /**
+   * Draws a rectangle
+   * @param at - Position of the rectangle
+   * @param width - Width of the rectangle
+   * @param height - Height of the rectangle
+   * @param align - Alignment mode: "center" positions at the center, "topLeft" at top-left corner (default: "center")
+   * @returns This path for method chaining
+   */
   rect(
     at: Point2D,
     width: number,
@@ -123,6 +187,15 @@ export class Path {
     return this
   }
 
+  /**
+   * Draws a regular polygon with n sides
+   * @param at - Position of the polygon
+   * @param n - Number of sides
+   * @param radius - Radius from center to vertices
+   * @param rotate - Rotation angle in radians (default: 0)
+   * @param align - Alignment mode: "center" positions at the center, "topLeft" at bounding box top-left (default: "center")
+   * @returns This path for method chaining
+   */
   regularPolygon(
     at: Point2D,
     n: number,
@@ -150,6 +223,14 @@ export class Path {
     return this
   }
 
+  /**
+   * Draws an ellipse (or circle if width equals height)
+   * @param at - Position of the ellipse
+   * @param width - Width of the ellipse
+   * @param height - Height of the ellipse
+   * @param align - Alignment mode: "center" positions at the center, "topLeft" at bounding box top-left (default: "center")
+   * @returns This path for method chaining
+   */
   ellipse(
     at: Point2D,
     width: number,
@@ -176,11 +257,21 @@ export class Path {
     return this
   }
 
+  /**
+   * Closes the path by drawing a line back to the starting point
+   * @returns This path for method chaining
+   */
   close(): Path {
     this.segments.push({ kind: "close" })
     return this
   }
 
+  /**
+   * Applies Chaikin's corner-cutting algorithm to smooth the path
+   * Each iteration replaces line segments with smoother curves
+   * @param n - Number of smoothing iterations (default: 2)
+   * @returns This path for method chaining
+   */
   chaiken(n: number = 2): Path {
     for (let k = 0; k < n; k++) {
       const newSegments: PathSegment[] = []
@@ -210,14 +301,21 @@ export class Path {
     return this
   }
 
+  /**
+   * Transforms each path segment using a mapping function
+   * @param fn - Function that takes a segment and index, returns a new segment
+   * @returns This path for method chaining
+   */
   map(fn: (el: PathSegment, index: number) => PathSegment): Path {
     this.segments = this.segments.map(fn)
     return this
   }
 
   /**
-   * NB while this copies a path it won't be inclued in a drawing
-   * use SolandraSVG.clonePath(path) for this.
+   * Creates a copy of this path with its segments
+   * @param attributes - Optional new attributes (if omitted, clones existing attributes)
+   * @returns A new Path instance with copied segments
+   * @warning The cloned path won't be added to the drawing automatically. Use SolandraSvg.clonePath() to clone and add.
    */
   clone(attributes?: Attributes): Path {
     const p = new Path(attributes || this.attributes.clone())
@@ -225,6 +323,12 @@ export class Path {
     return p
   }
 
+  /**
+   * Generates the SVG string representation of this path
+   * @param depth - Indentation depth for formatting
+   * @returns SVG path element as a string
+   * @throws Error if the path has no segments or doesn't start with moveTo
+   */
   string(depth: number): string {
     if (this.segments.length === 0) throw Error("Must add to path")
     if (this.segments[0].kind !== "move")
@@ -241,6 +345,10 @@ export class Path {
     return indent(`<path${this.attributes.string} d="${d}" />`, depth)
   }
 
+  /**
+   * Applies configuration to this path's attributes
+   * @param configureAttributes - Callback function that modifies the attributes
+   */
   configureAttributes(configureAttributes: (attributes: Attributes) => void) {
     configureAttributes(this.attributes)
   }
