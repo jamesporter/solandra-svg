@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(git log:*)",
+      "Bash(done)",
+      "Bash(ls:*)",
+      "Bash(pnpm book:generate-scripts:*)",
+      "Bash(tsx scripts/listCodeBlocks.ts:*)",
+      "Bash(pnpm tsx:*)",
+      "Bash(pnpm book:build:*)"
+    ]
+  }
+}

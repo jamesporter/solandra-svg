@@ -12,7 +12,10 @@
     "test": "vitest",
     "build:esm": "pnpm tsc -p tsconfig-esm.json",
     "build:cjs": "pnpm tsc -p tsconfig-cjs.json",
-    "build:package": "tsx pre-publish && pnpm build:esm && pnpm build:cjs"
+    "build:package": "tsx pre-publish && pnpm build:esm && pnpm build:cjs",
+    "book:generate-scripts": "tsx scripts/generateFigureScripts.ts",
+    "book:generate-images": "tsx scripts/generateAllImages.ts",
+    "book:build": "pnpm book:generate-images"
   },
   "dependencies": {
     "@radix-ui/react-navigation-menu": "^1.2.5",
