@@ -272,7 +272,7 @@ export class Path {
    * @param n - Number of smoothing iterations (default: 2)
    * @returns This path for method chaining
    */
-  chaiken(n: number = 2): Path {
+  chaikin(n: number = 2): Path {
     for (let k = 0; k < n; k++) {
       const newSegments: PathSegment[] = []
       newSegments.push(this.segments[0])
