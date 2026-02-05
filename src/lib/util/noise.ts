@@ -1,15 +1,39 @@
 import { dot } from "./vectors";
 
-// Adapted from public domain code: https://github.com/josephg/noisejs/blob/master/perlin.js ... possibly come back to/or find more comprehensive library
+/**
+ * 2D Perlin noise implementation.
+ *
+ * Adapted from public domain code:
+ * {@link https://github.com/josephg/noisejs/blob/master/perlin.js}
+ *
+ * @module
+ */
 
+/**
+ * Applies the smoothstep fade function `6t^5 - 15t^4 + 10t^3` for smooth interpolation.
+ *
+ * @param t - The input value
+ * @returns The smoothed value
+ * @internal
+ */
 function fade(t: number) {
   return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
+/**
+ * Linearly interpolates between two values.
+ *
+ * @param a - The start value
+ * @param b - The end value
+ * @param t - The interpolation factor in `[0, 1]`
+ * @returns The interpolated value
+ * @internal
+ */
 function lerp(a: number, b: number, t: number) {
   return (1 - t) * a + t * b;
 }
 
+/** Gradient vectors for 3D noise (only x,y components used for 2D Perlin noise). */
 const grad3 = [
   [1, 1, 0],
   [-1, 1, 0],
@@ -25,6 +49,7 @@ const grad3 = [
   [0, -1, -1]
 ];
 
+/** Ken Perlin's original permutation table (256 entries). */
 var p = [
   151,
   160,
@@ -284,9 +309,20 @@ var p = [
   180
 ];
 
+/** Doubled permutation table (512 entries) for wrapping lookups. */
 const perm = new Array(512);
+/** Doubled gradient lookup table (512 entries) for wrapping lookups. */
 const gradP = new Array(512);
 
+/**
+ * Seeds the noise permutation tables using the given seed value.
+ *
+ * Fractional seeds in `(0, 1)` are scaled up to a 16-bit integer range.
+ * Seeds below 256 are expanded to use both high and low bytes.
+ *
+ * @param seed - The seed value
+ * @internal
+ */
 function seedNoise(seed: number) {
   if (seed > 0 && seed < 1) {
     seed *= 65536;
@@ -312,6 +348,16 @@ function seedNoise(seed: number) {
 
 seedNoise(0);
 
+/**
+ * Computes 2D Perlin noise at the given coordinates.
+ *
+ * Returns a value roughly in the range `[-1, 1]` (though typically smaller in magnitude).
+ * The noise is deterministic for the same input coordinates and seed.
+ *
+ * @param ax - The x coordinate
+ * @param ay - The y coordinate
+ * @returns The Perlin noise value at `(ax, ay)`
+ */
 export function perlin2(ax: number, ay: number) {
   let X = Math.floor(ax);
   let Y = Math.floor(ay);

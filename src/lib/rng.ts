@@ -1,7 +1,22 @@
-// Based on https://github.com/thomcc/pcg-random
-// see also http://www.pcg-random.org/
+/**
+ * PCG (Permuted Congruential Generator) random number generator.
+ *
+ * Based on {@link https://github.com/thomcc/pcg-random}
+ * and {@link http://www.pcg-random.org/}.
+ *
+ * @module
+ */
 
-// multiply two 64 bit numbers (given in parts), and store the result in `out`.
+/**
+ * Multiplies two 64-bit numbers (given as high/low 32-bit pairs) and stores the result in `out`.
+ *
+ * @param out - The output array to store the result `[hi, lo]`
+ * @param aHi - High 32 bits of the first operand
+ * @param aLo - Low 32 bits of the first operand
+ * @param bHi - High 32 bits of the second operand
+ * @param bLo - Low 32 bits of the second operand
+ * @internal
+ */
 function mul64_(
   out: Int32Array,
   aHi: number,
@@ -34,7 +49,16 @@ function mul64_(
   out[1] = lo
 }
 
-// add two 64 bit numbers (given in parts), and store the result in `out`.
+/**
+ * Adds two 64-bit numbers (given as high/low 32-bit pairs) and stores the result in `out`.
+ *
+ * @param out - The output array to store the result `[hi, lo]`
+ * @param aHi - High 32 bits of the first operand
+ * @param aLo - Low 32 bits of the first operand
+ * @param bHi - High 32 bits of the second operand
+ * @param bLo - Low 32 bits of the second operand
+ * @internal
+ */
 function add64_(
   out: Int32Array,
   aHi: number,
@@ -60,9 +84,35 @@ const MUL_LO = 0x4c957f2d >>> 0
 const BIT_53 = 9007199254740992.0
 const BIT_27 = 134217728.0
 
+/**
+ * A seedable pseudo-random number generator using the PCG algorithm.
+ *
+ * PCG (Permuted Congruential Generator) provides high-quality random numbers
+ * with good statistical properties and a small state footprint. The generator
+ * is deterministic: identical seeds produce identical sequences.
+ *
+ * @example
+ * ```ts
+ * const rng = new RNG(42)
+ * rng.number()  // uniform double in [0, 1)
+ * rng.integer(6) // uniform integer in [0, 6)
+ * ```
+ */
 export class RNG {
+  /** Internal 64-bit state stored as `[stateHi, stateLo, incHi, incLo]`. */
   private state: Int32Array
 
+  /**
+   * Creates a new PCG random number generator.
+   *
+   * If no seed is provided, the generator is initialised with a random seed from `Math.random()`.
+   * Providing only `seedHi` uses it as the low 32 bits of the seed (with 0 for high bits).
+   *
+   * @param seedHi - High 32 bits of the seed (or the full seed if `seedLo` is omitted)
+   * @param seedLo - Low 32 bits of the seed
+   * @param incHi - High 32 bits of the increment (advanced usage)
+   * @param incLo - Low 32 bits of the increment (advanced usage)
+   */
   constructor(
     seedHi?: number,
     seedLo?: number,
@@ -89,10 +139,22 @@ export class RNG {
     this.next()
   }
 
+  /**
+   * Returns the current internal state as a 4-element tuple.
+   *
+   * Can be used with {@link setState} to save and restore the generator's position in the sequence.
+   *
+   * @returns The state as `[stateHi, stateLo, incHi, incLo]`
+   */
   getState(): [number, number, number, number] {
     return [this.state[0], this.state[1], this.state[2], this.state[3]]
   }
 
+  /**
+   * Restores the generator to a previously saved state.
+   *
+   * @param state - A 4-element tuple from {@link getState}
+   */
   setState(state: [number, number, number, number]) {
     this.state[0] = state[0]
     this.state[1] = state[1]
@@ -100,7 +162,14 @@ export class RNG {
     this.state[3] = state[3] | 1
   }
 
-  // Generate a random 32 bit integer. This uses the PCG algorithm, described here: http://www.pcg-random.org/
+  /**
+   * Generates the next random 32-bit unsigned integer using the PCG algorithm.
+   *
+   * Advances the internal state via a linear congruential generator (LCG),
+   * then applies a permutation (xorshift + rotation) to produce the output.
+   *
+   * @returns A random 32-bit unsigned integer
+   */
   next(): number {
     // save current state (what we'll use for this number)
     var oldHi = this.state[0] >>> 0
@@ -129,7 +198,15 @@ export class RNG {
     return ((xorshifted >>> rot) | (xorshifted << rot2)) >>> 0
   }
 
-  /// Get a uniformly distributed 32 bit integer between [0, max).
+  /**
+   * Generates a uniformly distributed 32-bit unsigned integer in `[0, max)`.
+   *
+   * Uses rejection sampling to avoid modulo bias. If `max` is a power of 2,
+   * a fast bitmask path is used instead.
+   *
+   * @param max - The exclusive upper bound
+   * @returns A random integer in `[0, max)`
+   */
   integer(max: number): number {
     if (!max) {
       return this.next()
@@ -148,8 +225,14 @@ export class RNG {
     return num % max
   }
 
-  /// Get a uniformly distributed IEEE-754 double between 0.0 and 1.0, with
-  /// 53 bits of precision (every bit of the mantissa is randomized).
+  /**
+   * Generates a uniformly distributed IEEE-754 double in `[0, 1)` with 53 bits of precision.
+   *
+   * Every bit of the mantissa is randomised, providing the maximum possible
+   * granularity for a JavaScript `number`.
+   *
+   * @returns A random double in `[0, 1)`
+   */
   number(): number {
     var hi = (this.next() & 0x03ffffff) * 1.0
     var lo = (this.next() & 0x07ffffff) * 1.0

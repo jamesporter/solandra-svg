@@ -1,10 +1,12 @@
 import { arrayOf } from "./collectionOps"
 
 /**
- * Indent some text (2 spaces per level)
+ * Indents a line of text with spaces (2 spaces per indentation level).
  *
- * @param line text
- * @param amount indentation depth
+ * @param line - The text to indent
+ * @param amount - The number of indentation levels
+ * @returns The indented text string
+ * @internal
  */
 export function indent(line: string, amount: number) {
   const padding = arrayOf(amount, () => "  ").join("")
