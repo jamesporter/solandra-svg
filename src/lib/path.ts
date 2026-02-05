@@ -4,6 +4,16 @@ import { Attributes } from "./attributes"
 import { v } from "."
 import { indent } from "./util/internalUtil"
 
+/**
+ * A discriminated union representing a single segment in an SVG path.
+ *
+ * Each variant corresponds to an SVG path command:
+ * - `"move"` - Move to a point (`M`)
+ * - `"line"` - Draw a line to a point (`L`)
+ * - `"cubicCurve"` - Draw a cubic bezier curve (`C`)
+ * - `"arc"` - Draw an elliptical arc (`A`)
+ * - `"close"` - Close the path (`Z`)
+ */
 export type PathSegment =
   | { kind: "move"; to: Point2D }
   | {
@@ -21,6 +31,14 @@ export type PathSegment =
 // To force types later, a bit nasty but to cover most potential errors with runtime checks
 type Toable = { to: Point2D }
 
+/**
+ * Converts a {@link PathSegment} to its SVG path data string representation.
+ *
+ * @param segment - The path segment to convert
+ * @param previous - The endpoint of the preceding segment (needed for cubic curves)
+ * @returns The SVG path command string
+ * @internal
+ */
 function segmentToString(segment: PathSegment, previous?: Point2D): string {
   switch (segment.kind) {
     case "move":
@@ -46,21 +64,64 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
   }
 }
 
+/**
+ * A fluent builder for constructing SVG path elements.
+ *
+ * Provides methods for common path operations (lines, curves, arcs) as well as
+ * higher-level shape helpers (rectangles, regular polygons, ellipses).
+ * Each drawing method returns `this` for chaining.
+ *
+ * @example
+ * ```ts
+ * s.path(s.A.fill(200, 80, 50))
+ *   .moveTo([0.1, 0.1])
+ *   .lineTo([0.9, 0.1])
+ *   .curveTo([0.9, 0.9])
+ *   .close()
+ * ```
+ */
 export class Path {
+  /** The ordered list of path segments that make up this path. */
   segments: PathSegment[] = []
 
+  /**
+   * Creates a new Path with the given attributes.
+   *
+   * @param attributes - The {@link Attributes} to apply to this path element
+   */
   constructor(readonly attributes: Attributes) {}
 
+  /**
+   * Moves the pen to a point without drawing.
+   *
+   * @param point - The target position
+   * @returns `this` for chaining
+   */
   moveTo(point: Point2D): Path {
     this.segments.push({ kind: "move", to: point })
     return this
   }
 
+  /**
+   * Draws a straight line from the current position to the given point.
+   *
+   * @param point - The target position
+   * @returns `this` for chaining
+   */
   lineTo(point: Point2D): Path {
     this.segments.push({ kind: "line", to: point })
     return this
   }
 
+  /**
+   * Draws a cubic bezier curve from the current position to the given point.
+   *
+   * The curve shape is controlled by the optional {@link CurveConfig}.
+   *
+   * @param point - The target position
+   * @param config - Optional curve configuration (size, polarity, bulbousness, angle, twist)
+   * @returns `this` for chaining
+   */
   curveTo(point: Point2D, config: CurveConfig = {}): Path {
     const {
       curveSize = 1,
@@ -78,6 +139,16 @@ export class Path {
     return this
   }
 
+  /**
+   * Draws an elliptical arc from the current position to the given point.
+   *
+   * If radii are not specified, they default to the absolute x/y distance between
+   * the current position and the target point.
+   *
+   * @param point - The target position
+   * @param config - Optional arc configuration (radii, rotation, large arc flag)
+   * @returns `this` for chaining
+   */
   arcTo(point: Point2D, config: ArcConfig = {}): Path {
     try {
       const previous: Point2D = (this.segments[this.segments.length - 1] as any)
@@ -107,6 +178,15 @@ export class Path {
     }
   }
 
+  /**
+   * Draws a rectangle as a closed path.
+   *
+   * @param at - The position of the rectangle
+   * @param width - The width of the rectangle
+   * @param height - The height of the rectangle
+   * @param align - Whether `at` is the `"topLeft"` corner or the `"center"` (default)
+   * @returns `this` for chaining
+   */
   rect(
     at: Point2D,
     width: number,
@@ -123,6 +203,16 @@ export class Path {
     return this
   }
 
+  /**
+   * Draws a regular polygon with `n` sides inscribed in a circle.
+   *
+   * @param at - The position of the polygon
+   * @param n - The number of sides
+   * @param radius - The circumscribed circle radius
+   * @param rotate - Initial rotation angle in radians (default `0`)
+   * @param align - Whether `at` is the `"topLeft"` of the bounding box or the `"center"` (default)
+   * @returns `this` for chaining
+   */
   regularPolygon(
     at: Point2D,
     n: number,
@@ -150,6 +240,15 @@ export class Path {
     return this
   }
 
+  /**
+   * Draws an ellipse using four arc segments.
+   *
+   * @param at - The position of the ellipse
+   * @param width - The full width of the ellipse
+   * @param height - The full height of the ellipse
+   * @param align - Whether `at` is the `"topLeft"` of the bounding box or the `"center"` (default)
+   * @returns `this` for chaining
+   */
   ellipse(
     at: Point2D,
     width: number,
@@ -176,11 +275,25 @@ export class Path {
     return this
   }
 
+  /**
+   * Closes the current sub-path by drawing a line back to the starting point.
+   *
+   * @returns `this` for chaining
+   */
   close(): Path {
     this.segments.push({ kind: "close" })
     return this
   }
 
+  /**
+   * Applies Chaikin's corner-cutting algorithm to smooth line segments.
+   *
+   * Each iteration replaces sharp corners with two new points at 25% and 75%
+   * along each edge, progressively smoothing the path.
+   *
+   * @param n - The number of smoothing iterations (default `2`)
+   * @returns `this` for chaining
+   */
   chaiken(n: number = 2): Path {
     for (let k = 0; k < n; k++) {
       const newSegments: PathSegment[] = []
@@ -210,14 +323,25 @@ export class Path {
     return this
   }
 
+  /**
+   * Transforms each segment of the path using a mapping function.
+   *
+   * @param fn - A function that receives each segment and its index, returning a new segment
+   * @returns `this` for chaining
+   */
   map(fn: (el: PathSegment, index: number) => PathSegment): Path {
     this.segments = this.segments.map(fn)
     return this
   }
 
   /**
-   * NB while this copies a path it won't be inclued in a drawing
-   * use SolandraSVG.clonePath(path) for this.
+   * Creates a deep copy of this path.
+   *
+   * Note: The cloned path is not automatically included in the drawing.
+   * Use {@link SolandraSvg.clonePath} to clone a path and add it to the drawing.
+   *
+   * @param attributes - Optional replacement attributes for the clone
+   * @returns A new {@link Path} with copied segments
    */
   clone(attributes?: Attributes): Path {
     const p = new Path(attributes || this.attributes.clone())
@@ -225,6 +349,13 @@ export class Path {
     return p
   }
 
+  /**
+   * Serialises this path to an SVG `<path>` element string.
+   *
+   * @param depth - The indentation depth for pretty-printing
+   * @returns The SVG path element string
+   * @throws If no segments have been added or the first segment is not a move
+   */
   string(depth: number): string {
     if (this.segments.length === 0) throw Error("Must add to path")
     if (this.segments[0].kind !== "move")
@@ -241,6 +372,11 @@ export class Path {
     return indent(`<path${this.attributes.string} d="${d}" />`, depth)
   }
 
+  /**
+   * Provides mutable access to this path's attributes via a callback.
+   *
+   * @param configureAttributes - A function that receives the {@link Attributes} instance to modify
+   */
   configureAttributes(configureAttributes: (attributes: Attributes) => void) {
     configureAttributes(this.attributes)
   }

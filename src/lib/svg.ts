@@ -5,10 +5,28 @@ import { indent } from "./util/internalUtil"
 import { RNG } from "./rng"
 import { Transform } from "./transforms"
 
+/**
+ * An SVG `<g>` group element that can contain nested {@link Path} and {@link Group} children.
+ *
+ * Groups are created via {@link SolandraSvg.group} and allow shared attributes
+ * (e.g. transforms, styles) to be applied to multiple child elements.
+ */
 export class Group {
+  /** The child elements (paths or nested groups) within this group. */
   children: (Group | Path)[] = []
+
+  /**
+   * @param attributes - The {@link Attributes} applied to this `<g>` element
+   */
   constructor(readonly attributes: Attributes) {}
 
+  /**
+   * Serialises this group and all its children to SVG markup lines.
+   *
+   * @param depth - The indentation depth for pretty-printing
+   * @returns An array of indented SVG markup lines
+   * @internal
+   */
   strings(depth: number): string[] {
     return [
       indent(`<g${this.attributes.string}>`, depth),
@@ -23,23 +41,64 @@ export class Group {
     ]
   }
 
+  /**
+   * Adds a child element (path or nested group) to this group.
+   *
+   * @param element - The child to add
+   */
   push(element: Group | Path) {
     this.children.push(element)
   }
 }
 
+/**
+ * The main entry point for creating SVG drawings with Solandra.
+ *
+ * Provides a declarative, fluent API for building SVG graphics with:
+ * - Path creation ({@link path}, {@link strokedPath}, {@link cutPath}, {@link creasePath})
+ * - Grouping ({@link group}, {@link groupWithId})
+ * - Layout iteration ({@link forTiling}, {@link forHorizontal}, {@link forVertical}, {@link forGrid}, {@link aroundCircle})
+ * - Seeded randomness ({@link random}, {@link gaussian}, {@link poisson}, {@link sample}, {@link shuffle})
+ * - SVG output ({@link image}, {@link imageSrc})
+ *
+ * The drawing uses a normalised coordinate system where `x` ranges from `0` to `1`
+ * and `y` ranges from `0` to `1/aspectRatio`.
+ *
+ * @example
+ * ```ts
+ * const s = new SolandraSvg(800, 600, 42)
+ * s.forTiling({ n: 4, margin: 0.1 }, (point, delta, center) => {
+ *   s.path(s.A.fill(200, 80, 50))
+ *     .ellipse(center, delta[0] * 0.8, delta[1] * 0.8)
+ * })
+ * document.body.innerHTML = s.image
+ * ```
+ */
 export class SolandraSvg {
+  /** The width-to-height ratio of the drawing. */
   readonly aspectRatio: number
   private rng: RNG
+  /** The top-level SVG elements (paths and groups). */
   elements: (Group | Path)[] = []
-  // Basically track current group for paths to be added to, null = no group/top level scope
   private currentGroup: Group | null = null
 
+  /**
+   * Creates a new SolandraSvg drawing context.
+   *
+   * @param width - The pixel width of the SVG
+   * @param height - The pixel height of the SVG
+   * @param seed - Optional seed for the random number generator (for reproducible output)
+   */
   constructor(readonly width: number, readonly height: number, seed?: number) {
     this.aspectRatio = width / height
     this.rng = new RNG(seed)
   }
 
+  /**
+   * Generates the complete SVG markup string for the drawing.
+   *
+   * The viewBox is normalised to `"0 0 1 {1/aspectRatio}"`.
+   */
   get image(): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
@@ -56,12 +115,23 @@ ${this.elements
 </svg>`
   }
 
+  /**
+   * Generates a data URI for the SVG image, suitable for use as an `<img>` `src`.
+   *
+   * @param encode - If `true` (default), URI-encodes the SVG; otherwise only escapes `#` characters
+   * @returns A `data:image/svg+xml` URI string
+   */
   imageSrc(encode: boolean = true): string {
     return `data:image/svg+xml;utf8,${
       encode ? encodeURIComponent(this.image) : this.image.replace(/\#/g, "%23")
     }`
   }
 
+  /**
+   * Generates SVG markup with millimetre dimensions, suitable for Inkscape import.
+   *
+   * @remarks This API is unstable and may change.
+   */
   get UNSTABLE_imageInkscapeReady(): string {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
@@ -74,10 +144,17 @@ ${this.elements
       return el.string(1)
     }
   })
-  .join("\n")}    
+  .join("\n")}
 </svg>`
   }
 
+  /**
+   * Generates a data URI for the Inkscape-ready SVG image.
+   *
+   * @param encode - If `true` (default), URI-encodes the SVG; otherwise only escapes `#` characters
+   * @returns A `data:image/svg+xml` URI string
+   * @remarks This API is unstable and may change.
+   */
   UNSTABLE_imageSrcInkscapeReady(encode: boolean = true): string {
     return `data:image/svg+xml;utf8,${
       encode
@@ -86,6 +163,15 @@ ${this.elements
     }`
   }
 
+  /**
+   * Creates an SVG `<g>` group with the given attributes.
+   *
+   * All paths and groups created within the `contents` callback are nested inside this group.
+   * Groups can be nested arbitrarily.
+   *
+   * @param attributes - The {@link Attributes} for the group element
+   * @param contents - A callback in which child elements are added to the group
+   */
   group(attributes: Attributes, contents: () => void) {
     const parent = this.currentGroup
     const newGroup = new Group(attributes)
@@ -95,10 +181,22 @@ ${this.elements
     this.currentGroup = parent
   }
 
+  /**
+   * Creates an SVG `<g>` group with the given ID.
+   *
+   * Convenience wrapper around {@link group} that only sets the `id` attribute.
+   *
+   * @param id - The group element ID
+   * @param contents - A callback in which child elements are added to the group
+   */
   groupWithId(id: string, contents: () => void) {
     this.group(new Attributes().id(id), contents)
   }
 
+  /**
+   * Returns the current element container (either the active group or the top-level element list).
+   * @internal
+   */
   get currentElements(): Group | (Group | Path)[] {
     if (this.currentGroup) {
       return this.currentGroup
@@ -107,12 +205,26 @@ ${this.elements
     }
   }
 
+  /**
+   * Creates a new {@link Path} and adds it to the current drawing context.
+   *
+   * @param attributes - Optional {@link Attributes} for the path (defaults to empty)
+   * @returns The new path, ready for drawing commands
+   */
   path(attributes: Attributes = new Attributes()): Path {
     const path = new Path(attributes)
     this.currentElements.push(path)
     return path
   }
 
+  /**
+   * Creates a new stroked {@link Path} with sensible defaults for line drawing.
+   *
+   * Defaults: no fill, black stroke, width `0.005`, round line cap.
+   *
+   * @param configureAttributes - Optional callback to further customise the attributes
+   * @returns The new stroked path
+   */
   strokedPath(configureAttributes?: (attributes: Attributes) => void): Path {
     const attr = Attributes.stroked
       .stroke(0, 0, 0)
@@ -125,6 +237,13 @@ ${this.elements
     return path
   }
 
+  /**
+   * Clones an existing path, adds the clone to the drawing, and returns it.
+   *
+   * @param path - The path to clone
+   * @param attributes - Optional replacement attributes for the clone
+   * @returns The cloned path (now part of the drawing)
+   */
   clonePath(path: Path, attributes?: Attributes): Path {
     const newPath = path.clone(attributes)
     this.currentElements.push(newPath)
@@ -132,7 +251,12 @@ ${this.elements
   }
 
   /**
-   * @returns Simple preset path for cut and fold designs; optionally provide a function to further configure the attributes
+   * Creates a preset path for cut lines in cut-and-fold designs.
+   *
+   * Defaults: round caps and joins, grey stroke (`lightness: 60`), width `0.005`.
+   *
+   * @param configureAttributes - Optional callback to further customise the attributes
+   * @returns The new cut path
    */
   cutPath(configureAttributes?: (attributes: Attributes) => void) {
     return this.strokedPath((a) => {
@@ -142,7 +266,12 @@ ${this.elements
   }
 
   /**
-   * @returns Simple preset path for cut and fold designs; optionally provide a function to further configure the attributes
+   * Creates a preset path for crease/fold lines in cut-and-fold designs.
+   *
+   * Defaults: round caps and joins, light grey stroke (`lightness: 90`), width `0.005`.
+   *
+   * @param configureAttributes - Optional callback to further customise the attributes
+   * @returns The new crease path
    */
   creasePath(configureAttributes?: (attributes: Attributes) => void) {
     return this.strokedPath((a) => {
@@ -151,12 +280,16 @@ ${this.elements
     })
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  //                                                                                              //
-  //     Literally copied from Solandra... should probably figure out decent way to share(!)      //
-  //                                                                                              //
-  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // ── Iteration utilities ────────────────────────────────────────────
 
+  /**
+   * Iterates once over the drawing area with the given margin.
+   *
+   * Shorthand for `forTiling({ n: 1, margin }, callback)`.
+   *
+   * @param margin - The margin around the drawing area (in normalised coordinates)
+   * @param callback - Called with the top-left point, the size delta, the center, and index `0`
+   */
   forMargin = (
     margin: number,
     callback: (
@@ -167,6 +300,16 @@ ${this.elements
     ) => void
   ) => this.forTiling({ n: 1, margin }, callback)
 
+  /**
+   * Tiles the drawing area into a grid of cells and iterates over each cell.
+   *
+   * @param config - Tiling configuration
+   * @param config.n - Number of columns (and rows, unless `type` is `"square"`)
+   * @param config.type - `"proportionate"` (default) uses `n` rows, `"square"` calculates rows from aspect ratio
+   * @param config.margin - Margin around the grid (default `0`)
+   * @param config.order - Iteration order: `"columnFirst"` (default) or `"rowFirst"`
+   * @param callback - Called for each cell with `(topLeft, cellSize, cellCenter, index)`
+   */
   forTiling = (
     config: {
       n: number
@@ -225,6 +368,14 @@ ${this.elements
     }
   }
 
+  /**
+   * Divides the drawing area into `n` horizontal strips and iterates over each.
+   *
+   * @param config - Configuration
+   * @param config.n - Number of horizontal strips
+   * @param config.margin - Margin around the area (default `0`)
+   * @param callback - Called for each strip with `(topLeft, stripSize, stripCenter, index)`
+   */
   forHorizontal = (
     config: {
       n: number
@@ -255,6 +406,14 @@ ${this.elements
     }
   }
 
+  /**
+   * Divides the drawing area into `n` vertical strips and iterates over each.
+   *
+   * @param config - Configuration
+   * @param config.n - Number of vertical strips
+   * @param config.margin - Margin around the area (default `0`)
+   * @param callback - Called for each strip with `(topLeft, stripSize, stripCenter, index)`
+   */
   forVertical = (
     config: {
       n: number
@@ -285,6 +444,17 @@ ${this.elements
     }
   }
 
+  /**
+   * Iterates over all integer points in a 2D grid defined by min/max bounds.
+   *
+   * @param config - Grid bounds and ordering
+   * @param config.minX - Minimum x value (inclusive)
+   * @param config.maxX - Maximum x value (inclusive)
+   * @param config.minY - Minimum y value (inclusive)
+   * @param config.maxY - Maximum y value (inclusive)
+   * @param config.order - Iteration order: `"columnFirst"` (default) or `"rowFirst"`
+   * @param callback - Called for each grid point with `(point, index)`
+   */
   forGrid = (
     config: {
       minX: number
@@ -315,11 +485,14 @@ ${this.elements
     }
   }
 
-  /*
-    Build something using other iteration utlities rather than drawing within callback
-
-    I tried a  curried version with first argument so could compose with random order etc, but TypeScript wasn't figuring out types properly at use site. Would probably require explicit annotation so don't want that.
-  */
+  /**
+   * Collects results from an iteration utility into an array, rather than drawing within the callback.
+   *
+   * @param iterFn - An iteration function (e.g. {@link forTiling}, {@link forGrid})
+   * @param config - The configuration to pass to the iteration function
+   * @param cb - A mapping callback that returns a value for each iteration
+   * @returns An array of values produced by `cb`
+   */
   build = <C, T extends any[], U>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
@@ -332,9 +505,15 @@ ${this.elements
     return res
   }
 
-  /*
-    Take existing iteration function and apply in random order
-  */
+  /**
+   * Runs an iteration utility's callback in random order.
+   *
+   * Collects all iteration arguments first, shuffles them, then calls `cb` for each.
+   *
+   * @param iterFn - An iteration function (e.g. {@link forTiling}, {@link forGrid})
+   * @param config - The configuration to pass to the iteration function
+   * @param cb - The callback to execute in random order
+   */
   withRandomOrder<C, T extends any[]>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
@@ -351,24 +530,51 @@ ${this.elements
     }
   }
 
+  /**
+   * Executes a callback with probability `p`.
+   *
+   * @param p - The probability of executing (between `0` and `1`)
+   * @param callback - The callback to conditionally execute
+   */
   doProportion(p: number, callback: () => void) {
     if (this.rng.number() < p) {
       callback()
     }
   }
 
+  /**
+   * Executes a callback `n` times, passing the iteration index.
+   *
+   * @param n - The number of iterations
+   * @param callback - Called with the index `0` through `n-1`
+   */
   times(n: number, callback: (n: number) => void) {
     for (let i = 0; i < n; i++) {
       callback(i)
     }
   }
 
+  /**
+   * Executes a callback counting down from `n` to `1`.
+   *
+   * @param n - The starting count
+   * @param callback - Called with values from `n` down to `1`
+   */
   downFrom(n: number, callback: (n: number) => void) {
     for (let i = n; i > 0; i--) {
       callback(i)
     }
   }
 
+  /**
+   * Iterates over `n` evenly spaced points around a circle.
+   *
+   * @param config - Circle configuration
+   * @param config.at - Center of the circle (defaults to the drawing center)
+   * @param config.r - Radius of the circle (default `0.25`)
+   * @param config.n - Number of points around the circle
+   * @param callback - Called for each point with `(point, index)`
+   */
   aroundCircle = (
     config: {
       at?: Point2D
@@ -387,6 +593,13 @@ ${this.elements
     }
   }
 
+  /**
+   * Randomly selects and executes one of several weighted cases.
+   *
+   * @param cases - An array of `[weight, callback]` pairs
+   * @returns The return value of the selected callback
+   * @throws If the total weight is not positive
+   */
   proportionately<T>(cases: [number, () => T][]): T {
     const total = cases.map((c) => c[0]).reduce((a, b) => a + b, 0)
     if (total <= 0) throw new Error("Must be positive total")
@@ -399,14 +612,29 @@ ${this.elements
         r -= cases[i][0]
       }
     }
-    //fallback *should never happen!*
+    // fallback (should never happen)
     return cases[0][1]()
   }
 
+  /**
+   * Generates a random point within the drawing bounds.
+   *
+   * @returns A random {@link Point2D} with `x` in `[0, 1]` and `y` in `[0, 1/aspectRatio]`
+   */
   randomPoint(): Point2D {
     return [this.rng.number(), this.rng.number() / this.aspectRatio]
   }
 
+  /**
+   * Iterates over evenly spaced values in a numeric range.
+   *
+   * @param config - Range configuration
+   * @param config.from - The start value (default `0`)
+   * @param config.to - The end value (default `1`)
+   * @param config.n - The number of steps
+   * @param config.inclusive - Whether to include the endpoint (default `true`)
+   * @param callback - Called with each value in the range
+   */
   range(
     config: { from: number; to: number; n: number; inclusive?: boolean },
     callback: (n: number) => void
@@ -420,6 +648,12 @@ ${this.elements
     }
   }
 
+  /**
+   * Tests whether a point is within the drawing bounds.
+   *
+   * @param point - The point to test
+   * @returns `true` if the point is strictly inside the drawing area
+   */
   inDrawing = (point: Point2D): boolean => {
     const { left, right, top, bottom } = this.meta
     return (
@@ -427,25 +661,34 @@ ${this.elements
     )
   }
 
-  // Randomness
+  // ── Randomness ─────────────────────────────────────────────────────
 
   /**
-   * A uniform random number betweeon 0 and 1
+   * Generates a uniform random number between 0 and 1.
+   *
+   * @returns A random number in `[0, 1)`
    */
   random = (): number => {
     return this.rng.number()
   }
 
   /**
-   * A uniform random number betweeon 0 and 2π
+   * Generates a uniform random angle between 0 and 2pi.
+   *
+   * @returns A random angle in `[0, 2pi)` radians
    */
   randomAngle = (): number => {
     return this.rng.number() * Math.PI * 2
   }
 
   /**
-   * A uniform random integer. Default lower bound is 0.
-   * Upper bound can be inclusive (default) or exclusive
+   * Generates a uniform random integer within the given bounds.
+   *
+   * @param config - Integer range configuration
+   * @param config.from - Lower bound (default `0`)
+   * @param config.to - Upper bound
+   * @param config.inclusive - Whether the upper bound is inclusive (default `true`)
+   * @returns A random integer
    */
   uniformRandomInt = (config: {
     from?: number
@@ -458,7 +701,10 @@ ${this.elements
   }
 
   /**
-   * A random Point2D on a grid
+   * Generates a random integer {@link Point2D} within the given grid bounds.
+   *
+   * @param bounds - The grid bounds (all inclusive)
+   * @returns A random grid point
    */
   uniformGridPoint = ({
     minX,
@@ -478,21 +724,30 @@ ${this.elements
   }
 
   /**
-   * A coin toss with result either -1 or 1
+   * Returns either `-1` or `1` with equal probability.
+   *
+   * @returns `1` or `-1`
    */
   randomPolarity = (): 1 | -1 => {
     return this.rng.number() > 0.5 ? 1 : -1
   }
 
   /**
-   * Sample uniformly from an array
+   * Selects a single random element from an array with uniform probability.
+   *
+   * @param from - The source array
+   * @returns A randomly selected element
    */
   sample = <T>(from: T[]): T => {
     return from[Math.floor(this.rng.number() * from.length)]
   }
 
   /**
-   * n uniform samples from an array
+   * Selects `n` random elements from an array with replacement.
+   *
+   * @param n - The number of samples
+   * @param from - The source array
+   * @returns An array of `n` randomly selected elements
    */
   samples = <T>(n: number, from: T[]): T[] => {
     let res: T[] = []
@@ -503,7 +758,10 @@ ${this.elements
   }
 
   /**
-   * Shuffle an array
+   * Shuffles an array in place using the Fisher-Yates algorithm.
+   *
+   * @param items - The array to shuffle
+   * @returns The same array, now shuffled
    */
   shuffle = <T>(items: T[]): T[] => {
     let currentIndex = items.length
@@ -524,9 +782,15 @@ ${this.elements
   }
 
   /**
-   * Perturb a point by a random amount (by default uniform random changes in
-   * -0.05 to 0.05, optional magnitude scales this e.g. magnitude 1 is perturbations
-   * of -0.5 to 0.5)
+   * Perturbs a point by a random offset.
+   *
+   * By default applies uniform random changes in the range `[-0.05, 0.05]` per axis.
+   * The `magnitude` parameter scales this range (e.g. `magnitude: 1` gives `[-0.5, 0.5]`).
+   *
+   * @param config - Perturbation configuration
+   * @param config.at - The point to perturb
+   * @param config.magnitude - Scale factor for the perturbation range (default `0.1`)
+   * @returns A new perturbed point
    */
   perturb = (config: { at: Point2D; magnitude?: number }): Point2D => {
     const {
@@ -540,7 +804,12 @@ ${this.elements
   }
 
   /**
-   * Gaussian random number, default mean 0, default standard deviation 1
+   * Generates a Gaussian (normally distributed) random number using the Box-Muller transform.
+   *
+   * @param config - Optional distribution parameters
+   * @param config.mean - The mean of the distribution (default `0`)
+   * @param config.sd - The standard deviation (default `1`)
+   * @returns A normally distributed random number
    */
   gaussian = (config?: { mean?: number; sd?: number }): number => {
     const { mean = 0, sd = 1 } = config || {}
@@ -551,7 +820,10 @@ ${this.elements
   }
 
   /**
-   * Poisson random number, lambda (the mean and variance) is only parameter
+   * Generates a Poisson-distributed random integer.
+   *
+   * @param lambda - The rate parameter (both the mean and variance of the distribution)
+   * @returns A non-negative integer drawn from the Poisson distribution
    */
   poisson = (lambda: number): number => {
     const limit = Math.exp(-lambda)
@@ -564,6 +836,11 @@ ${this.elements
     return n
   }
 
+  /**
+   * Returns metadata about the drawing dimensions and bounds.
+   *
+   * @returns An object with `top`, `bottom`, `left`, `right`, `aspectRatio`, and `center` properties
+   */
   get meta() {
     return {
       top: 0,
@@ -575,10 +852,16 @@ ${this.elements
     }
   }
 
+  /**
+   * Shorthand to create a new empty {@link Attributes} instance.
+   */
   get A(): Attributes {
     return new Attributes()
   }
 
+  /**
+   * Shorthand to create a new empty {@link Transform} instance.
+   */
   get T(): Transform {
     return new Transform()
   }

@@ -1,5 +1,14 @@
 import { Point2D } from "./types"
 
+/**
+ * Clamps a number to a given range.
+ *
+ * @param range - The range to clamp to
+ * @param range.from - The minimum allowed value
+ * @param range.to - The maximum allowed value
+ * @param n - The number to clamp
+ * @returns The clamped value, guaranteed to be within `[from, to]`
+ */
 export const clamp = (
   { from, to }: { from: number; to: number },
   n: number
@@ -7,13 +16,32 @@ export const clamp = (
   return Math.min(to, Math.max(from, n))
 }
 
+/**
+ * Configuration for a linear scale that maps values from a domain to a range.
+ */
 type ScaleConfig = {
+  /** The minimum input value */
   minDomain: number
+  /** The maximum input value */
   maxDomain: number
+  /** The minimum output value */
   minRange: number
+  /** The maximum output value */
   maxRange: number
 }
 
+/**
+ * Creates a linear scale function that maps values from a domain to a range.
+ *
+ * @param config - The scale configuration defining domain and range bounds
+ * @returns A function that maps a domain value to its corresponding range value
+ *
+ * @example
+ * ```ts
+ * const toPercent = scaler({ minDomain: 0, maxDomain: 1, minRange: 0, maxRange: 100 })
+ * toPercent(0.5) // 50
+ * ```
+ */
 export const scaler = ({
   minDomain,
   maxDomain,
@@ -25,6 +53,13 @@ export const scaler = ({
   return (n) => minRange + (rangeS * (n - minDomain)) / domainS
 }
 
+/**
+ * Creates a 2D linear scale function that independently maps x and y coordinates.
+ *
+ * @param c1 - The scale configuration for the x-axis
+ * @param c2 - The scale configuration for the y-axis
+ * @returns A function that maps a {@link Point2D} from domain space to range space
+ */
 export const scaler2d = (
   c1: ScaleConfig,
   c2: ScaleConfig
@@ -35,8 +70,10 @@ export const scaler2d = (
 }
 
 /**
- * @param height The height of the (vertical parts of) isometric grid cells
- * @returns A function mapping from [x,y,z] to [x,y].
+ * Creates a function that projects 3D coordinates onto a 2D isometric plane.
+ *
+ * @param height - The height of the vertical parts of isometric grid cells
+ * @returns A function mapping `[x, y, z]` to an isometric `[x, y]` position
  */
 export const isoTransform = (height: number) => {
   const w = (height * Math.sqrt(3)) / 2
@@ -46,6 +83,16 @@ export const isoTransform = (height: number) => {
   ]
 }
 
+/**
+ * Computes the centroid (geometric center) of a set of points.
+ *
+ * If the first and last points are identical (i.e. the polygon is closed),
+ * the duplicate point is excluded from the calculation.
+ *
+ * @param points - An array of points (must contain at least one)
+ * @returns The centroid point
+ * @throws If the array is empty
+ */
 export const centroid = (points: Point2D[]): Point2D => {
   const n = points.length
   if (n === 0) {
@@ -71,8 +118,14 @@ export const centroid = (points: Point2D[]): Point2D => {
 const cp6 = Math.cos(Math.PI / 6)
 
 /**
- * NB Assumes integer grid
- * Supply a radius and boolean for whether it should be vertical (vertex at top) or not
+ * Creates a function that transforms integer grid coordinates to hexagonal grid positions.
+ *
+ * Assumes an integer grid as input. Supply a radius and orientation to control the layout.
+ *
+ * @param config - The hexagonal grid configuration
+ * @param config.r - The radius of each hexagon
+ * @param config.vertical - If `true` (default), vertices point up; if `false`, edges point up
+ * @returns A function mapping integer `[x, y]` grid coordinates to hexagonal `[x, y]` positions
  */
 export const hexTransform = ({
   r,
@@ -89,7 +142,15 @@ export const hexTransform = ({
 }
 
 /**
- * NB Assumes integer grid, returns function that will return center of triangle and whether it should be flipped
+ * Creates a function that transforms integer grid coordinates to triangular grid positions.
+ *
+ * Assumes an integer grid as input. Returns both the center position of each triangle
+ * and whether it is flipped (pointing downward).
+ *
+ * @param config - The triangular grid configuration
+ * @param config.s - The side length of each triangle
+ * @returns A function mapping integer `[x, y]` to `{ at, flipped }` where `at` is the center
+ *   position and `flipped` indicates if the triangle points downward
  */
 export const triTransform = ({ s }: { s: number }) => {
   const r = s / (2 * Math.sin(Math.PI / 3))

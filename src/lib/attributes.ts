@@ -3,36 +3,48 @@ import { hslToRgb } from "./util/colorCalcs"
 import { Point2D } from "./util/types"
 
 /**
-Supports (via fluent api)
-  - [x] "fill"
-  - [x] "fill-opacity" 
-  - [x] "opacity"
-  - [x] "stroke"
-  - [x] "stroke-dasharray" a lot of these in viewBox dimensions
-  - [x] "stroke-dashoffset"
-  - [x] "stroke-linecap"
-  - [x] "stroke-linejoin"
-  - [x] "stroke-miterlimit"
-  - [x] "stroke-opacity"
-  - [x] "stroke-width" NB this has to be really low if going to work with 1 h dimensions?
-  - [x] "transform"
-  - [x] "class"
-  - [x] "id"
-
-  has a handful of static functions that provide reasonable defaults for common use
-*/
+ * Fluent builder for SVG presentation attributes and inline styles.
+ *
+ * Supports fill, stroke, opacity, dash patterns, transforms, CSS classes, and IDs.
+ * Methods return `this` for chaining. Use the {@link string} getter to serialise
+ * the attributes for embedding in SVG markup.
+ *
+ * Also provides static factory methods ({@link stroked}, {@link filled}, {@link empty})
+ * for common presets.
+ *
+ * @example
+ * ```ts
+ * new Attributes()
+ *   .fill(200, 80, 50)
+ *   .strokeWidth(0.01)
+ *   .stroke(0, 0, 0)
+ * ```
+ */
 export class Attributes {
   private attributes: { [key: string]: string | number } = {}
   private styleAttributes: { [key: string]: string | number } = {}
 
+  /**
+   * Sets the overall opacity of the element.
+   *
+   * @param opacity - Opacity value from `0` (transparent) to `1` (opaque)
+   * @returns `this` for chaining
+   */
   opacity(opacity: number): Attributes {
     this.styleAttributes["opacity"] = opacity
     return this
   }
 
-  /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
-       in render use hex for compatability with Inkscape(!)
-  */
+  /**
+   * Sets the fill colour using HSL values, rendered as a hex RGB string
+   * for compatibility with Inkscape.
+   *
+   * @param hue - Hue from `0` to `360`
+   * @param saturation - Saturation from `0` to `100`
+   * @param lightness - Lightness from `0` to `100`
+   * @param opacity - Optional fill opacity from `0` to `1`
+   * @returns `this` for chaining
+   */
   fill(
     hue: number,
     saturation: number,
@@ -48,26 +60,38 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Removes the fill (sets it to `"none"`).
+   *
+   * @returns `this` for chaining
+   */
   noFill(): Attributes {
     this.styleAttributes["fill"] = "none"
     return this
   }
 
+  /**
+   * Sets the fill opacity independently of the fill colour.
+   *
+   * @param opacity - Opacity value from `0` to `1`
+   * @returns `this` for chaining
+   */
   fillOpacity(opacity: number): Attributes {
     this.styleAttributes["fill-opacity"] = opacity
     return this
   }
 
   /**
-   * Use OkLCH colour space
+   * Sets the fill colour using the OkLCH colour space.
    *
-   * NB this is not as widely supported as other approaches but for modern browser use should be fine
+   * OkLCH provides perceptually uniform colour manipulation. Note that this may not
+   * be supported in all SVG renderers (e.g. older Inkscape versions), but works in modern browsers.
    *
-   * @param lightness
-   * @param chroma
-   * @param hue
-   * @param opacity
-   * @returns
+   * @param lightness - Perceptual lightness (typically `0` to `1`)
+   * @param chroma - Colour intensity (typically `0` to `0.4`)
+   * @param hue - Hue angle in degrees (`0` to `360`)
+   * @param alpha - Opacity from `0` to `1`
+   * @returns `this` for chaining
    */
   fillOklch(
     lightness: number,
@@ -81,9 +105,16 @@ export class Attributes {
     return this
   }
 
-  /**  Colour is hue from 0 to 360, sat 0 to 100, lightnesss 0 to 100, opacity 0 to 1.0
-       in render use hex for compatability with Inkscape(!)
-  */
+  /**
+   * Sets the stroke colour using HSL values, rendered as a hex RGB string
+   * for compatibility with Inkscape.
+   *
+   * @param hue - Hue from `0` to `360`
+   * @param saturation - Saturation from `0` to `100`
+   * @param lightness - Lightness from `0` to `100`
+   * @param alpha - Optional stroke opacity from `0` to `1`
+   * @returns `this` for chaining
+   */
   stroke(
     hue: number,
     saturation: number,
@@ -99,6 +130,15 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Sets the stroke colour using the OkLCH colour space.
+   *
+   * @param lightness - Perceptual lightness (typically `0` to `1`)
+   * @param chroma - Colour intensity (typically `0` to `0.4`)
+   * @param hue - Hue angle in degrees (`0` to `360`)
+   * @param alpha - Stroke opacity from `0` to `1`
+   * @returns `this` for chaining
+   */
   strokeOklch(
     lightness: number,
     chroma: number,
@@ -113,21 +153,47 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Sets the stroke opacity independently of the stroke colour.
+   *
+   * @param opacity - Opacity value from `0` to `1`
+   * @returns `this` for chaining
+   */
   strokeOpacity(opacity: number): Attributes {
     this.styleAttributes["stroke-opacity"] = opacity
     return this
   }
 
+  /**
+   * Sets the stroke width.
+   *
+   * Note: When using the default `0`-to-`1` viewBox, values like `0.005` are typical.
+   *
+   * @param width - The stroke width in viewBox units
+   * @returns `this` for chaining
+   */
   strokeWidth(width: number): Attributes {
     this.styleAttributes["stroke-width"] = width
     return this
   }
 
+  /**
+   * Sets the stroke line cap style.
+   *
+   * @param cap - The line cap: `"butt"`, `"round"`, or `"square"`
+   * @returns `this` for chaining
+   */
   lineCap(cap: "butt" | "round" | "square"): Attributes {
     this.styleAttributes["stroke-linecap"] = cap
     return this
   }
 
+  /**
+   * Sets the stroke line join style.
+   *
+   * @param join - The line join: `"arcs"`, `"bevel"`, `"miter"`, `"miter-clip"`, or `"round"`
+   * @returns `this` for chaining
+   */
   lineJoin(
     join: "arcs" | "bevel" | "miter" | "miter-clip" | "round"
   ): Attributes {
@@ -135,36 +201,78 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Sets the miter limit for stroke line joins.
+   *
+   * @param limit - The miter limit ratio
+   * @returns `this` for chaining
+   */
   miterLimit(limit: number): Attributes {
     this.styleAttributes["stroke-miterlimit"] = limit
     return this
   }
 
+  /**
+   * Sets the stroke dash pattern.
+   *
+   * @param dashes - Alternating dash and gap lengths in viewBox units
+   * @returns `this` for chaining
+   */
   dashArray(...dashes: number[]): Attributes {
     this.styleAttributes["stroke-dasharray"] = dashes.join(" ")
     return this
   }
 
+  /**
+   * Sets the stroke dash offset.
+   *
+   * @param offset - The offset into the dash pattern
+   * @returns `this` for chaining
+   */
   dashOffset(offset: number) {
     this.styleAttributes["stroke-dashoffset"] = offset
     return this
   }
 
+  /**
+   * Sets a CSS class name on the element.
+   *
+   * @param name - The class name
+   * @returns `this` for chaining
+   */
   class(name: string): Attributes {
     this.attributes["class"] = name
     return this
   }
 
+  /**
+   * Sets the element ID.
+   *
+   * @param name - The ID string
+   * @returns `this` for chaining
+   */
   id(name: string): Attributes {
     this.attributes["id"] = name
     return this
   }
 
+  /**
+   * Applies SVG transformations to the element.
+   *
+   * @param transformations - A {@link Transform} instance describing the transformations
+   * @returns `this` for chaining
+   */
   transform(transformations: Transform): Attributes {
     this.attributes["transform"] = transformations.string
     return this
   }
 
+  /**
+   * Sets the transform origin for the element.
+   *
+   * @param location - A {@link Point2D} or the string `"center"`
+   * @returns `this` for chaining
+   */
   transformOrigin(location: Point2D | "center"): Attributes {
     if (typeof location === "string") {
       this.attributes["transform-origin"] = location
@@ -174,6 +282,11 @@ export class Attributes {
     return this
   }
 
+  /**
+   * Creates a deep copy of this Attributes instance.
+   *
+   * @returns A new {@link Attributes} with the same values
+   */
   clone(): Attributes {
     const newAttr = new Attributes()
     newAttr.attributes = { ...this.attributes }
@@ -182,7 +295,10 @@ export class Attributes {
   }
 
   /**
-   * Adds leading whitespace if non empty as this is tedious elsewhere
+   * Serialises all attributes and inline styles into an SVG attribute string.
+   *
+   * Returns a leading space followed by the attributes if any are set,
+   * or an empty string if no attributes have been configured.
    */
   get string(): string {
     const styleAttributeEntries = Object.entries(this.styleAttributes)
@@ -204,24 +320,41 @@ export class Attributes {
     return attrString
   }
 
+  /**
+   * Creates an {@link Attributes} preset for stroked paths with no fill.
+   *
+   * Defaults: no fill, stroke width `0.005`, black stroke.
+   */
   static get stroked(): Attributes {
     return new Attributes().noFill().strokeWidth(0.005).stroke(0, 0, 0)
   }
 
-  // in browser will have fill by default, but not in e.g. Inkscape hence this might be useful
+  /**
+   * Creates an {@link Attributes} preset with a black fill.
+   *
+   * Useful when the rendering context (e.g. Inkscape) does not apply a default fill.
+   */
   static get filled(): Attributes {
     return new Attributes().fill(0, 0, 0)
   }
 
+  /**
+   * Creates an {@link Attributes} instance with only a transform applied.
+   *
+   * @param transformations - The {@link Transform} to apply
+   * @returns A new {@link Attributes} with the given transform
+   */
   static transform(transformations: Transform): Attributes {
     return new Attributes().transform(transformations)
   }
 
   /**
-   * For when your attributes are only transformations (or you want to start there)
-   * @param transformSpec
+   * Creates an {@link Attributes} instance from a {@link Transform.of} specification.
    *
-   * @deprecated Don't think this is needed
+   * @param transformSpec - Arguments forwarded to {@link Transform.of}
+   * @returns A new {@link Attributes} with the resulting transform
+   *
+   * @deprecated Use `new Attributes().transform(new Transform().translate(...))` instead
    */
   static transformOf(
     ...transformSpec: Parameters<typeof Transform.of>
@@ -230,10 +363,13 @@ export class Attributes {
   }
 
   /**
-   * Offer a object based API too. Don't get the fluent API but in many cases easier, plus more like Solandra
-   * @param an object of attributribues
+   * Creates an {@link Attributes} instance from a plain configuration object.
    *
-   * @deprecated Plan to drop this as new s.A is consistent with other things and about as concise/better completion support
+   * Provides an alternative to the fluent API for cases where an object literal is more convenient.
+   *
+   * @param config - An object of attribute values
+   *
+   * @deprecated Use the fluent API via `new Attributes()` (accessible as `s.A`) instead
    */
   static of({
     fill,
@@ -347,6 +483,9 @@ export class Attributes {
     return attr
   }
 
+  /**
+   * Creates an empty {@link Attributes} instance with no attributes set.
+   */
   static get empty() {
     return new Attributes()
   }
