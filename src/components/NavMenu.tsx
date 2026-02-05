@@ -58,10 +58,7 @@ const examples: {
 
 export function NavMenu() {
   return (
-    <div
-      className="p-4 bg-gradient-to-r from-sky-300 to-rose-300 via-amber-300
-    "
-    >
+    <div className="p-4 bg-gradient-to-r from-sky-300 via-amber-300 to-rose-300">
       <NavigationMenu>
         <NavigationMenuList>
           <div>
