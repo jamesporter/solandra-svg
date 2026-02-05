@@ -258,7 +258,7 @@ s.forTiling(
         />
 
         <p>
-          Let's done down the randomness, make it more symetrical and repeat a
+          Let's tone down the randomness, make it more symmetrical and repeat a
           rotation with an offset.
         </p>
         <SmallSketch

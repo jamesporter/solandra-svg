@@ -11,7 +11,7 @@ export default function APIReference() {
       <p>The starting point; create an instance of this class.</p>
       <Source
         code={`import { SolandraSvg } from "solandra-svg"
-        
+
 const svg = new SolandraSvg(width, height, 1)`}
       />
       <p>Do some drawing (see below), then export with</p>
@@ -678,8 +678,7 @@ v.scale(...)
 v.polarToCartesian(...)
 v.pointAlong(...)
 v.dot(...)
-v.distance(...)
-          `}
+v.distance(...)`}
       />
     </PageLayout>
   )
