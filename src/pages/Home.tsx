@@ -352,7 +352,7 @@ export function Home() {
 })`}
         />
 
-        <h2>Chaiken</h2>
+        <h2>Chaikin</h2>
 
         <p>
           An elegant algorithm for smooth a path of lines. Repeatedly cut the
@@ -383,7 +383,7 @@ export function Home() {
                     return el
                   }
                 })
-                .chaiken(n + 1)
+                .chaikin(n + 1)
             })
           }}
         />
@@ -408,7 +408,7 @@ s.times(4, (n) => {
         return el
       }
     })
-    .chaiken(n + 1)
+    .chaikin(n + 1)
 })`}
         />
 

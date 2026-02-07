@@ -223,23 +223,23 @@ describe("Path", () => {
     })
   })
 
-  describe("chaiken", () => {
+  describe("chaikin", () => {
     it("should smooth a path with default iterations", () => {
       const path = new Path(Attributes.empty)
       path.moveTo([0, 0]).lineTo([0.5, 0]).lineTo([0.5, 0.5]).lineTo([1, 0.5])
       const originalLength = path.segments.length
-      path.chaiken()
-      // Chaiken should increase the number of segments
+      path.chaikin()
+      // Chaikin should increase the number of segments
       expect(path.segments.length).toBeGreaterThan(originalLength)
     })
 
     it("should smooth a path with custom iterations", () => {
       const path = new Path(Attributes.empty)
       path.moveTo([0, 0]).lineTo([0.5, 0]).lineTo([0.5, 0.5]).lineTo([1, 0.5])
-      path.chaiken(1)
+      path.chaikin(1)
       const path2 = new Path(Attributes.empty)
       path2.moveTo([0, 0]).lineTo([0.5, 0]).lineTo([0.5, 0.5]).lineTo([1, 0.5])
-      path2.chaiken(3)
+      path2.chaikin(3)
       // More iterations should produce more segments
       expect(path2.segments.length).toBeGreaterThan(path.segments.length)
     })

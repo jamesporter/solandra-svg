@@ -56,12 +56,12 @@ const svg = new SolandraSvg(width, height, 1)`}
         }}
         className="bg-zinc-100"
       />
-      <h3>Chaiken</h3>
+      <h3>Chaikin</h3>
       <p>Cuts corners to smooth out (note does not apply to start point).</p>
       <Source
         code={`s.filledPath((a) => a.fill(210, 80, 50))
     .rect(s.meta.center, 0.5, 0.2)
-    .chaiken(2)`}
+    .chaikin(2)`}
       />
       <SVGSketch
         width={320}
@@ -69,7 +69,7 @@ const svg = new SolandraSvg(width, height, 1)`}
         sketch={(s) => {
           s.filledPath((a) => a.fill(210, 80, 50))
             .rect(s.meta.center, 0.5, 0.2)
-            .chaiken(2)
+            .chaikin(2)
         }}
         className="bg-zinc-100"
       />
