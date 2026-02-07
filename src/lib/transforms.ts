@@ -158,12 +158,18 @@ export class Transform {
       tr.translate(translate)
     }
     if (scale !== undefined) {
-      typeof scale === "object" ? tr.scale(...scale) : tr.scale(scale)
+      if (typeof scale === "object") {
+        tr.scale(...scale)
+      } else {
+        tr.scale(scale)
+      }
     }
     if (rotate !== undefined) {
-      typeof rotate === "object"
-        ? tr.rotate(rotate[0], ...rotate[1])
-        : tr.rotate(rotate)
+      if (typeof rotate === "object") {
+        tr.rotate(rotate[0], ...rotate[1])
+      } else {
+        tr.rotate(rotate)
+      }
     }
     if (skewX !== undefined) {
       tr.skewX(skewX)

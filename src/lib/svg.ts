@@ -127,7 +127,7 @@ ${this.elements
    */
   imageSrc(encode: boolean = true): string {
     return `data:image/svg+xml;utf8,${
-      encode ? encodeURIComponent(this.image) : this.image.replace(/\#/g, "%23")
+      encode ? encodeURIComponent(this.image) : this.image.replace(/#/g, "%23")
     }`
   }
 
@@ -163,7 +163,7 @@ ${this.elements
     return `data:image/svg+xml;utf8,${
       encode
         ? encodeURIComponent(this.UNSTABLE_imageInkscapeReady)
-        : this.UNSTABLE_imageInkscapeReady.replace(/\#/g, "%23")
+        : this.UNSTABLE_imageInkscapeReady.replace(/#/g, "%23")
     }`
   }
 

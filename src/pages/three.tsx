@@ -4,7 +4,6 @@ import {
   perlin2,
   Point2D,
   SolandraSvg,
-  Transform,
   v,
 } from "@/lib"
 
@@ -338,7 +337,7 @@ export default function Three() {
           const path = s.strokedPath((attr) => attr.strokeWidth(0.0035))
           s.forTiling(
             { n: 10, type: "square", margin: 0.05 },
-            ([sX, sY], [dX], _c, i) => {
+            ([sX, sY], [dX], _c, _i) => {
               s.proportionately([
                 [
                   1,
@@ -372,7 +371,7 @@ export default function Three() {
         sketch={(s) => {
           s.forTiling(
             { n: 10, type: "square", margin: 0.05 },
-            ([sX, sY], [dX], c, i) => {
+            ([sX, sY], [dX], c, _i) => {
               const path = s.strokedPath((attr) =>
                 attr
                   .strokeWidth(0.0035)
@@ -412,7 +411,7 @@ export default function Three() {
         sketch={(s) => {
           s.forTiling(
             { n: 10, type: "square", margin: 0.05 },
-            ([sX, sY], [dX], c, i) => {
+            ([sX, sY], [dX], c, _i) => {
               const path = s.strokedPath((attr) =>
                 attr
                   .strokeWidth(0.0035)
@@ -590,7 +589,7 @@ export default function Three() {
         sketch={(s) => {
           s.forTiling(
             { n: 8, type: "square", margin: 0.075 },
-            ([sX, sY], [dX], c, i) => {
+            ([sX, sY], [dX], c, _i) => {
               s.doProportion(0.8, () => {
                 const path = s.strokedPath((attr) =>
                   attr
@@ -628,7 +627,7 @@ export default function Three() {
         sketch={(s) => {
           s.forTiling(
             { n: 11, type: "square", margin: 0.075 },
-            ([sX, sY], [dX], c, i) => {
+            ([sX, sY], [dX], c, _i) => {
               s.doProportion(0.8, () => {
                 const path = s.strokedPath((attr) =>
                   attr
@@ -659,7 +658,7 @@ export default function Three() {
         sketch={(s) => {
           s.forTiling(
             { n: 11, type: "square", margin: 0.075 },
-            (_, [dX], c, i) => {
+            (_, [dX], c, _i) => {
               s.doProportion(0.66, () => {
                 const path = s.strokedPath((attr) =>
                   attr
@@ -695,7 +694,7 @@ export default function Three() {
       <A4InkscapeSketch
         sketch={(s) => {
           const isofy = isoTransform(0.1)
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
 
           const path = s.strokedPath((attr) =>
             attr.transform(s.T.translate(0.4, bottom * 0.75))
@@ -724,7 +723,7 @@ export default function Three() {
       <A4InkscapeSketch
         sketch={(s) => {
           const isofy = isoTransform(0.25)
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
 
           const pointOnSphere = (): [number, number, number] => {
             const [x, y, z] = [s.gaussian(), s.gaussian(), s.gaussian()]
@@ -750,7 +749,7 @@ export default function Three() {
       <A4InkscapeSketch
         sketch={(s) => {
           const isofy = isoTransform(0.018)
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
 
           const path = s.strokedPath((attr) =>
             attr.transform(s.T.translate(0.5, bottom * 0.5))
@@ -768,7 +767,7 @@ export default function Three() {
       <A4InkscapeSketch
         sketch={(s) => {
           const isofy = isoTransform(0.018)
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
 
           const path = s.strokedPath((attr) =>
             attr.transform(s.T.translate(0.5, bottom * 0.5))
@@ -786,7 +785,7 @@ export default function Three() {
       <A4InkscapeSketch
         sketch={(s) => {
           const isofy = isoTransform(0.018)
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
 
           s.times(10, (n) => {
             let point: Point2D = [0, 0]
@@ -836,7 +835,7 @@ export default function Three() {
 
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
           const isofy = isoTransform(0.05)
 
           const path = s.strokedPath((attr) =>
@@ -845,7 +844,7 @@ export default function Three() {
 
           s.range({ from: 5, to: 3, n: 7, inclusive: true }, (n) => {
             const points: [number, number, number][] = s.build(
-              s.range,
+              (...args: Parameters<typeof s.range>) => s.range(...args),
               { from: 0, to: Math.PI * 2, n: 128, inclusive: false },
               (a) => [n * Math.cos(a), 5 - n, n * Math.sin(a)]
             )
@@ -858,7 +857,7 @@ export default function Three() {
 
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
           const isofy = isoTransform(0.05)
 
           const path = s.strokedPath((attr) =>
@@ -868,7 +867,7 @@ export default function Three() {
           s.range({ from: -5, to: 5, n: 21, inclusive: true }, (n) => {
             const points: [number, number][] = s
               .build(
-                s.range,
+                (...args: Parameters<typeof s.range>) => s.range(...args),
                 { from: -5, to: 5, n: 41, inclusive: true },
                 (m) => {
                   return [m, Math.cos(n + m * 1.2 + (n * m) / 7), n] as [

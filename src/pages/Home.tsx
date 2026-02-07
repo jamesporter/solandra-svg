@@ -6,7 +6,7 @@ import Source from "@/components/Source"
 import { SVGSketch } from "@/components/SVGSketch"
 
 import { Slider } from "@/components/ui/slider"
-import { Attributes, Point2D, Transform, v } from "@/lib"
+import { Attributes, Point2D, v } from "@/lib"
 import { ChevronsLeftRight, Play, Sparkles } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"

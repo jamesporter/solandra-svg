@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/PageLayout"
-import { Attributes, Point2D, SolandraSvg, v } from "@/lib"
+import { Point2D, SolandraSvg, v } from "@/lib"
 import { useControls } from "leva"
 
 export default function CutAndFold() {

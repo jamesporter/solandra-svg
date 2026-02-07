@@ -33,7 +33,7 @@ export default function Two() {
         sketch={(s) => {
           s.forHorizontal(
             { n: 30, margin: 0.1 },
-            ([x, y], [dX, dY], [cX, cY], i) => {
+            ([_x, y], [_dX, dY], [cX, _cY], _i) => {
               const a: Point2D = [cX, y]
               const b: Point2D = [cX, y + dY * Math.random()]
 
@@ -43,7 +43,7 @@ export default function Two() {
 
           s.forVertical(
             { n: 20, margin: 0.1 },
-            ([x, y], [dX, dY], [cX, cY], i) => {
+            ([x, _y], [dX, _dY], [_cX, cY], _i) => {
               const a: Point2D = [x, cY]
               const b: Point2D = [x + dX * Math.random(), cY]
 

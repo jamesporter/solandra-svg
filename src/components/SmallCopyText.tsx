@@ -7,7 +7,7 @@ export function SmallCopyText({ text }: { text: string }) {
       <span className="font-mono text-sm text-zinc-700">{text}</span>
       <button
         onClick={() => {
-          navigator.clipboard.writeText(text)
+          void navigator.clipboard.writeText(text)
           toast.success("Copied to clipboard")
         }}
         className="text-sky-600 hover:text-sky-700 cursor-pointer"
