@@ -141,9 +141,9 @@ s.times(35, () => {
 
 - `s.strokedPath(...).ellipse(s.randomPoint(), size, size / 1.25)`: This creates an ellipse at a random point on the canvas. The `size` variable determines the width of the ellipse, and the height is set to `size / 1.25`.
 
-### Chaiken Algorithm
+### Chaikin Algorithm
 
-This example demonstrates how to use the Chaiken algorithm to smooth a path of lines.
+This example demonstrates how to use the Chaikin algorithm to smooth a path of lines.
 
 **Code:**
 
@@ -165,15 +165,15 @@ s.times(4, (n) => {
         return el
       }
     })
-    .chaiken(n + 1)
+    .chaikin(n + 1)
 })
 ```
 
 **Explanation:**
 
 - The code first creates a path with a series of straight lines.
-- `.map(...)`: This function is used to modify the points of the path before applying the Chaiken algorithm. In this case, it's used to create a layered effect.
-- `.chaiken(n + 1)`: This applies the Chaiken algorithm to the path `n + 1` times, which progressively smooths the corners of the path.
+- `.map(...)`: This function is used to modify the points of the path before applying the Chaikin algorithm. In this case, it's used to create a layered effect.
+- `.chaikin(n + 1)`: This applies the Chaikin algorithm to the path `n + 1` times, which progressively smooths the corners of the path.
 
 ### Transforms
 

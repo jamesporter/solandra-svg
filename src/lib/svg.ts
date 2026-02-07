@@ -89,7 +89,11 @@ export class SolandraSvg {
    * @param height - The pixel height of the SVG
    * @param seed - Optional seed for the random number generator (for reproducible output)
    */
-  constructor(readonly width: number, readonly height: number, seed?: number) {
+  constructor(
+    readonly width: number,
+    readonly height: number,
+    seed?: number,
+  ) {
     this.aspectRatio = width / height
     this.rng = new RNG(seed)
   }
@@ -237,6 +241,14 @@ ${this.elements
     return path
   }
 
+  filledPath(configureAttributes?: (attributes: Attributes) => void): Path {
+    const attr = Attributes.filled.fill(0, 0, 0).fillOpacity(1)
+    configureAttributes?.(attr)
+    const path = new Path(attr)
+    this.currentElements.push(path)
+    return path
+  }
+
   /**
    * Clones an existing path, adds the clone to the drawing, and returns it.
    *
@@ -296,8 +308,8 @@ ${this.elements
       point: Point2D,
       delta: Vector2D,
       center: Point2D,
-      i: number
-    ) => void
+      i: number,
+    ) => void,
   ) => this.forTiling({ n: 1, margin }, callback)
 
   /**
@@ -321,8 +333,8 @@ ${this.elements
       point: Point2D,
       delta: Vector2D,
       center: Point2D,
-      i: number
-    ) => void
+      i: number,
+    ) => void,
   ) => {
     let k = 0
     const {
@@ -348,7 +360,7 @@ ${this.elements
             [sX + i * deltaX, sY + j * deltaY],
             [deltaX, deltaY],
             [sX + i * deltaX + deltaX / 2, sY + j * deltaY + deltaY / 2],
-            k
+            k,
           )
           k++
         }
@@ -360,7 +372,7 @@ ${this.elements
             [sX + i * deltaX, sY + j * deltaY],
             [deltaX, deltaY],
             [sX + i * deltaX + deltaX / 2, sY + j * deltaY + deltaY / 2],
-            k
+            k,
           )
           k++
         }
@@ -385,8 +397,8 @@ ${this.elements
       point: Point2D,
       delta: Vector2D,
       center: Point2D,
-      i: number
-    ) => void
+      i: number,
+    ) => void,
   ) => {
     const { n, margin = 0 } = config
 
@@ -401,7 +413,7 @@ ${this.elements
         [sX + i * dX, sY],
         [dX, dY],
         [sX + i * dX + dX / 2, sY + dY / 2],
-        i
+        i,
       )
     }
   }
@@ -423,8 +435,8 @@ ${this.elements
       point: Point2D,
       delta: Vector2D,
       center: Point2D,
-      i: number
-    ) => void
+      i: number,
+    ) => void,
   ) => {
     const { n, margin = 0 } = config
 
@@ -439,7 +451,7 @@ ${this.elements
         [sX, sY + i * dY],
         [dX, dY],
         [sX + dX / 2, sY + i * dY + dY / 2],
-        i
+        i,
       )
     }
   }
@@ -463,7 +475,7 @@ ${this.elements
       maxY: number
       order?: "columnFirst" | "rowFirst"
     },
-    callback: (point: Point2D, i: number) => void
+    callback: (point: Point2D, i: number) => void,
   ) => {
     let k = 0
     const { minX, maxX, minY, maxY, order = "columnFirst" } = config
@@ -496,7 +508,7 @@ ${this.elements
   build = <C, T extends any[], U>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
-    cb: (...args: T) => U
+    cb: (...args: T) => U,
   ): U[] => {
     const res: U[] = []
     iterFn(config, (...as: T) => {
@@ -517,7 +529,7 @@ ${this.elements
   withRandomOrder<C, T extends any[]>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
-    cb: (...args: T) => void
+    cb: (...args: T) => void,
   ) {
     const args: T[] = []
     iterFn(config, (...as: T) => {
@@ -581,7 +593,7 @@ ${this.elements
       r?: number
       n: number
     },
-    callback: (point: Point2D, i: number) => void
+    callback: (point: Point2D, i: number) => void,
   ) => {
     const { n, at: [cX, cY] = [0.5, 0.5 / this.aspectRatio], r = 0.25 } = config
     const da = (Math.PI * 2) / n
@@ -637,7 +649,7 @@ ${this.elements
    */
   range(
     config: { from: number; to: number; n: number; inclusive?: boolean },
-    callback: (n: number) => void
+    callback: (n: number) => void,
   ) {
     const { from = 0, to = 1, n, inclusive = true } = config
 
