@@ -191,7 +191,7 @@ export class Path {
     at: Point2D,
     width: number,
     height: number,
-    align: "topLeft" | "center" = "center"
+    align: "topLeft" | "center" = "center",
   ): Path {
     const start =
       align === "topLeft" ? at : v.subtract(at, [width / 2, height / 2])
@@ -218,7 +218,7 @@ export class Path {
     n: number,
     radius: number,
     rotate: number = 0,
-    align: "topLeft" | "center" = "center"
+    align: "topLeft" | "center" = "center",
   ): Path {
     const c = align === "topLeft" ? v.add(at, [radius, radius]) : at
 
@@ -253,7 +253,7 @@ export class Path {
     at: Point2D,
     width: number,
     height: number,
-    align: "topLeft" | "center" = "center"
+    align: "topLeft" | "center" = "center",
   ): Path {
     const [cX, cY]: Point2D =
       align === "center" ? at : [at[0] + width / 2, at[1] + height / 2]
@@ -269,9 +269,37 @@ export class Path {
           cX + rX * Math.cos(Math.PI * (i + 1)),
           cY + rY * Math.sin(Math.PI * (i + 1)),
         ],
-        { rX, rY }
+        { rX, rY },
       )
     }
+    return this
+  }
+
+  spiral(
+    at: Point2D,
+    l: number,
+    n: number,
+    angle: number = 0,
+    rate: number = 0.005,
+  ) {
+    let a = angle
+    let r = l
+
+    this.segments.push({
+      kind: "move",
+      to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
+    })
+
+    for (let i = 0; i < n; i++) {
+      const dA = 2 * Math.asin(l / (r * 2))
+      r += rate * dA
+      a += dA
+      this.segments.push({
+        kind: "line",
+        to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
+      })
+    }
+
     return this
   }
 
@@ -294,7 +322,7 @@ export class Path {
    * @param n - The number of smoothing iterations (default `2`)
    * @returns `this` for chaining
    */
-  chaiken(n: number = 2): Path {
+  chaikin(n: number = 2): Path {
     for (let k = 0; k < n; k++) {
       const newSegments: PathSegment[] = []
       newSegments.push(this.segments[0])
@@ -365,8 +393,8 @@ export class Path {
       .map((s, i) =>
         segmentToString(
           s,
-          i > 0 ? (this.segments[i - 1] as Toable).to : undefined
-        )
+          i > 0 ? (this.segments[i - 1] as Toable).to : undefined,
+        ),
       )
       .join(" ")
     return indent(`<path${this.attributes.string} d="${d}" />`, depth)

@@ -185,7 +185,10 @@ describe("Path", () => {
       const path = new Path(Attributes.empty)
       path.regularPolygon([0, 0], 4, 0.1, 0, "topLeft")
       // Center should be offset by radius
-      const moveSegment = path.segments[0] as { kind: "move"; to: [number, number] }
+      const moveSegment = path.segments[0] as {
+        kind: "move"
+        to: [number, number]
+      }
       expect(moveSegment.to[0]).toBeCloseTo(0.2, 5) // 0 + 0.1 + 0.1 * cos(0) = 0.2
     })
   })
@@ -203,7 +206,10 @@ describe("Path", () => {
       const path = new Path(Attributes.empty)
       path.ellipse([0, 0], 0.2, 0.4, "topLeft")
       // Starting position should be top center of ellipse
-      const moveSegment = path.segments[0] as { kind: "move"; to: [number, number] }
+      const moveSegment = path.segments[0] as {
+        kind: "move"
+        to: [number, number]
+      }
       expect(moveSegment.to[0]).toBeCloseTo(0.1, 5) // at[0] + width/2
       expect(moveSegment.to[1]).toBeCloseTo(0, 5) // at[1]
     })
@@ -217,23 +223,23 @@ describe("Path", () => {
     })
   })
 
-  describe("chaiken", () => {
+  describe("chaikin", () => {
     it("should smooth a path with default iterations", () => {
       const path = new Path(Attributes.empty)
       path.moveTo([0, 0]).lineTo([0.5, 0]).lineTo([0.5, 0.5]).lineTo([1, 0.5])
       const originalLength = path.segments.length
-      path.chaiken()
-      // Chaiken should increase the number of segments
+      path.chaikin()
+      // Chaikin should increase the number of segments
       expect(path.segments.length).toBeGreaterThan(originalLength)
     })
 
     it("should smooth a path with custom iterations", () => {
       const path = new Path(Attributes.empty)
       path.moveTo([0, 0]).lineTo([0.5, 0]).lineTo([0.5, 0.5]).lineTo([1, 0.5])
-      path.chaiken(1)
+      path.chaikin(1)
       const path2 = new Path(Attributes.empty)
       path2.moveTo([0, 0]).lineTo([0.5, 0]).lineTo([0.5, 0.5]).lineTo([1, 0.5])
-      path2.chaiken(3)
+      path2.chaikin(3)
       // More iterations should produce more segments
       expect(path2.segments.length).toBeGreaterThan(path.segments.length)
     })
@@ -245,7 +251,10 @@ describe("Path", () => {
       path.moveTo([0, 0]).lineTo([1, 1])
       path.map((segment) => {
         if ("to" in segment) {
-          return { ...segment, to: [segment.to[0] * 2, segment.to[1] * 2] as [number, number] }
+          return {
+            ...segment,
+            to: [segment.to[0] * 2, segment.to[1] * 2] as [number, number],
+          }
         }
         return segment
       })
@@ -281,14 +290,16 @@ describe("Path", () => {
     it("should throw if path doesn't start with moveTo", () => {
       const path = new Path(Attributes.empty)
       path.segments.push({ kind: "line", to: [1, 1] })
-      expect(() => path.string(0)).toThrow("Must start path with move to initial position")
+      expect(() => path.string(0)).toThrow(
+        "Must start path with move to initial position",
+      )
     })
 
     it("should generate correct SVG path string", () => {
       const path = new Path(Attributes.empty)
       path.moveTo([0, 0]).lineTo([1, 0]).lineTo([1, 1]).close()
       expect(path.string(0)).toMatchInlineSnapshot(
-        `"<path d="M 0 0 L 1 0 L 1 1 Z" />"`
+        `"<path d="M 0 0 L 1 0 L 1 1 Z" />"`,
       )
     })
 

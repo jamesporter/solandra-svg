@@ -58,21 +58,28 @@ const examples: {
 
 export function NavMenu() {
   return (
-    <div className="p-4 bg-gradient-to-r from-amber-100 to-rose-300">
+    <div className="p-4 bg-gradient-to-r from-sky-300 via-amber-300 to-rose-300">
       <NavigationMenu>
         <NavigationMenuList>
           <div>
             <Link
               to="/"
-              className="font-semibold mr-4 text-rose-600 text-lg lg:text-xl"
+              className="font-semibold mr-4 text-neutral-900 text-lg lg:text-xl"
             >
-              Solandra-SVG
+              <span className="text-sky-800">Solandra-SVG</span>
             </Link>
           </div>
           <NavigationMenuItem>
             <Link to="/">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Introduction
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/api">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                API Reference
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
@@ -139,10 +146,10 @@ const ListItem = forwardRef(
             )}
             {...props}
           >
-            <div className="text-sm font-medium leading-none text-rose-700">
+            <div className="text-sm font-medium leading-none text-sky-700">
               {title}
               {isNew && (
-                <div className="absolute top-2 right-2 bg-amber-600 text-amber-50 py-1 px-2 rounded-full">
+                <div className="absolute top-2 right-2 bg-sky-600 text-sky-50 py-1 px-2 rounded-full">
                   New
                 </div>
               )}

@@ -2,7 +2,7 @@ import { PageLayout } from "@/components/PageLayout"
 import Source from "@/components/Source"
 import { Slider } from "@/components/ui/slider"
 
-import { Attributes, SolandraSvg, Transform } from "@/lib"
+import { Attributes, SolandraSvg, Transform, v } from "@/lib"
 import { useControls } from "leva"
 
 export default function Favicon() {
@@ -49,7 +49,6 @@ s.path(
   .lineTo([sX, sY + h])
   .lineTo([sX, sY])`}
         />
-
         <SmallSketch
           seed={seed}
           sketch={(s) => {
@@ -76,7 +75,6 @@ s.path(s.A.fill(350, 90, 50, 0.5))
   .curveTo([sX, sY + h], { curveSize: -0.5, bulbousness: 0.1 })
   .curveTo([sX, sY], { curveSize: -0.5, bulbousness: 0.1 })`}
         />
-
         <SmallSketch
           seed={seed}
           sketch={(s) => {
@@ -118,7 +116,6 @@ s.path(s.A.fill(350, 90, 50, 0.5))
   }
 )`}
         />
-
         <SmallSketch
           seed={seed}
           sketch={(s) => {
@@ -173,7 +170,6 @@ s.path(s.A.fill(350, 90, 50, 0.5))
   }
 )`}
         />
-
         <SmallSketch
           seed={seed}
           sketch={(s) => {
@@ -259,6 +255,82 @@ s.forTiling(
       })
   }
 )`}
+        />
+
+        <p>
+          Let's tone down the randomness, make it more symmetrical and repeat a
+          rotation with an offset.
+        </p>
+        <SmallSketch
+          seed={seed}
+          sketch={(s) => {
+            s.times(4, (n) => {
+              const angle = Math.PI * (n - 1.5)
+
+              s.forMargin(0.15, (p, d, c) => {
+                const ptA = v.add(c, v.rotate(v.subtract(p, c), angle / 16))
+                const ptB = v.add(
+                  c,
+                  v.rotate(v.subtract([p[0] + d[0], p[1]], c), angle / 16)
+                )
+                const ptC = v.add(
+                  c,
+                  v.rotate(
+                    v.subtract([p[0] + d[0], p[1] + d[1]], c),
+                    angle / 16
+                  )
+                )
+                const ptD = v.add(
+                  c,
+                  v.rotate(v.subtract([p[0], p[1] + d[1]], c), angle / 16)
+                )
+
+                const curveSize = -0.5 + n * 0.1
+                const bulbousness = 0.1
+                const config = { curveSize, bulbousness }
+
+                s.path(s.A.fill(340 - n * 45, 90, 50, 0.5))
+                  .moveTo(ptA)
+                  .curveTo(ptB, config)
+                  .curveTo(ptC, config)
+                  .curveTo(ptD, config)
+                  .curveTo(ptA, config)
+              })
+            })
+          }}
+          codeSnippet={`s.times(4, (n) => {
+  const angle = Math.PI * (n - 1.5)
+
+  s.forMargin(0.15, (p, d, c) => {
+    const ptA = v.add(c, v.rotate(v.subtract(p, c), angle / 16))
+    const ptB = v.add(
+      c,
+      v.rotate(v.subtract([p[0] + d[0], p[1]], c), angle / 16)
+    )
+    const ptC = v.add(
+      c,
+      v.rotate(
+        v.subtract([p[0] + d[0], p[1] + d[1]], c),
+        angle / 16
+      )
+    )
+    const ptD = v.add(
+      c,
+      v.rotate(v.subtract([p[0], p[1] + d[1]], c), angle / 16)
+    )
+
+    const curveSize = -0.5 + n * 0.1
+    const bulbousness = 0.1
+    const config = { curveSize, bulbousness }
+
+    s.path(s.A.fill(340 - n * 45, 90, 50, 0.5))
+      .moveTo(ptA)
+      .curveTo(ptB, config)
+      .curveTo(ptC, config)
+      .curveTo(ptD, config)
+      .curveTo(ptA, config)
+  })
+})`}
         />
       </div>
     </PageLayout>
