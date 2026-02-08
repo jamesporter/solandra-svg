@@ -150,32 +150,33 @@ export class Path {
    * @returns `this` for chaining
    */
   arcTo(point: Point2D, config: ArcConfig = {}): Path {
-    try {
-      const previous: Point2D = (this.segments[this.segments.length - 1] as any)
-        .to
-      const {
-        rX = Math.abs(point[0] - previous[0]),
-        rY = Math.abs(point[1] - previous[1]),
-        largeArc = false,
-        xAxisRotation = 0,
-      } = config
-
-      this.segments.push({
-        kind: "arc",
-        to: point,
-        config: {
-          rX: rX,
-          rY: rY,
-          xAxisRotation,
-          largeArc,
-        },
-      })
-
-      return this
-    } catch (ex) {
-      console.error("Probably no previous point", ex)
-      return this
+    const prev = this.segments[this.segments.length - 1]
+    if (!prev || prev.kind === "close") {
+      throw new Error(
+        "arcTo requires a previous segment with a destination point",
+      )
     }
+
+    const previous: Point2D = prev.to
+    const {
+      rX = Math.abs(point[0] - previous[0]),
+      rY = Math.abs(point[1] - previous[1]),
+      largeArc = false,
+      xAxisRotation = 0,
+    } = config
+
+    this.segments.push({
+      kind: "arc",
+      to: point,
+      config: {
+        rX: rX,
+        rY: rY,
+        xAxisRotation,
+        largeArc,
+      },
+    })
+
+    return this
   }
 
   /**
@@ -385,9 +386,9 @@ export class Path {
    * @throws If no segments have been added or the first segment is not a move
    */
   string(depth: number): string {
-    if (this.segments.length === 0) throw Error("Must add to path")
+    if (this.segments.length === 0) throw new Error("Must add to path")
     if (this.segments[0].kind !== "move")
-      throw Error("Must start path with move to initial position")
+      throw new Error("Must start path with move to initial position")
 
     const d = this.segments
       .map((s, i) =>
