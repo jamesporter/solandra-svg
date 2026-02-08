@@ -31,6 +31,29 @@ export type PathSegment =
 // To force types later, a bit nasty but to cover most potential errors with runtime checks
 type Toable = { to: Point2D }
 
+function cloneSegment(segment: PathSegment): PathSegment {
+  switch (segment.kind) {
+    case "close":
+      return { kind: "close" }
+    case "move":
+      return { kind: "move", to: [...segment.to] }
+    case "line":
+      return { kind: "line", to: [...segment.to] }
+    case "cubicCurve":
+      return {
+        kind: "cubicCurve",
+        to: [...segment.to],
+        config: { ...segment.config },
+      }
+    case "arc":
+      return {
+        kind: "arc",
+        to: [...segment.to],
+        config: { ...segment.config },
+      }
+  }
+}
+
 /**
  * Converts a {@link PathSegment} to its SVG path data string representation.
  *
@@ -324,6 +347,7 @@ export class Path {
    * @returns `this` for chaining
    */
   chaikin(n: number = 2): Path {
+    if (this.segments.length === 0) return this
     for (let k = 0; k < n; k++) {
       const newSegments: PathSegment[] = []
       newSegments.push(this.segments[0])
@@ -374,7 +398,7 @@ export class Path {
    */
   clone(attributes?: Attributes): Path {
     const p = new Path(attributes || this.attributes.clone())
-    p.segments = this.segments.map((s) => JSON.parse(JSON.stringify(s)))
+    p.segments = this.segments.map(cloneSegment)
     return p
   }
 
