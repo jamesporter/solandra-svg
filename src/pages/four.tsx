@@ -1,6 +1,6 @@
 import { PageLayout } from "@/components/PageLayout"
 import { A4InkscapeSketch } from "@/components/SVGSketch"
-import { isoTransform, Point2D, Transform, v } from "@/lib"
+import { isoTransform, Point2D, v } from "@/lib"
 
 export default function Four() {
   return (
@@ -9,7 +9,7 @@ export default function Four() {
       <h2>Early ideas for different colours</h2>
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
 
           const twisty = (scale: number, start: Point2D) => {
             const isofy = isoTransform(scale)
@@ -36,7 +36,7 @@ export default function Four() {
           twisty(0.05, [0.5, bottom * 0.65])
           twisty(0.05, [0.8, bottom * 0.65])
 
-          s.forHorizontal({ n: 5 }, (_pt, [w], [cX]) => {
+          s.forHorizontal({ n: 5 }, (_pt, [_w], [cX]) => {
             twisty(0.025, [cX, bottom * 0.85])
           })
         }}
@@ -147,7 +147,7 @@ export default function Four() {
 
           s.forTiling(
             { n: 12, margin: 0.1, type: "square" },
-            (pt, [dX], c, i) => {
+            (pt, [dX], _c, _i) => {
               const j = s.uniformRandomInt({
                 from: 0,
                 to: tileDrawers.length,
@@ -163,7 +163,7 @@ export default function Four() {
 
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
           const pathOne = s.strokedPath().moveTo([0.1, 0.1])
           const pathTwo = s
             .strokedPath((attr) => attr.stroke(170, 90, 40))
@@ -183,7 +183,7 @@ export default function Four() {
 
       <A4InkscapeSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
+          const { bottom, center: _center } = s.meta
           const pathOne = s.strokedPath().moveTo([0.1, bottom / 2])
           const pathTwo = s
             .strokedPath((attr) => attr.stroke(170, 90, 40))

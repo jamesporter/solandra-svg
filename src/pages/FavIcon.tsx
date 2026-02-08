@@ -1,8 +1,7 @@
 import { PageLayout } from "@/components/PageLayout"
 import Source from "@/components/Source"
-import { Slider } from "@/components/ui/slider"
 
-import { Attributes, SolandraSvg, Transform, v } from "@/lib"
+import { SolandraSvg, v } from "@/lib"
 import { useControls } from "leva"
 
 export default function Favicon() {
@@ -52,7 +51,7 @@ s.path(
         <SmallSketch
           seed={seed}
           sketch={(s) => {
-            s.forMargin(0.2, ([sX, sY], [w, h], [cX, cY]) => {
+            s.forMargin(0.2, ([sX, sY], [w, h], [_cX, _cY]) => {
               s.path(s.A.fill(350, 90, 50, 0.5))
                 .moveTo([sX, sY])
                 .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
@@ -84,7 +83,7 @@ s.path(s.A.fill(350, 90, 50, 0.5))
                 type: "proportionate",
                 margin: 0.2,
               },
-              ([sX, sY], [w, h], [cX, cY], i) => {
+              ([sX, sY], [w, h], [_cX, _cY], _i) => {
                 s.path(s.A.fill(350, 90, 50, 0.5))
                   .moveTo([sX, sY])
                   .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
@@ -103,7 +102,7 @@ s.path(s.A.fill(350, 90, 50, 0.5))
     type: "proportionate",
     margin: 0.2,
   },
-  ([sX, sY], [w, h], [cX, cY], i) => {
+  ([sX, sY], [w, h], [_cX, _cY], _i) => {
     s.path(s.A.fill(350, 90, 50, 0.5))
       .moveTo([sX, sY])
       .curveTo([sX + w, sY], { curveSize: -0.5, bulbousness: 0.1 })
@@ -125,7 +124,7 @@ s.path(s.A.fill(350, 90, 50, 0.5))
                 type: "proportionate",
                 margin: 0.3,
               },
-              ([sX, sY], [w, h], [cX, cY], i) => {
+              ([sX, sY], [w, h], [_cX, _cY], _i) => {
                 const hue = (330 + 60 * s.random()) % 360
 
                 s.path(
@@ -150,7 +149,7 @@ s.path(s.A.fill(350, 90, 50, 0.5))
     type: "proportionate",
     margin: 0.3,
   },
-  ([sX, sY], [w, h], [cX, cY], i) => {
+  ([sX, sY], [w, h], [_cX, _cY], _i) => {
     const hue = (330 + 60 * s.random()) % 360
 
     s.path(
@@ -180,7 +179,7 @@ s.path(s.A.fill(350, 90, 50, 0.5))
                 type: "proportionate",
                 margin: 0.1,
               },
-              ([sX, sY], [w, h], c, i) => {
+              ([sX, sY], [w, h], c, _i) => {
                 const hue = (330 + 60 * s.random()) % 360
 
                 const dX = 0.3 * (center[0] - c[0])

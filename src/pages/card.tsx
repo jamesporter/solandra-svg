@@ -1,6 +1,6 @@
 import { PageLayout } from "@/components/PageLayout"
 import { A4InkscapeSketch } from "@/components/SVGSketch"
-import { Point2D, Transform } from "@/lib"
+import { Point2D } from "@/lib"
 
 export default function Card() {
   return (

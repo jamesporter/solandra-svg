@@ -40,7 +40,7 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          const { center, bottom } = s.meta
+          const { center } = s.meta
           const [cX, cY] = center
           const p = s
             .strokedPath((attr) => attr.strokeWidth(0.005).strokeOpacity(0.9))
@@ -57,7 +57,7 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          s.forMargin(0.1, ([sX, sY], [w, h], [cX, cY]) => {
+          s.forMargin(0.1, ([sX, _sY], [w, _h], [_cX, cY]) => {
             s.times(32, () => {
               const x1 = s.random() * w + sX
               const x2 = s.random() * w + sX
@@ -69,7 +69,7 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          const { center, bottom } = s.meta
+          const { center } = s.meta
           const [cX, cY] = center
           const path = s.strokedPath().moveTo(center)
           const N = 14
@@ -101,7 +101,7 @@ export default function One() {
             const points: Point2D[] = []
             s.forTiling(
               { n: 8, type: "square", margin: 0.1 },
-              (pt, d, c, i) => {
+              (pt, d, c, _i) => {
                 points.push(s.perturb({ at: c, magnitude: d[0] }))
               }
             )
@@ -118,7 +118,7 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          const { center, bottom } = s.meta
+          const { center } = s.meta
 
           const start: Point2D = [0, 0]
           const path = [start]
@@ -174,7 +174,7 @@ export default function One() {
 
       <A4ishSketch
         sketch={(s) => {
-          const { bottom, center } = s.meta
+          const { bottom } = s.meta
           const N = 40
 
           const start: Point2D = [0.5, bottom * 0.95]
@@ -184,7 +184,7 @@ export default function One() {
           const lv = v.subtract(left, start)
           const rv = v.subtract(right, start)
 
-          s.times(2, (r) => {
+          s.times(2, (_r) => {
             const sPath = s
               .strokedPath((attr) => attr.strokeWidth(0.002))
               .moveTo(start)
