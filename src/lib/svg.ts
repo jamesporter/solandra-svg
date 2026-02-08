@@ -505,7 +505,7 @@ ${this.elements
    * @param cb - A mapping callback that returns a value for each iteration
    * @returns An array of values produced by `cb`
    */
-  build = <C, T extends unknown[], U>(
+  build = <C, T extends any[], U>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
     cb: (...args: T) => U,
@@ -526,7 +526,7 @@ ${this.elements
    * @param config - The configuration to pass to the iteration function
    * @param cb - The callback to execute in random order
    */
-  withRandomOrder<C, T extends unknown[]>(
+  withRandomOrder<C, T extends any[]>(
     iterFn: (config: C, callback: (...args: T) => void) => void,
     config: C,
     cb: (...args: T) => void,
