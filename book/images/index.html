@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solandra-SVG Book Figures</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .stats {
+      margin: 1rem 0;
+      color: #888;
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .figure-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .figure-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .figure-card.missing {
+      opacity: 0.5;
+      background: #fafafa;
+    }
+
+    .figure-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .figure-number {
+      font-weight: bold;
+      color: #0066cc;
+      font-size: 1.1rem;
+    }
+
+    .chapter-badge {
+      background: #e8f4f8;
+      color: #0066cc;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .figure-description {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      min-height: 2.4rem;
+    }
+
+    .image-container {
+      width: 100%;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .missing-label {
+      color: #999;
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Solandra-SVG Book Figures</h1>
+    <p class="subtitle">Visual examples from the Solandra-SVG documentation</p>
+    <p class="stats">80 figures across 8 chapters</p>
+  </header>
+
+  <main class="grid">
+    <!-- Chapter 1: Introduction and Getting Started -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 001</span>
+        <span class="chapter-badge">Chapter 1</span>
+      </div>
+      <p class="figure-description">Simple diagonal line</p>
+      <div class="image-container">
+        <img src="image001.svg" alt="Figure 001: Simple diagonal line" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 002</span>
+        <span class="chapter-badge">Chapter 1</span>
+      </div>
+      <p class="figure-description">Random arcs pattern</p>
+      <div class="image-container">
+        <img src="image002.svg" alt="Figure 002: Random arcs pattern" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 003</span>
+        <span class="chapter-badge">Chapter 1</span>
+      </div>
+      <p class="figure-description">Colored arcs with varying hues</p>
+      <div class="image-container">
+        <img src="image003.svg" alt="Figure 003: Colored arcs with varying hues" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Chapter 2: Basic Drawing with Paths -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 004</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Zigzag line</p>
+      <div class="image-container">
+        <img src="image004.svg" alt="Figure 004: Zigzag line" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 005</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Triangle</p>
+      <div class="image-container">
+        <img src="image005.svg" alt="Figure 005: Triangle" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 006</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Chained arcs</p>
+      <div class="image-container">
+        <img src="image006.svg" alt="Figure 006: Chained arcs" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 007</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Curves with polarity</p>
+      <div class="image-container">
+        <img src="image007.svg" alt="Figure 007: Curves with polarity" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 008</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Regular polygons</p>
+      <div class="image-container">
+        <img src="image008.svg" alt="Figure 008: Regular polygons" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 009</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Flower shape</p>
+      <div class="image-container">
+        <img src="image009.svg" alt="Figure 009: Flower shape" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 010</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Grid of squares</p>
+      <div class="image-container">
+        <img src="image010.svg" alt="Figure 010: Grid of squares" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 011</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Concentric circles</p>
+      <div class="image-container">
+        <img src="image011.svg" alt="Figure 011: Concentric circles" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 012</span>
+        <span class="chapter-badge">Chapter 2</span>
+      </div>
+      <p class="figure-description">Spiral</p>
+      <div class="image-container">
+        <img src="image012.svg" alt="Figure 012: Spiral" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Chapter 3: Attributes and Styling -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 013</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">RGB circles</p>
+      <div class="image-container">
+        <img src="image013.svg" alt="Figure 013: RGB circles" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 014</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Overlapping semi-transparent circles</p>
+      <div class="image-container">
+        <img src="image014.svg" alt="Figure 014: Overlapping semi-transparent circles" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 015</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Stroke width variations</p>
+      <div class="image-container">
+        <img src="image015.svg" alt="Figure 015: Stroke width variations" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 016</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Line cap styles</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 017</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Line join styles</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 018</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Dashed lines</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 019</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Rainbow gradient</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 020</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Monochrome concentric</p>
+      <div class="image-container">
+        <img src="image020.svg" alt="Figure 020: Monochrome concentric" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 021</span>
+        <span class="chapter-badge">Chapter 3</span>
+      </div>
+      <p class="figure-description">Saturation variations</p>
+      <div class="image-container">
+        <img src="image021.svg" alt="Figure 021: Saturation variations" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Chapter 4: Transformations -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 022</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Rotated square</p>
+      <div class="image-container">
+        <img src="image022.svg" alt="Figure 022: Rotated square" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 023</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Rotated pattern</p>
+      <div class="image-container">
+        <img src="image023.svg" alt="Figure 023: Rotated pattern" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 024</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Grid with translation</p>
+      <div class="image-container">
+        <img src="image024.svg" alt="Figure 024: Grid with translation" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 025</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Growing circles</p>
+      <div class="image-container">
+        <img src="image025.svg" alt="Figure 025: Growing circles" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 026</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Transform order comparison</p>
+      <div class="image-container">
+        <img src="image026.svg" alt="Figure 026: Transform order comparison" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 027</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Rotating star pattern</p>
+      <div class="image-container">
+        <img src="image027.svg" alt="Figure 027: Rotating star pattern" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 028</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Spirograph effect</p>
+      <div class="image-container">
+        <img src="image028.svg" alt="Figure 028: Spirograph effect" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 029</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Grid with random rotations</p>
+      <div class="image-container">
+        <img src="image029.svg" alt="Figure 029: Grid with random rotations" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 030</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Scaling animation effect</p>
+      <div class="image-container">
+        <img src="image030.svg" alt="Figure 030: Scaling animation effect" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 031</span>
+        <span class="chapter-badge">Chapter 4</span>
+      </div>
+      <p class="figure-description">Perspective with skew</p>
+      <div class="image-container">
+        <img src="image031.svg" alt="Figure 031: Perspective with skew" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Chapter 5: Iteration and Layout Helpers -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 032</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Simple times() loop</p>
+      <div class="image-container">
+        <img src="image032.svg" alt="Figure 032: Simple times() loop" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 033</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Basic forTiling</p>
+      <div class="image-container">
+        <img src="image033.svg" alt="Figure 033: Basic forTiling" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 034</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Colored square grid</p>
+      <div class="image-container">
+        <img src="image034.svg" alt="Figure 034: Colored square grid" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 035</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Checkerboard pattern</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 036</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Gradient grid</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 037</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Circular pattern with varying sizes</p>
+      <div class="image-container">
+        <img src="image037.svg" alt="Figure 037: Circular pattern with varying sizes" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 038</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Radial burst</p>
+      <div class="image-container">
+        <img src="image038.svg" alt="Figure 038: Radial burst" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 039</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Parametric wave</p>
+      <div class="image-container">
+        <img src="image039.svg" alt="Figure 039: Parametric wave" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 040</span>
+        <span class="chapter-badge">Chapter 5</span>
+      </div>
+      <p class="figure-description">Nested grid pattern</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <!-- Chapter 6: Randomness and Generative Art -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 041</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Random circles</p>
+      <div class="image-container">
+        <img src="image041.svg" alt="Figure 041: Random circles" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 042</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Random rays</p>
+      <div class="image-container">
+        <img src="image042.svg" alt="Figure 042: Random rays" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 043</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Random polygons</p>
+      <div class="image-container">
+        <img src="image043.svg" alt="Figure 043: Random polygons" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 044</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Random polarity curves</p>
+      <div class="image-container">
+        <img src="image044.svg" alt="Figure 044: Random polarity curves" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 045</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Color sampling</p>
+      <div class="image-container">
+        <img src="image045.svg" alt="Figure 045: Color sampling" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 046</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Gaussian distribution</p>
+      <div class="image-container">
+        <img src="image046.svg" alt="Figure 046: Gaussian distribution" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 047</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Gaussian visualization</p>
+      <div class="image-container">
+        <img src="image047.svg" alt="Figure 047: Gaussian visualization" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 048</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Perturbed grid</p>
+      <div class="image-container">
+        <img src="image048.svg" alt="Figure 048: Perturbed grid" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 049</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Wavy line</p>
+      <div class="image-container">
+        <img src="image049.svg" alt="Figure 049: Wavy line" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 050</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Random walk</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 051</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Organic shape</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 052</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Scattered composition</p>
+      <div class="image-container">
+        <img src="image052.svg" alt="Figure 052: Scattered composition" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 053</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Random grid disruption</p>
+      <div class="image-container">
+        <img src="image053.svg" alt="Figure 053: Random grid disruption" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 054</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Branching structure</p>
+      <div class="image-container">
+        <img src="image054.svg" alt="Figure 054: Branching structure" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 055</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Cellular/Voronoi pattern</p>
+      <div class="image-container">
+        <img src="image055.svg" alt="Figure 055: Cellular/Voronoi pattern" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 056</span>
+        <span class="chapter-badge">Chapter 6</span>
+      </div>
+      <p class="figure-description">Weighted randomness</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <!-- Chapter 7: Advanced Path Operations -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 057</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Chaiken smoothing comparison</p>
+      <div class="image-container">
+        <img src="image057.svg" alt="Figure 057: Chaiken smoothing comparison" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 058</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Smooth random walk</p>
+      <div class="image-container">
+        <img src="image058.svg" alt="Figure 058: Smooth random walk" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 059</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Organic shape from polygon</p>
+      <div class="image-container">
+        <img src="image059.svg" alt="Figure 059: Organic shape from polygon" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 060</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Natural terrain</p>
+      <div class="image-container">
+        <img src="image060.svg" alt="Figure 060: Natural terrain" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 061</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Wavy line with map()</p>
+      <div class="image-container">
+        <img src="image061.svg" alt="Figure 061: Wavy line with map()" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 062</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Displacement with map()</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 063</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Path cloning</p>
+      <div class="image-container">
+        <img src="image063.svg" alt="Figure 063: Path cloning" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 064</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Clone with transformations</p>
+      <div class="image-container">
+        <img src="image064.svg" alt="Figure 064: Clone with transformations" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 065</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Smooth random shapes</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 066</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Layered smooth paths</p>
+      <div class="image-container">
+        <img src="image066.svg" alt="Figure 066: Layered smooth paths" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 067</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Iterative smoothing</p>
+      <div class="image-container">
+        <img src="image067.svg" alt="Figure 067: Iterative smoothing" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 068</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Wobbling spiral</p>
+      <div class="image-container">
+        <img src="image068.svg" alt="Figure 068: Wobbling spiral" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 069</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Mirrored paths</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 070</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Kaleidoscope effect</p>
+      <div class="image-container">
+        <img src="image070.svg" alt="Figure 070: Kaleidoscope effect" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 071</span>
+        <span class="chapter-badge">Chapter 7</span>
+      </div>
+      <p class="figure-description">Deformed grid</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <!-- Chapter 8: Complete Examples and Projects -->
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 072</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Geometric Mandala</p>
+      <div class="image-container">
+        <img src="image072.svg" alt="Figure 072: Geometric Mandala" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 073</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Flow Field</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 074</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Procedural Trees</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 075</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Islamic Geometric Pattern</p>
+      <div class="image-container">
+        <img src="image075.svg" alt="Figure 075: Islamic Geometric Pattern" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 076</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Maze Generator</p>
+      <div class="image-container">
+        <img src="image076.svg" alt="Figure 076: Maze Generator" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 077</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Sunburst Radial Pattern</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 078</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Cellular Growth Simulation</p>
+      <div class="image-container">
+        <img src="image078.svg" alt="Figure 078: Cellular Growth Simulation" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card">
+      <div class="figure-header">
+        <span class="figure-number">Figure 079</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Plotter-Ready Hatching</p>
+      <div class="image-container">
+        <img src="image079.svg" alt="Figure 079: Plotter-Ready Hatching" loading="lazy">
+      </div>
+    </div>
+
+    <div class="figure-card missing">
+      <div class="figure-header">
+        <span class="figure-number">Figure 080</span>
+        <span class="chapter-badge">Chapter 8</span>
+      </div>
+      <p class="figure-description">Generative Landscape</p>
+      <div class="image-container">
+        <span class="missing-label">Image not generated</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
