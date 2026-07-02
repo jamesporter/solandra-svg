@@ -1,5 +1,5 @@
-import { Point2D, CurveConfig } from "./types"
-import { default as v } from "./vectors"
+import { Point2D, CurveConfig } from "./types.js"
+import { default as v } from "./vectors.js"
 
 /**
  * Converts a curve configuration into an SVG cubic bezier path command string.

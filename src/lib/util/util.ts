@@ -1,4 +1,4 @@
-import { Point2D } from "./types"
+import { Point2D } from "./types.js"
 
 /**
  * Clamps a number to a given range.

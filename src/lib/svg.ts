@@ -1,9 +1,9 @@
-import { Point2D, Vector2D } from "./util/types"
-import { Path } from "./path"
-import { Attributes } from "./attributes"
-import { indent } from "./util/internalUtil"
-import { RNG } from "./rng"
-import { Transform } from "./transforms"
+import { Point2D, Vector2D } from "./util/types.js"
+import { Path } from "./path.js"
+import { Attributes } from "./attributes.js"
+import { indent } from "./util/internalUtil.js"
+import { RNG } from "./rng.js"
+import { Transform } from "./transforms.js"
 
 /**
  * An SVG `<g>` group element that can contain nested {@link Path} and {@link Group} children.
@@ -241,6 +241,14 @@ ${this.elements
     return path
   }
 
+  /**
+   * Creates a new filled {@link Path} with sensible defaults for solid shapes.
+   *
+   * Defaults: black fill, full opacity, no stroke.
+   *
+   * @param configureAttributes - Optional callback to further customise the attributes
+   * @returns The new filled path
+   */
   filledPath(configureAttributes?: (attributes: Attributes) => void): Path {
     const attr = Attributes.filled.fill(0, 0, 0).fillOpacity(1)
     configureAttributes?.(attr)
@@ -648,7 +656,7 @@ ${this.elements
    * @param callback - Called with each value in the range
    */
   range(
-    config: { from: number; to: number; n: number; inclusive?: boolean },
+    config: { from?: number; to?: number; n: number; inclusive?: boolean },
     callback: (n: number) => void,
   ) {
     const { from = 0, to = 1, n, inclusive = true } = config

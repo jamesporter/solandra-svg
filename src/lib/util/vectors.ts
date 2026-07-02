@@ -1,4 +1,4 @@
-import { Point2D } from "./types"
+import { Point2D } from "./types.js"
 
 /**
  * Adds two 2D points component-wise.

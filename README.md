@@ -28,6 +28,23 @@ This repo contains a `llm.md` file that can be used to provide context to a Larg
 
 ## Updates
 
+### 0.6.2
+
+- Independent `sweep` flag for arcs (previously tied to `largeArc`), so all four arc variants between two points can be drawn
+- `ellipse` now draws four clean quarter arcs instead of overlapping half-ellipses (better for pen plotting; visually identical)
+- Fixed the published package for Node ESM consumers: proper `exports` map, module-type markers, and file extensions in relative imports
+- Added LICENSE (MIT) and README to the published package
+- Documentation improvements (arcs/ellipse API reference and JSDoc)
+
+### 0.6.1
+
+- Type safety improvements in `Path` and generics, improved path cloning
+- Replaced ESLint with oxlint (type-aware) and added CI workflows for tests and linting
+
+### 0.6.0
+
+- API reference page and more APIs
+
 ### 0.5.1
 
 - Minor typo fixes and updated documentation on using with AIs.

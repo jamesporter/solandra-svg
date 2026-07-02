@@ -2,14 +2,15 @@
   "compilerOptions": {
     "target": "ES2016",
     "module": "esnext",
+    "moduleResolution": "bundler",
+    "rootDir": "./src/lib",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./package/esm",
     "lib": ["DOM", "ESNext"],
     "declaration": true,
-    "skipLibCheck": true,
-    "moduleResolution": "node"
+    "skipLibCheck": true
   },
   "include": ["./src/lib/index.ts"]
 }

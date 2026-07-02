@@ -41,4 +41,14 @@ export type ArcConfig = {
   xAxisRotation?: number
   /** Whether the arc should take the longer path (arc greater than pi). */
   largeArc?: boolean
+  /**
+   * The SVG sweep flag: if `true` the arc is drawn in the positive-angle
+   * (clockwise, as displayed) direction; if `false` in the negative-angle
+   * (counterclockwise) direction.
+   *
+   * Defaults to the value of `largeArc`, which keeps the short and long arcs
+   * on the same ellipse (and matches this library's historical output).
+   * Set it explicitly to reach the mirrored pair of arcs.
+   */
+  sweep?: boolean
 }

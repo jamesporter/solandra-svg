@@ -16,6 +16,8 @@ This is the main class of the library. It is responsible for creating the SVG el
 
 The `Path` class is used to define the geometry of an SVG shape. You can create a new path using `s.path()` or more specific methods like `s.strokedPath()`. Once you have a path object, you can use methods like `moveTo()`, `lineTo()`, `arcTo()`, and `curveTo()` to define its shape.
 
+`arcTo(point, config?)` accepts an optional config: `rX`/`rY` (radii, defaulting to the x/y distance to the target), `xAxisRotation` (degrees), `largeArc` (take the longer way around the ellipse) and `sweep` (draw in the clockwise direction; defaults to the value of `largeArc`, so set it explicitly to get the mirrored pair of arcs).
+
 ### `Attributes` Class
 
 The `Attributes` class is used to set the visual properties of a path, such as its stroke, fill, and opacity. You can create a new `Attributes` object using `s.A` and then chain methods like `stroke()`, `fill()`, and `opacity()` to configure the desired attributes.

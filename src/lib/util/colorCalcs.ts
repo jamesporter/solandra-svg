@@ -1,4 +1,4 @@
-import { arrayOf } from "./collectionOps"
+import { arrayOf } from "./collectionOps.js"
 
 /**
  * Converts a hue component to an RGB channel value.

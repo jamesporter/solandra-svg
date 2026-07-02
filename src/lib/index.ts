@@ -4,16 +4,16 @@
  * @packageDocumentation
  */
 
-export * from "./svg"
-export * from "./attributes"
-export * from "./transforms"
-export * from "./path"
+export * from "./svg.js"
+export * from "./attributes.js"
+export * from "./transforms.js"
+export * from "./path.js"
 
-export * from "./util/noise"
+export * from "./util/noise.js"
 /** Vector/point math utilities (add, subtract, rotate, scale, etc.) */
-export { default as v } from "./util/vectors"
+export { default as v } from "./util/vectors.js"
 /** Collection operations (pairWise, tripleWise, zip2, sum, arrayOf) */
-export { default as c } from "./util/collectionOps"
-export * from "./util/util"
+export { default as c } from "./util/collectionOps.js"
+export * from "./util/util.js"
 
-export * from "./util/types"
+export * from "./util/types.js"
