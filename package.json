@@ -46,7 +46,7 @@
     "oxlint-tsgolint": "^0.11.4",
     "rimraf": "^6.0.1",
     "tsx": "^4.19.3",
-    "typescript": "~6.0.2",
+    "typescript": "7.0.1-rc",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"
   },
