@@ -110,6 +110,31 @@ describe("Path", () => {
         },
       })
     })
+
+    it("should default sweep to match largeArc (same-ellipse arcs)", () => {
+      const path = new Path(Attributes.empty)
+      path
+        .moveTo([0, 0])
+        .arcTo([1, 1])
+        .arcTo([0, 0], { largeArc: true })
+      expect(path.segments[1]).toMatchObject({
+        config: { largeArc: false, sweep: false },
+      })
+      expect(path.segments[2]).toMatchObject({
+        config: { largeArc: true, sweep: true },
+      })
+    })
+
+    it("should allow the sweep flag to be set independently", () => {
+      const path = new Path(Attributes.empty)
+      path
+        .moveTo([0, 0])
+        .arcTo([1, 1], { sweep: true })
+        .arcTo([0, 0], { largeArc: true, sweep: false })
+      expect(path.string(0)).toMatchInlineSnapshot(
+        `"<path d="M 0 0 A 1 1 0 0 1 1 1 A 1 1 0 1 0 0 0" />"`,
+      )
+    })
   })
 
   describe("rect", () => {
@@ -212,6 +237,45 @@ describe("Path", () => {
       }
       expect(moveSegment.to[0]).toBeCloseTo(0.1, 5) // at[0] + width/2
       expect(moveSegment.to[1]).toBeCloseTo(0, 5) // at[1]
+    })
+
+    it("should draw quarter arcs through the extreme points, ending at the start", () => {
+      const path = new Path(Attributes.empty)
+      path.ellipse([0.5, 0.5], 0.4, 0.2)
+      const points = path.segments.map((s) => (s as { to: [number, number] }).to)
+      const expected: [number, number][] = [
+        [0.5, 0.4], // top (start)
+        [0.3, 0.5], // left
+        [0.5, 0.6], // bottom
+        [0.7, 0.5], // right
+        [0.5, 0.4], // back to top
+      ]
+      expect(points).toHaveLength(expected.length)
+      points.forEach((p, i) => {
+        expect(p[0]).toBeCloseTo(expected[i][0], 10)
+        expect(p[1]).toBeCloseTo(expected[i][1], 10)
+      })
+    })
+  })
+
+  describe("spiral", () => {
+    it("should create a move followed by n line segments", () => {
+      const path = new Path(Attributes.empty)
+      path.spiral([0.5, 0.5], 0.1, 20)
+      expect(path.segments).toHaveLength(21)
+      expect(path.segments[0].kind).toBe("move")
+      expect(path.segments.filter((s) => s.kind === "line")).toHaveLength(20)
+    })
+
+    it("should move outwards from the center", () => {
+      const path = new Path(Attributes.empty)
+      path.spiral([0, 0], 0.1, 50)
+      const first = path.segments[0] as { to: [number, number] }
+      const last = path.segments[path.segments.length - 1] as {
+        to: [number, number]
+      }
+      const dist = ([x, y]: [number, number]) => Math.hypot(x, y)
+      expect(dist(last.to)).toBeGreaterThan(dist(first.to))
     })
   })
 

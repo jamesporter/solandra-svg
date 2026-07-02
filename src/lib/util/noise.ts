@@ -1,4 +1,4 @@
-import { dot } from "./vectors";
+import { dot } from "./vectors.js";
 
 /**
  * 2D Perlin noise implementation.

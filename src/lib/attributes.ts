@@ -1,6 +1,6 @@
-import { Transform } from "./transforms"
-import { hslToRgb } from "./util/colorCalcs"
-import { Point2D } from "./util/types"
+import { Transform } from "./transforms.js"
+import { hslToRgb } from "./util/colorCalcs.js"
+import { Point2D } from "./util/types.js"
 
 /**
  * Fluent builder for SVG presentation attributes and inline styles.

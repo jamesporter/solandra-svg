@@ -46,6 +46,55 @@ const svg = new SolandraSvg(width, height, 1)`}
         }}
         className="bg-zinc-100"
       />
+      <h3>Ellipse</h3>
+      <Source code={`s.strokedPath().ellipse(s.meta.center, 0.5, 0.3)`} />
+      <SVGSketch
+        width={320}
+        height={320}
+        sketch={(s) => {
+          s.strokedPath().ellipse(s.meta.center, 0.5, 0.3)
+        }}
+        className="bg-zinc-100"
+      />
+      <h3>Arcs</h3>
+      <p>
+        Draw elliptical arcs between points. By default the radii are taken
+        from the distance between the points; use{" "}
+        <span className="font-mono">largeArc</span> to take the longer way
+        around the same ellipse and <span className="font-mono">sweep</span> to
+        draw in the opposite (mirrored) direction.
+      </p>
+      <Source
+        code={`const a: Point2D = [0.35, 0.6]
+const b: Point2D = [0.65, 0.4]
+s.strokedPath((at) => at.stroke(0, 90, 50)).moveTo(a).arcTo(b)
+s.strokedPath((at) => at.stroke(120, 90, 40)).moveTo(a).arcTo(b, { sweep: true })
+s.strokedPath((at) => at.stroke(210, 90, 50)).moveTo(a).arcTo(b, { largeArc: true })
+s.strokedPath((at) => at.stroke(280, 90, 50))
+  .moveTo(a)
+  .arcTo(b, { largeArc: true, sweep: false })`}
+      />
+      <SVGSketch
+        width={320}
+        height={320}
+        sketch={(s) => {
+          const a: Point2D = [0.35, 0.6]
+          const b: Point2D = [0.65, 0.4]
+          s.strokedPath((at) => at.stroke(0, 90, 50))
+            .moveTo(a)
+            .arcTo(b)
+          s.strokedPath((at) => at.stroke(120, 90, 40))
+            .moveTo(a)
+            .arcTo(b, { sweep: true })
+          s.strokedPath((at) => at.stroke(210, 90, 50))
+            .moveTo(a)
+            .arcTo(b, { largeArc: true })
+          s.strokedPath((at) => at.stroke(280, 90, 50))
+            .moveTo(a)
+            .arcTo(b, { largeArc: true, sweep: false })
+        }}
+        className="bg-zinc-100"
+      />
       <h3>Spiral</h3>
       <Source code={`s.strokedPath().spiral(s.meta.center, 0.1, 50)`} />
       <SVGSketch

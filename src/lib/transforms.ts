@@ -1,4 +1,4 @@
-import { Point2D } from "./util/types"
+import { Point2D } from "./util/types.js"
 
 /**
  * Fluent builder for SVG transform attribute strings.

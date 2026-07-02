@@ -1,4 +1,4 @@
-import { arrayOf } from "./collectionOps"
+import { arrayOf } from "./collectionOps.js"
 
 /**
  * Indents a line of text with spaces (2 spaces per indentation level).

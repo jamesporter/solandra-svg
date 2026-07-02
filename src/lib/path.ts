@@ -1,8 +1,8 @@
-import { Point2D, CurveConfig, ArcConfig } from "./util/types"
-import { convertToSVGCubicSpec } from "./util/curveCalcs"
-import { Attributes } from "./attributes"
-import { v } from "."
-import { indent } from "./util/internalUtil"
+import { Point2D, CurveConfig, ArcConfig } from "./util/types.js"
+import { convertToSVGCubicSpec } from "./util/curveCalcs.js"
+import { Attributes } from "./attributes.js"
+import v from "./util/vectors.js"
+import { indent } from "./util/internalUtil.js"
 
 /**
  * A discriminated union representing a single segment in an SVG path.
@@ -78,11 +78,11 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
       })
     case "arc":
       const {
-        config: { rX, rY, largeArc, xAxisRotation },
+        config: { rX, rY, largeArc, sweep, xAxisRotation },
         to,
       } = segment
       return `A ${rX} ${rY} ${xAxisRotation} ${largeArc ? 1 : 0} ${
-        largeArc ? 1 : 0
+        sweep ? 1 : 0
       } ${to[0]} ${to[1]}`
   }
 }
@@ -168,8 +168,11 @@ export class Path {
    * If radii are not specified, they default to the absolute x/y distance between
    * the current position and the target point.
    *
+   * The `sweep` flag defaults to the value of `largeArc`, which keeps the short
+   * and long arcs on the same ellipse; set it explicitly to draw the mirrored arcs.
+   *
    * @param point - The target position
-   * @param config - Optional arc configuration (radii, rotation, large arc flag)
+   * @param config - Optional arc configuration (radii, rotation, large arc and sweep flags)
    * @returns `this` for chaining
    */
   arcTo(point: Point2D, config: ArcConfig = {}): Path {
@@ -185,6 +188,7 @@ export class Path {
       rX = Math.abs(point[0] - previous[0]),
       rY = Math.abs(point[1] - previous[1]),
       largeArc = false,
+      sweep = largeArc,
       xAxisRotation = 0,
     } = config
 
@@ -196,6 +200,7 @@ export class Path {
         rY: rY,
         xAxisRotation,
         largeArc,
+        sweep,
       },
     })
 
@@ -286,26 +291,35 @@ export class Path {
     const rY = height / 2
 
     // draw from top, seems most natural, like a clock?
-    this.segments.push({ kind: "move", to: [cX, cY - height / 2] })
+    // four quarter arcs counterclockwise: top, left, bottom, right, back to top
+    this.segments.push({ kind: "move", to: [cX, cY - rY] })
     for (let i = 0; i < 4; i++) {
-      this.arcTo(
-        [
-          cX + rX * Math.cos(Math.PI * (i + 1)),
-          cY + rY * Math.sin(Math.PI * (i + 1)),
-        ],
-        { rX, rY },
-      )
+      const angle = ((i + 2) * Math.PI) / 2
+      this.arcTo([cX + rX * Math.cos(angle), cY - rY * Math.sin(angle)], {
+        rX,
+        rY,
+      })
     }
     return this
   }
 
+  /**
+   * Draws a spiral of `n` straight segments of (roughly) equal length around a point.
+   *
+   * @param at - The center of the spiral
+   * @param l - The length of each segment (and the starting radius)
+   * @param n - The number of segments
+   * @param angle - The starting angle in radians (default `0`)
+   * @param rate - How quickly the radius grows per radian turned (default `0.005`)
+   * @returns `this` for chaining
+   */
   spiral(
     at: Point2D,
     l: number,
     n: number,
     angle: number = 0,
     rate: number = 0.005,
-  ) {
+  ): Path {
     let a = angle
     let r = l
 
