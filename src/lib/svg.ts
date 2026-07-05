@@ -608,7 +608,7 @@ ${this.elements
 
     let a = -Math.PI * 0.5
     for (let i = 0; i < n; i++) {
-      callback([cX + r * Math.cos(a + da), cY + r * Math.sin(a + da)], i)
+      callback([cX + r * Math.cos(a), cY + r * Math.sin(a)], i)
       a += da
     }
   }
