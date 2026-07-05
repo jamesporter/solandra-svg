@@ -28,40 +28,7 @@ This repo contains a `llm.md` file that can be used to provide context to a Larg
 
 ## Updates
 
-### 0.6.2
-
-- Independent `sweep` flag for arcs (previously tied to `largeArc`), so all four arc variants between two points can be drawn
-- `ellipse` now draws four clean quarter arcs instead of overlapping half-ellipses (better for pen plotting; visually identical)
-- Fixed the published package for Node ESM consumers: proper `exports` map, module-type markers, and file extensions in relative imports
-- Added LICENSE (MIT) and README to the published package
-- Documentation improvements (arcs/ellipse API reference and JSDoc)
-
-### 0.6.1
-
-- Type safety improvements in `Path` and generics, improved path cloning
-- Replaced ESLint with oxlint (type-aware) and added CI workflows for tests and linting
-
-### 0.6.0
-
-- API reference page and more APIs
-
-### 0.5.1
-
-- Minor typo fixes and updated documentation on using with AIs.
-
-### 0.5.0
-
-- OkLCH
-- Regular Polygon helper
-- more convenient APIs: `A` and `T` for concise Attributes and Transforms
-- tweaks
-
-### 0.4.0
-
-- `groupWithId` to easily build out groups in SVGs (where you only care about logically separating)
-- `cutPath` and `creasePath` for convenient paths for cut and fold patterns
-- `randomAngle`
-- `transformOrigin` attribute (so can easily rotate things)
+See [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 
 ## To develop or run locally
 
@@ -74,54 +41,23 @@ pnpm start
 
 Should open browser.
 
-## History
+To run the checks used in CI:
 
-Core, relevant bits of Solandra applied to SVG for static renders. Include html-ish stuff like classes, ids. Do groups, layers, ...
+```bash
+pnpm test --run   # unit tests
+pnpm lint         # type-aware linting
+pnpm verify:package  # build and smoke-test the publishable package
+```
 
-Don't do fill/draw separately (as Solandra)
+## Design
 
-Main short term goal is for plotting type stuff.
-
-Keep it minimal
-
-Output in various ways: initial focus preview/sketch-book + svg file (or something equiv)
-
-Probably just support svg, path and g(roup)
-
-## TO DO/Roadmap
-
-- [x] Basics
-- [x] Transforms
-- [x] Arcs (within path)
-- [x] Ellipse (as move, arc)
-- [x] Custom path transform (i.e. user supplied function to transform; at least points, maybe other aspects of path spec?)
-- [x] Chaikin
-- [x] clone path
-- [x] squash commits(!), publish to npm, open source
-
-### Post v'0.1'
-
-- [x] Inkscape friendly export (dimensions, colours, ...?)
-- [x] Groups (have plans for closure based approach for nesting)
-- [x] Quick website update (animated transitions, links to source code (but keep very simple, raw GH nothing embedded(!)))
-
-### After
-
-- [x] Object literal apis for attributes and transforms
-
-### Next gen
-
-- [x] Vite
-- [x] get deploying
-- [x] new lib stuff for cut and fold
-- [x] cut and fold example
-
-## API
+Solandra-SVG applies the core, relevant bits of [Solandra](https://github.com/jamesporter/solandra) to SVG for static renders. It supports HTML-ish concepts (classes, ids), groups and layers, and focuses on generative art and pen-plotting workflows. Output is an SVG string (or data URI) suitable for the browser, a sketchbook preview, or an `.svg` file.
 
 ## Publishing
 
-`pnpm build:package`
-
-`cd package`
-
-`npm publish`
+```bash
+pnpm build:package  # generates ./package
+pnpm verify:package # smoke-test the built ESM + CJS artifacts
+cd package
+npm publish
+```
