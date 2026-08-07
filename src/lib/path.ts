@@ -28,8 +28,16 @@ export type PathSegment =
   | { kind: "arc"; to: Point2D; config: Required<ArcConfig> }
   | { kind: "close" }
 
-// To force types later, a bit nasty but to cover most potential errors with runtime checks
-type Toable = { to: Point2D }
+/**
+ * Returns the point a segment finishes at, or `undefined` for segments that
+ * have no destination of their own (i.e. `close`).
+ *
+ * @param segment - The segment to inspect
+ * @internal
+ */
+function endPointOf(segment: PathSegment | undefined): Point2D | undefined {
+  return segment && segment.kind !== "close" ? segment.to : undefined
+}
 
 function cloneSegment(segment: PathSegment): PathSegment {
   switch (segment.kind) {
@@ -71,12 +79,17 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
     case "line":
       return `L ${segment.to.join(" ")}`
     case "cubicCurve":
+      if (!previous) {
+        throw new Error(
+          "A curve must follow a segment with a destination point",
+        )
+      }
       return convertToSVGCubicSpec({
-        from: previous!,
+        from: previous,
         to: segment.to,
         ...segment.config,
       })
-    case "arc":
+    case "arc": {
       const {
         config: { rX, rY, largeArc, sweep, xAxisRotation },
         to,
@@ -84,6 +97,7 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
       return `A ${rX} ${rY} ${xAxisRotation} ${largeArc ? 1 : 0} ${
         sweep ? 1 : 0
       } ${to[0]} ${to[1]}`
+    }
   }
 }
 
@@ -176,14 +190,13 @@ export class Path {
    * @returns `this` for chaining
    */
   arcTo(point: Point2D, config: ArcConfig = {}): Path {
-    const prev = this.segments[this.segments.length - 1]
-    if (!prev || prev.kind === "close") {
+    const previous = endPointOf(this.segments[this.segments.length - 1])
+    if (!previous) {
       throw new Error(
         "arcTo requires a previous segment with a destination point",
       )
     }
 
-    const previous: Point2D = prev.to
     const {
       rX = Math.abs(point[0] - previous[0]),
       rY = Math.abs(point[1] - previous[1]),
@@ -224,12 +237,11 @@ export class Path {
   ): Path {
     const start =
       align === "topLeft" ? at : v.subtract(at, [width / 2, height / 2])
-    this.segments.push({ kind: "move", to: start })
-    this.segments.push({ kind: "line", to: v.add(start, [width, 0]) })
-    this.segments.push({ kind: "line", to: v.add(start, [width, height]) })
-    this.segments.push({ kind: "line", to: v.add(start, [0, height]) })
-    this.segments.push({ kind: "line", to: start })
-    return this
+    return this.moveTo(start)
+      .lineTo(v.add(start, [width, 0]))
+      .lineTo(v.add(start, [width, height]))
+      .lineTo(v.add(start, [0, height]))
+      .lineTo(start)
   }
 
   /**
@@ -251,19 +263,10 @@ export class Path {
   ): Path {
     const c = align === "topLeft" ? v.add(at, [radius, radius]) : at
 
-    let start: Point2D = [
-      c[0] + radius * Math.cos(rotate),
-      c[1] + radius * Math.sin(rotate),
-    ]
-
-    this.segments.push({ kind: "move", to: start })
+    this.moveTo(v.polarToCartesian(c, radius, rotate))
 
     for (let i = 1; i <= n; i++) {
-      const angle = (i * Math.PI * 2) / n + rotate
-      this.segments.push({
-        kind: "line",
-        to: [c[0] + radius * Math.cos(angle), c[1] + radius * Math.sin(angle)],
-      })
+      this.lineTo(v.polarToCartesian(c, radius, (i * Math.PI * 2) / n + rotate))
     }
 
     return this
@@ -292,7 +295,7 @@ export class Path {
 
     // draw from top, seems most natural, like a clock?
     // four quarter arcs counterclockwise: top, left, bottom, right, back to top
-    this.segments.push({ kind: "move", to: [cX, cY - rY] })
+    this.moveTo([cX, cY - rY])
     for (let i = 0; i < 4; i++) {
       const angle = ((i + 2) * Math.PI) / 2
       this.arcTo([cX + rX * Math.cos(angle), cY - rY * Math.sin(angle)], {
@@ -323,19 +326,13 @@ export class Path {
     let a = angle
     let r = l
 
-    this.segments.push({
-      kind: "move",
-      to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
-    })
+    this.moveTo(v.polarToCartesian(at, r, a))
 
     for (let i = 0; i < n; i++) {
       const dA = 2 * Math.asin(l / (r * 2))
       r += rate * dA
       a += dA
-      this.segments.push({
-        kind: "line",
-        to: v.add(at, [r * Math.cos(a), r * Math.sin(a)]),
-      })
+      this.lineTo(v.polarToCartesian(at, r, a))
     }
 
     return this
@@ -367,14 +364,14 @@ export class Path {
       newSegments.push(this.segments[0])
 
       for (let i = 1; i < this.segments.length - 1; i++) {
-        const a = this.segments[i - 1]
+        const a = endPointOf(this.segments[i - 1])
         const b = this.segments[i]
         const c = this.segments[i + 1]
 
-        if (b.kind === "line" && c.kind === "line" && (a as Toable)["to"]) {
+        if (b.kind === "line" && c.kind === "line" && a) {
           newSegments.push({
             kind: "line",
-            to: v.pointAlong((a as Toable).to, b.to, 0.75),
+            to: v.pointAlong(a, b.to, 0.75),
           })
           newSegments.push({
             kind: "line",
@@ -429,12 +426,7 @@ export class Path {
       throw new Error("Must start path with move to initial position")
 
     const d = this.segments
-      .map((s, i) =>
-        segmentToString(
-          s,
-          i > 0 ? (this.segments[i - 1] as Toable).to : undefined,
-        ),
-      )
+      .map((s, i) => segmentToString(s, endPointOf(this.segments[i - 1])))
       .join(" ")
     return indent(`<path${this.attributes.string} d="${d}" />`, depth)
   }

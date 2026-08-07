@@ -1,5 +1,3 @@
-import { arrayOf } from "./collectionOps.js"
-
 /**
  * Indents a line of text with spaces (2 spaces per indentation level).
  *
@@ -9,6 +7,5 @@ import { arrayOf } from "./collectionOps.js"
  * @internal
  */
 export function indent(line: string, amount: number) {
-  const padding = arrayOf(amount, () => "  ").join("")
-  return padding + line
+  return "  ".repeat(amount) + line
 }

@@ -113,10 +113,7 @@ describe("Path", () => {
 
     it("should default sweep to match largeArc (same-ellipse arcs)", () => {
       const path = new Path(Attributes.empty)
-      path
-        .moveTo([0, 0])
-        .arcTo([1, 1])
-        .arcTo([0, 0], { largeArc: true })
+      path.moveTo([0, 0]).arcTo([1, 1]).arcTo([0, 0], { largeArc: true })
       expect(path.segments[1]).toMatchObject({
         config: { largeArc: false, sweep: false },
       })
@@ -242,7 +239,9 @@ describe("Path", () => {
     it("should draw quarter arcs through the extreme points, ending at the start", () => {
       const path = new Path(Attributes.empty)
       path.ellipse([0.5, 0.5], 0.4, 0.2)
-      const points = path.segments.map((s) => (s as { to: [number, number] }).to)
+      const points = path.segments.map(
+        (s) => (s as { to: [number, number] }).to,
+      )
       const expected: [number, number][] = [
         [0.5, 0.4], // top (start)
         [0.3, 0.5], // left
@@ -389,6 +388,39 @@ describe("Path", () => {
         attrs.stroke(180, 50, 50)
       })
       expect(path.string(0)).toMatch(/stroke/)
+    })
+  })
+
+  describe("segments without a destination point", () => {
+    it("should reject an arcTo with no preceding segment", () => {
+      const path = new Path(Attributes.empty)
+      expect(() => path.arcTo([1, 1])).toThrow(
+        "arcTo requires a previous segment with a destination point",
+      )
+    })
+
+    it("should reject an arcTo directly after a close", () => {
+      const path = new Path(Attributes.empty)
+      path.moveTo([0, 0]).lineTo([1, 1]).close()
+      expect(() => path.arcTo([0.5, 0.5])).toThrow(
+        "arcTo requires a previous segment with a destination point",
+      )
+    })
+
+    it("should report a clear error for a curve after a close", () => {
+      const path = new Path(Attributes.empty)
+      path.moveTo([0, 0]).lineTo([1, 1]).close().curveTo([0.5, 0.5])
+      expect(() => path.string(0)).toThrow(
+        "A curve must follow a segment with a destination point",
+      )
+    })
+
+    it("should leave close segments alone when smoothing", () => {
+      const path = new Path(Attributes.empty)
+      path.moveTo([0, 0]).lineTo([1, 0]).close().lineTo([1, 1]).lineTo([0, 1])
+
+      expect(() => path.chaikin(1)).not.toThrow()
+      expect(path.segments.some((s) => s.kind === "close")).toBe(true)
     })
   })
 })

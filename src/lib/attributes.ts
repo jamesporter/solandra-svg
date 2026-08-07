@@ -49,14 +49,36 @@ export class Attributes {
     hue: number,
     saturation: number,
     lightness: number,
-    opacity?: number
+    opacity?: number,
   ): Attributes {
-    this.styleAttributes["fill"] = hslToRgb(
+    return this.setHsl("fill", hue, saturation, lightness, opacity)
+  }
+
+  /**
+   * Sets a paint property to an HSL colour (as hex RGB), with optional opacity.
+   *
+   * @param property - Either `"fill"` or `"stroke"`
+   * @param hue - Hue from `0` to `360`
+   * @param saturation - Saturation from `0` to `100`
+   * @param lightness - Lightness from `0` to `100`
+   * @param opacity - Optional opacity from `0` to `1`
+   * @returns `this` for chaining
+   */
+  private setHsl(
+    property: "fill" | "stroke",
+    hue: number,
+    saturation: number,
+    lightness: number,
+    opacity?: number,
+  ): Attributes {
+    this.styleAttributes[property] = hslToRgb(
       hue / 360,
       saturation / 100,
-      lightness / 100
+      lightness / 100,
     )
-    if (opacity !== undefined) this.styleAttributes["fill-opacity"] = opacity
+    if (opacity !== undefined) {
+      this.styleAttributes[`${property}-opacity`] = opacity
+    }
     return this
   }
 
@@ -90,17 +112,17 @@ export class Attributes {
    * @param lightness - Perceptual lightness (typically `0` to `1`)
    * @param chroma - Colour intensity (typically `0` to `0.4`)
    * @param hue - Hue angle in degrees (`0` to `360`)
-   * @param alpha - Opacity from `0` to `1`
+   * @param alpha - Optional opacity from `0` to `1`, embedded in the `oklch()` value
    * @returns `this` for chaining
    */
   fillOklch(
     lightness: number,
     chroma: number,
     hue: number,
-    alpha: number
+    alpha?: number,
   ): Attributes {
     this.styleAttributes["fill"] = `oklch(${lightness} ${chroma} ${hue}${
-      typeof alpha === "number" ? ` / ${alpha * 100}%` : ""
+      alpha !== undefined ? ` / ${alpha * 100}%` : ""
     })`
     return this
   }
@@ -119,15 +141,9 @@ export class Attributes {
     hue: number,
     saturation: number,
     lightness: number,
-    alpha?: number
+    alpha?: number,
   ): Attributes {
-    this.styleAttributes["stroke"] = hslToRgb(
-      hue / 360,
-      saturation / 100,
-      lightness / 100
-    )
-    if (alpha !== undefined) this.styleAttributes["stroke-opacity"] = alpha
-    return this
+    return this.setHsl("stroke", hue, saturation, lightness, alpha)
   }
 
   /**
@@ -136,19 +152,20 @@ export class Attributes {
    * @param lightness - Perceptual lightness (typically `0` to `1`)
    * @param chroma - Colour intensity (typically `0` to `0.4`)
    * @param hue - Hue angle in degrees (`0` to `360`)
-   * @param alpha - Stroke opacity from `0` to `1`
+   * @param alpha - Optional stroke opacity from `0` to `1`, set as `stroke-opacity`
    * @returns `this` for chaining
    */
   strokeOklch(
     lightness: number,
     chroma: number,
     hue: number,
-    alpha: number
+    alpha?: number,
   ): Attributes {
     this.styleAttributes["stroke"] = `oklch(${lightness} ${chroma} ${hue})`
 
-    if (typeof alpha === "number")
+    if (alpha !== undefined) {
       this.styleAttributes["stroke-opacity"] = alpha
+    }
 
     return this
   }
