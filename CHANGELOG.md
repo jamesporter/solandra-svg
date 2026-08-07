@@ -11,6 +11,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `aroundCircle` now emits its first point at the top of the circle (angle
   `-π/2`), matching the documented starting angle. Previously every point was
   rotated forward by one step, so the top point was emitted last.
+- Hues outside the `0`-`360` range (e.g. `h + 20` on a hue near `350`) now wrap
+  correctly instead of collapsing to a flat colour once they were more than one
+  turn out. Saturation and lightness outside their documented ranges are clamped,
+  so `fill`/`stroke` can no longer emit an invalid hex colour.
+- A curve that follows a `close` (which has no destination point of its own) now
+  raises a clear error instead of failing inside the curve maths.
 
 ### Changed
 
@@ -20,6 +26,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `engines` field and is unaffected.
 - CI now reads the Node version from `.nvmrc` (set to `22`) as a single source
   of truth.
+- Internal refactoring to remove duplication, with no change to rendered output:
+  SVG serialisation, data URI generation, grid iteration order, the
+  horizontal/vertical strip helpers, path insertion, and the `cutPath`/
+  `creasePath` presets are each now defined once. The shared iteration callback
+  signature is exported as `RegionCallback`.
+- `Path` no longer casts segments to an unchecked helper type to read their end
+  point, and its shape helpers (`rect`, `regularPolygon`, `ellipse`, `spiral`)
+  build on its own fluent methods rather than pushing raw segments.
+- `fillOklch` and `strokeOklch` now declare `alpha` as optional, matching the
+  behaviour they already had.
 
 ### Added
 
@@ -29,6 +45,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   guarding against broken publishes.
 - Tests for `aroundCircle`, `gaussian`, `poisson`, `proportionately`, and
   `uniformRandomInt`, which were previously untested.
+- Test coverage for the layout iteration utilities (`forTiling`, `forMargin`,
+  `forHorizontal`, `forVertical`, `forGrid`, `build`, `withRandomOrder`, `range`,
+  `times`, `downFrom`, `doProportion`, `inDrawing`), the remaining randomness
+  helpers (`sample`, `samples`, `shuffle`, `perturb`, `randomPoint`,
+  `randomPolarity`, `randomAngle`, `uniformGridPoint`), the SVG output variants
+  (`imageSrc`, the Inkscape-ready renderings, `groupWithId`, `clonePath`, and the
+  path presets), and `perlin2`, which had no tests at all.
 
 ## [0.6.2]
 

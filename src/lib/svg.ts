@@ -30,13 +30,7 @@ export class Group {
   strings(depth: number): string[] {
     return [
       indent(`<g${this.attributes.string}>`, depth),
-      ...this.children.flatMap((el) => {
-        if (el instanceof Group) {
-          return el.strings(depth + 1)
-        } else {
-          return el.string(depth + 1)
-        }
-      }),
+      ...this.children.flatMap((el) => renderElement(el, depth + 1)),
       indent(`</g>`, depth),
     ]
   }
@@ -48,6 +42,79 @@ export class Group {
    */
   push(element: Group | Path) {
     this.children.push(element)
+  }
+}
+
+/**
+ * Serialises a top-level or nested SVG element to indented markup lines.
+ *
+ * @param element - The group or path to serialise
+ * @param depth - The indentation depth for pretty-printing
+ * @internal
+ */
+function renderElement(element: Group | Path, depth: number): string[] {
+  return element instanceof Group
+    ? element.strings(depth)
+    : [element.string(depth)]
+}
+
+/**
+ * Wraps SVG markup in a `data:` URI suitable for use as an `<img>` `src`.
+ *
+ * @param svg - The SVG markup
+ * @param encode - If `true`, URI-encodes the SVG; otherwise only escapes `#` characters
+ * @internal
+ */
+function toDataUri(svg: string, encode: boolean): string {
+  return `data:image/svg+xml;utf8,${
+    encode ? encodeURIComponent(svg) : svg.replace(/#/g, "%23")
+  }`
+}
+
+/**
+ * The callback signature shared by the region-based iteration utilities
+ * ({@link SolandraSvg.forTiling}, {@link SolandraSvg.forHorizontal},
+ * {@link SolandraSvg.forVertical}, {@link SolandraSvg.forMargin}).
+ *
+ * @param point - The top-left corner of the region
+ * @param delta - The `[width, height]` of the region
+ * @param center - The center of the region
+ * @param i - The zero-based iteration index
+ */
+export type RegionCallback = (
+  point: Point2D,
+  delta: Vector2D,
+  center: Point2D,
+  i: number,
+) => void
+
+/**
+ * Visits every `(i, j)` cell of an `nX` by `nY` grid in the requested order.
+ *
+ * @param nX - The number of columns
+ * @param nY - The number of rows
+ * @param order - `"columnFirst"` walks down each column, `"rowFirst"` across each row
+ * @param visit - Called with the column and row index of each cell
+ * @internal
+ */
+function forEachCell(
+  nX: number,
+  nY: number,
+  order: "columnFirst" | "rowFirst",
+  visit: (i: number, j: number) => void,
+) {
+  if (order === "columnFirst") {
+    for (let i = 0; i < nX; i++) {
+      for (let j = 0; j < nY; j++) {
+        visit(i, j)
+      }
+    }
+  } else {
+    for (let j = 0; j < nY; j++) {
+      for (let i = 0; i < nX; i++) {
+        visit(i, j)
+      }
+    }
   }
 }
 
@@ -99,24 +166,28 @@ export class SolandraSvg {
   }
 
   /**
+   * Renders the drawing as SVG markup, with the given unit suffix on the
+   * `width`/`height` attributes.
+   *
+   * @param unit - The CSS unit appended to the pixel dimensions (e.g. `""` or `"mm"`)
+   * @internal
+   */
+  private render(unit: string): string {
+    const body = this.elements.flatMap((el) => renderElement(el, 1)).join("\n")
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
+      1 / this.aspectRatio
+    }" width="${this.width}${unit}" height="${this.height}${unit}">
+${body}
+</svg>`
+  }
+
+  /**
    * Generates the complete SVG markup string for the drawing.
    *
    * The viewBox is normalised to `"0 0 1 {1/aspectRatio}"`.
    */
   get image(): string {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
-      1 / this.aspectRatio
-    }" width="${this.width}" height="${this.height}">
-${this.elements
-  .flatMap((el) => {
-    if (el instanceof Group) {
-      return el.strings(1)
-    } else {
-      return el.string(1)
-    }
-  })
-  .join("\n")}
-</svg>`
+    return this.render("")
   }
 
   /**
@@ -126,9 +197,7 @@ ${this.elements
    * @returns A `data:image/svg+xml` URI string
    */
   imageSrc(encode: boolean = true): string {
-    return `data:image/svg+xml;utf8,${
-      encode ? encodeURIComponent(this.image) : this.image.replace(/#/g, "%23")
-    }`
+    return toDataUri(this.image, encode)
   }
 
   /**
@@ -137,19 +206,7 @@ ${this.elements
    * @remarks This API is unstable and may change.
    */
   get UNSTABLE_imageInkscapeReady(): string {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
-      1 / this.aspectRatio
-    }" width="${this.width}mm" height="${this.height}mm">
-${this.elements
-  .flatMap((el) => {
-    if (el instanceof Group) {
-      return el.strings(1)
-    } else {
-      return el.string(1)
-    }
-  })
-  .join("\n")}
-</svg>`
+    return this.render("mm")
   }
 
   /**
@@ -160,11 +217,7 @@ ${this.elements
    * @remarks This API is unstable and may change.
    */
   UNSTABLE_imageSrcInkscapeReady(encode: boolean = true): string {
-    return `data:image/svg+xml;utf8,${
-      encode
-        ? encodeURIComponent(this.UNSTABLE_imageInkscapeReady)
-        : this.UNSTABLE_imageInkscapeReady.replace(/#/g, "%23")
-    }`
+    return toDataUri(this.UNSTABLE_imageInkscapeReady, encode)
   }
 
   /**
@@ -210,15 +263,25 @@ ${this.elements
   }
 
   /**
+   * Adds an already-constructed path to the current drawing context.
+   *
+   * @param path - The path to add
+   * @returns The same path, for convenience
+   * @internal
+   */
+  private addPath(path: Path): Path {
+    this.currentElements.push(path)
+    return path
+  }
+
+  /**
    * Creates a new {@link Path} and adds it to the current drawing context.
    *
    * @param attributes - Optional {@link Attributes} for the path (defaults to empty)
    * @returns The new path, ready for drawing commands
    */
   path(attributes: Attributes = new Attributes()): Path {
-    const path = new Path(attributes)
-    this.currentElements.push(path)
-    return path
+    return this.addPath(new Path(attributes))
   }
 
   /**
@@ -236,9 +299,7 @@ ${this.elements
       .strokeOpacity(1)
       .lineCap("round")
     configureAttributes?.(attr)
-    const path = new Path(attr)
-    this.currentElements.push(path)
-    return path
+    return this.addPath(new Path(attr))
   }
 
   /**
@@ -252,9 +313,7 @@ ${this.elements
   filledPath(configureAttributes?: (attributes: Attributes) => void): Path {
     const attr = Attributes.filled.fill(0, 0, 0).fillOpacity(1)
     configureAttributes?.(attr)
-    const path = new Path(attr)
-    this.currentElements.push(path)
-    return path
+    return this.addPath(new Path(attr))
   }
 
   /**
@@ -265,9 +324,27 @@ ${this.elements
    * @returns The cloned path (now part of the drawing)
    */
   clonePath(path: Path, attributes?: Attributes): Path {
-    const newPath = path.clone(attributes)
-    this.currentElements.push(newPath)
-    return newPath
+    return this.addPath(path.clone(attributes))
+  }
+
+  /**
+   * Creates a stroked path preset for cut-and-fold designs.
+   *
+   * @param lightness - The stroke lightness (`0`-`100`)
+   * @param configureAttributes - Optional callback to further customise the attributes
+   * @internal
+   */
+  private cutAndFoldPath(
+    lightness: number,
+    configureAttributes?: (attributes: Attributes) => void,
+  ): Path {
+    return this.strokedPath((a) => {
+      a.lineCap("round")
+        .lineJoin("round")
+        .stroke(0, 0, lightness)
+        .strokeWidth(0.005)
+      configureAttributes?.(a)
+    })
   }
 
   /**
@@ -279,10 +356,7 @@ ${this.elements
    * @returns The new cut path
    */
   cutPath(configureAttributes?: (attributes: Attributes) => void) {
-    return this.strokedPath((a) => {
-      a.lineCap("round").lineJoin("round").stroke(0, 0, 60).strokeWidth(0.005)
-      configureAttributes?.(a)
-    })
+    return this.cutAndFoldPath(60, configureAttributes)
   }
 
   /**
@@ -294,10 +368,7 @@ ${this.elements
    * @returns The new crease path
    */
   creasePath(configureAttributes?: (attributes: Attributes) => void) {
-    return this.strokedPath((a) => {
-      a.lineCap("round").lineJoin("round").stroke(0, 0, 90).strokeWidth(0.005)
-      configureAttributes?.(a)
-    })
+    return this.cutAndFoldPath(90, configureAttributes)
   }
 
   // ── Iteration utilities ────────────────────────────────────────────
@@ -310,15 +381,8 @@ ${this.elements
    * @param margin - The margin around the drawing area (in normalised coordinates)
    * @param callback - Called with the top-left point, the size delta, the center, and index `0`
    */
-  forMargin = (
-    margin: number,
-    callback: (
-      point: Point2D,
-      delta: Vector2D,
-      center: Point2D,
-      i: number,
-    ) => void,
-  ) => this.forTiling({ n: 1, margin }, callback)
+  forMargin = (margin: number, callback: RegionCallback) =>
+    this.forTiling({ n: 1, margin }, callback)
 
   /**
    * Tiles the drawing area into a grid of cells and iterates over each cell.
@@ -337,12 +401,7 @@ ${this.elements
       margin?: number
       order?: "columnFirst" | "rowFirst"
     },
-    callback: (
-      point: Point2D,
-      delta: Vector2D,
-      center: Point2D,
-      i: number,
-    ) => void,
+    callback: RegionCallback,
   ) => {
     let k = 0
     const {
@@ -361,31 +420,14 @@ ${this.elements
     const sX = margin
     const sY = (1 / this.aspectRatio - hY) / 2
 
-    if (order === "columnFirst") {
-      for (let i = 0; i < n; i++) {
-        for (let j = 0; j < nY; j++) {
-          callback(
-            [sX + i * deltaX, sY + j * deltaY],
-            [deltaX, deltaY],
-            [sX + i * deltaX + deltaX / 2, sY + j * deltaY + deltaY / 2],
-            k,
-          )
-          k++
-        }
-      }
-    } else {
-      for (let j = 0; j < nY; j++) {
-        for (let i = 0; i < n; i++) {
-          callback(
-            [sX + i * deltaX, sY + j * deltaY],
-            [deltaX, deltaY],
-            [sX + i * deltaX + deltaX / 2, sY + j * deltaY + deltaY / 2],
-            k,
-          )
-          k++
-        }
-      }
+    const emit = (i: number, j: number) => {
+      const x = sX + i * deltaX
+      const y = sY + j * deltaY
+      callback([x, y], [deltaX, deltaY], [x + deltaX / 2, y + deltaY / 2], k)
+      k++
     }
+
+    forEachCell(n, nY, order, emit)
   }
 
   /**
@@ -397,34 +439,9 @@ ${this.elements
    * @param callback - Called for each strip with `(topLeft, stripSize, stripCenter, index)`
    */
   forHorizontal = (
-    config: {
-      n: number
-      margin?: number
-    },
-    callback: (
-      point: Point2D,
-      delta: Vector2D,
-      center: Point2D,
-      i: number,
-    ) => void,
-  ) => {
-    const { n, margin = 0 } = config
-
-    const sX = margin
-    const eX = 1 - margin
-    const sY = margin
-    const dY = 1 / this.aspectRatio - 2 * margin
-    const dX = (eX - sX) / n
-
-    for (let i = 0; i < n; i++) {
-      callback(
-        [sX + i * dX, sY],
-        [dX, dY],
-        [sX + i * dX + dX / 2, sY + dY / 2],
-        i,
-      )
-    }
-  }
+    config: { n: number; margin?: number },
+    callback: RegionCallback,
+  ) => this.forStrips(config, "horizontal", callback)
 
   /**
    * Divides the drawing area into `n` vertical strips and iterates over each.
@@ -435,32 +452,33 @@ ${this.elements
    * @param callback - Called for each strip with `(topLeft, stripSize, stripCenter, index)`
    */
   forVertical = (
-    config: {
-      n: number
-      margin?: number
-    },
-    callback: (
-      point: Point2D,
-      delta: Vector2D,
-      center: Point2D,
-      i: number,
-    ) => void,
-  ) => {
-    const { n, margin = 0 } = config
+    config: { n: number; margin?: number },
+    callback: RegionCallback,
+  ) => this.forStrips(config, "vertical", callback)
 
-    const sX = margin
-    const eY = 1 / this.aspectRatio - margin
-    const sY = margin
-    const dX = 1 - 2 * margin
-    const dY = (eY - sY) / n
+  /**
+   * Divides the drawing area into `n` strips along one axis and iterates over each.
+   *
+   * @param config - Strip count and margin
+   * @param direction - `"horizontal"` splits along x, `"vertical"` along y
+   * @param callback - Called for each strip
+   * @internal
+   */
+  private forStrips(
+    { n, margin = 0 }: { n: number; margin?: number },
+    direction: "horizontal" | "vertical",
+    callback: RegionCallback,
+  ) {
+    const horizontal = direction === "horizontal"
+    const width = 1 - 2 * margin
+    const height = 1 / this.aspectRatio - 2 * margin
+    const dX = horizontal ? width / n : width
+    const dY = horizontal ? height : height / n
 
     for (let i = 0; i < n; i++) {
-      callback(
-        [sX, sY + i * dY],
-        [dX, dY],
-        [sX + dX / 2, sY + i * dY + dY / 2],
-        i,
-      )
+      const x = margin + (horizontal ? i * dX : 0)
+      const y = margin + (horizontal ? 0 : i * dY)
+      callback([x, y], [dX, dY], [x + dX / 2, y + dY / 2], i)
     }
   }
 
@@ -488,21 +506,10 @@ ${this.elements
     let k = 0
     const { minX, maxX, minY, maxY, order = "columnFirst" } = config
 
-    if (order === "columnFirst") {
-      for (let i = minX; i <= maxX; i++) {
-        for (let j = minY; j <= maxY; j++) {
-          callback([i, j], k)
-          k++
-        }
-      }
-    } else {
-      for (let j = minY; j <= maxY; j++) {
-        for (let i = minX; i <= maxX; i++) {
-          callback([i, j], k)
-          k++
-        }
-      }
-    }
+    forEachCell(maxX - minX + 1, maxY - minY + 1, order, (i, j) => {
+      callback([minX + i, minY + j], k)
+      k++
+    })
   }
 
   /**
@@ -545,7 +552,7 @@ ${this.elements
     })
     this.shuffle(args)
 
-    for (let a of args) {
+    for (const a of args) {
       cb(...a)
     }
   }

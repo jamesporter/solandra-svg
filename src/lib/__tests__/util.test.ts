@@ -23,6 +23,34 @@ describe("Colour calc", () => {
 
     expect(hslToRgb(0, 0, 1)).toBe("#FFFFFF")
   })
+
+  it("should always produce a six digit hex string", () => {
+    // Channels below 0x10 must be zero padded, not truncated.
+    expect(hslToRgb(0, 0, 1 / 255)).toBe("#010101")
+    expect(hslToRgb(0, 1, 0.02)).toBe("#0A0000")
+
+    for (let i = 0; i <= 100; i++) {
+      expect(hslToRgb(i / 100, 0.5, i / 100)).toMatch(/^#[0-9A-F]{6}$/)
+    }
+  })
+
+  it("should wrap hues outside the 0-1 range", () => {
+    // Hue is cyclic: 1 is the same as 0, and 1.5 the same as 0.5.
+    expect(hslToRgb(0, 1, 0.5)).toBe("#FF0000")
+    expect(hslToRgb(1, 1, 0.5)).toBe("#FF0000")
+    expect(hslToRgb(2, 1, 0.5)).toBe("#FF0000")
+    expect(hslToRgb(-1, 1, 0.5)).toBe("#FF0000")
+
+    expect(hslToRgb(0.5, 1, 0.5)).toBe("#00FFFF")
+    expect(hslToRgb(1.5, 1, 0.5)).toBe("#00FFFF")
+    expect(hslToRgb(-0.5, 1, 0.5)).toBe("#00FFFF")
+  })
+
+  it("should clamp out of range saturation and lightness", () => {
+    expect(hslToRgb(0, 0, 1.5)).toBe("#FFFFFF")
+    expect(hslToRgb(0, 0, -0.5)).toBe("#000000")
+    expect(hslToRgb(0.5, 2, 0.5)).toMatch(/^#[0-9A-F]{6}$/)
+  })
 })
 
 describe("Scalar utilities", () => {
