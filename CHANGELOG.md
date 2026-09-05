@@ -17,6 +17,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   so `fill`/`stroke` can no longer emit an invalid hex colour.
 - A curve that follows a `close` (which has no destination point of its own) now
   raises a clear error instead of failing inside the curve maths.
+- Attribute values are now XML-escaped, so an `id`, `class` or any other
+  attribute containing `&`, `<`, `>` or `"` produces valid markup instead of
+  output no SVG renderer can parse. Values without those characters are
+  unchanged.
+- `chaikin` on a path with a single segment no longer duplicates that segment.
+  There are no corners to cut with fewer than three segments, so such paths are
+  now returned untouched.
+- `range` with `n: 0` emitted `NaN` (from an infinite step). It now emits just
+  the `from` value when `inclusive` (the default), and nothing otherwise.
 
 ### Changed
 
@@ -52,6 +61,28 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `randomPolarity`, `randomAngle`, `uniformGridPoint`), the SVG output variants
   (`imageSrc`, the Inkscape-ready renderings, `groupWithId`, `clonePath`, and the
   path presets), and `perlin2`, which had no tests at all.
+- Coverage reporting via `@vitest/coverage-v8`, a `pnpm test:coverage` script and
+  a dedicated `vitest.config.ts`. The library is at 100% statement, branch, line
+  and function coverage, enforced as a threshold in CI; the two genuinely
+  unreachable defensive branches carry `v8 ignore` comments explaining why.
+- Output-validity tests that parse every rendered drawing as XML and every `d`
+  attribute as SVG path data, over a range of seeds, so malformed markup,
+  invalid path commands and `NaN` coordinates fail the suite. The strict XML and
+  path-data parsers used for this live in `src/lib/__tests__/helpers` and have
+  tests of their own.
+- Property-based tests (`forAll`, seeded from the library's own RNG so runs are
+  reproducible) covering the laws the vector, scale, centroid, grid-transform,
+  collection and noise helpers have to obey.
+- Distribution tests for the randomness helpers: chi-squared uniformity for
+  `random`, `uniformRandomInt`, `randomAngle`, `sample` and `shuffle`; the
+  normal three-sigma shares for `gaussian`; mean, variance and per-count
+  probabilities for `poisson`; and rate checks for `doProportion` and
+  `proportionately`.
+- A public API test that pins the exact export surface of the package, so an
+  accidental rename or removal fails in the diff that causes it.
+- Golden-file regression tests: six representative sketches render to checked-in
+  `.svg` files under `src/lib/__tests__/__snapshots__`, which can be opened in a
+  browser, so a change to what the library draws shows up as a reviewable diff.
 
 ## [0.6.2]
 

@@ -44,10 +44,38 @@ Should open browser.
 To run the checks used in CI:
 
 ```bash
-pnpm test --run   # unit tests
-pnpm lint         # type-aware linting
+pnpm test:coverage   # unit tests with coverage thresholds
+pnpm lint            # type-aware linting
 pnpm verify:package  # build and smoke-test the publishable package
 ```
+
+`pnpm test` starts vitest in watch mode; `pnpm test:run` runs it once without
+coverage.
+
+## Testing
+
+The library's tests live in `src/lib/__tests__` and are layered:
+
+- **Unit tests** per module (`path`, `attributes`, `transforms`, `svg*`,
+  `vectors`, `noise`, …) covering documented behaviour and error cases.
+- **Output validity** (`svgValidity.test.ts`) parses every rendered drawing as
+  XML and every `d` attribute as SVG path data, across a range of seeds, so
+  malformed markup or `NaN` coordinates fail the suite. The strict parsers used
+  for this are in `__tests__/helpers` and are themselves tested.
+- **Property tests** (`properties.test.ts`) check the laws the geometry helpers
+  obey over hundreds of generated inputs, drawn from the library's own seeded
+  RNG so failures are reproducible.
+- **Distribution tests** (`randomDistributions.test.ts`) check the shape of the
+  randomness helpers' distributions, not just their ranges.
+- **Public API** (`publicApi.test.ts`) pins the package's export surface.
+- **Golden files** (`regression.test.ts`) render representative sketches to
+  `.svg` files under `__tests__/__snapshots__`. These can be opened in a
+  browser, so a change to what the library draws is a reviewable diff. Update
+  them with `pnpm test:run -u` and check the results before committing.
+
+Coverage of `src/lib` is enforced at 100% (statements, branches, lines and
+functions); anything genuinely unreachable carries a `v8 ignore` comment
+explaining why.
 
 ## Design
 

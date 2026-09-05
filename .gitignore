@@ -25,3 +25,6 @@ dist-ssr
 
 # The published version
 package
+
+# Test coverage reports
+coverage

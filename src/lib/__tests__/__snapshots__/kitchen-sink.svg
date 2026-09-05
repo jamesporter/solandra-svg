@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 0.625" width="800" height="500">
+  <path style="fill:none; stroke-width:0.005; stroke:#000000; stroke-opacity:1; stroke-linecap:round; stroke-dasharray:0.01 0.005; stroke-dashoffset:0.002;" d="M 0.2 0.3125 C 0.18683352096321335 0.2804930248745072, 0.24467251182428532 0.270052788613642, 0.2538176812958981 0.28887787949943966 Z" />
+  <path style="fill:#E6191D; fill-opacity:0.6950459953202928;" d="M 0.5 0.1625 A 0.15 0.15 0 0 0 0.35 0.3125 A 0.15 0.15 0 0 0 0.5 0.4625 A 0.15 0.15 0 0 0 0.65 0.31250000000000006 A 0.15 0.15 0 0 0 0.5 0.1625" />
+  <path style="fill:none; stroke-width:0.005; stroke:#000000; stroke-opacity:1; stroke-linecap:round; stroke-dasharray:0.01 0.005; stroke-dashoffset:0.002;" d="M 0.8 0.3125 C 0.8068735353089679 0.3714424564080348, 0.8994678892201947 0.3276598020482459, 0.9022905116953297 0.30727635987706886 Z" />
+  <g id="strips">
+    <path style="fill:#333333; fill-opacity:0.2;" d="M 0.02 0.02 L 0.26 0.02 L 0.26 0.605 L 0.02 0.605 L 0.02 0.02" />
+    <path style="fill:#333333; fill-opacity:0.2;" d="M 0.26 0.02 L 0.5 0.02 L 0.5 0.605 L 0.26 0.605 L 0.26 0.02" />
+    <path style="fill:#333333; fill-opacity:0.2;" d="M 0.5 0.02 L 0.74 0.02 L 0.74 0.605 L 0.5 0.605 L 0.5 0.02" />
+    <path style="fill:#333333; fill-opacity:0.2;" d="M 0.74 0.02 L 0.98 0.02 L 0.98 0.605 L 0.74 0.605 L 0.74 0.02" />
+    <g transform="scale(0.5, 0.5) skewX(0.1)">
+      <path style="fill:#000000; fill-opacity:1; opacity:0.3;" d="M 0.5 0.07916666666666666 A 0.05 0.025 0 0 0 0.45 0.10416666666666667 A 0.05 0.025 0 0 0 0.5 0.12916666666666668 A 0.05 0.025 0 0 0 0.55 0.10416666666666667 A 0.05 0.025 0 0 0 0.5 0.07916666666666666" />
+      <path style="fill:#000000; fill-opacity:1; opacity:0.3;" d="M 0.5 0.2875 A 0.05 0.025 0 0 0 0.45 0.3125 A 0.05 0.025 0 0 0 0.5 0.3375 A 0.05 0.025 0 0 0 0.55 0.3125 A 0.05 0.025 0 0 0 0.5 0.2875" />
+      <path style="fill:#000000; fill-opacity:1; opacity:0.3;" d="M 0.5 0.49583333333333335 A 0.05 0.025 0 0 0 0.45 0.5208333333333334 A 0.05 0.025 0 0 0 0.5 0.5458333333333334 A 0.05 0.025 0 0 0 0.55 0.5208333333333334 A 0.05 0.025 0 0 0 0.5 0.49583333333333335" />
+    </g>
+  </g>
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.2547202814347259 0.20868846196879814 A 0.18010311332199924 0.4106669802414839 0 0 0 0.07461716811272667 0.619355442210282" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.7045920050571455 0.2877266404687484 A 0.1375771143327329 0.1321197317616266 0 1 1 0.8421691193898784 0.419846372230375" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.210029506860986 0.03436812706187168 A 0.04059498597386349 0.19529290064496657 0 1 1 0.16943452088712252 0.22966102770683824" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M -0.02776977637035154 0.04413390004966 A 0.03717981607177705 0.47336005151972527 0 1 1 0.00941003970142551 0.5174939515693853" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.5046300619377421 0.511670055432933 A 0.02797924361612658 0.05112470243761902 0 1 1 0.5326093055538687 0.46054535299531396" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.011717612195023609 0.2739536748854305 A 0.9675847287763647 0.2730162700389357 0 0 0 0.9793023409713884 0.0009374048464948215" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.52808940868992 -0.022986922583401938 A 0.0876161183137737 0.21861522029662014 0 0 0 0.44047329037614635 0.1956282977132182" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.03546737765984842 0.48373919168267127 A 0.0062489217816185105 0.12905651520809608 0 1 1 0.02921845587822991 0.3546826764745752" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.7209031041331392 0.48432573599596146 A 0.638084637175175 0.06660821601239769 0 1 1 0.08281846695796413 0.41771751998356377" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.21759576454487475 0.5060701688245851 A 0.10908073061188797 0.4475262102958015 0 0 0 0.10851503393298678 0.058543958528783635" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.7272212066991092 0.02885472109253844 A 0.6868009448598447 0.5011024487024761 0 0 0 0.040420261839264504 0.5299571697950145" />
+  <path style="fill:none; stroke-width:0.005; stroke:#999999; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.49558277136460344 0.22351651093641636 A 0.49357150046541803 0.2804855286212884 0 1 1 0.9891542718300215 0.5040020395577047" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.5 0.11249999999999999 L 0.9046921507309845 0.10558937250649866" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.656366296493606 0.18780203962825331 L 0.5 0.3125" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.6949855824363648 0.3570041867912629 L 0.5 0.3125" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.5867767478235116 0.49269377358048383 L 0.3042205390309969 0.29439591333629117" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.41322325217648836 0.49269377358048383 L 0.5 0.3125" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.30501441756363523 0.3570041867912629 L 0.5 0.3125" />
+  <path style="fill:none; stroke-width:0.005; stroke:#E6E6E6; stroke-opacity:1; stroke-linecap:round; stroke-linejoin:round;" d="M 0.343633703506394 0.18780203962825331 L 0.5 0.3125" />
+</svg>

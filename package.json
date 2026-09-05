@@ -1,7 +1,7 @@
 {
   "name": "solandra-svg",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.8.1",
   "type": "module",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
@@ -13,6 +13,8 @@
     "lint": "oxlint --type-aware",
     "preview": "vite preview",
     "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "build:esm": "pnpm tsc -p tsconfig-esm.json",
     "build:cjs": "pnpm tsc -p tsconfig-cjs.json",
     "build:package": "tsx pre-publish && pnpm build:esm && pnpm build:cjs",
@@ -43,6 +45,7 @@
     "@types/react-dom": "^19.0.4",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react-swc": "^4.3.0",
+    "@vitest/coverage-v8": "^4.1.4",
     "oxlint": "^1.43.0",
     "oxlint-tsgolint": "^0.11.4",
     "rimraf": "^6.0.1",

@@ -85,6 +85,9 @@ const gradP: Point2D[] = new Array(512)
  * @internal
  */
 function seedNoise(seed: number) {
+  // The seed normalisation below is only partly reachable while the noise seed
+  // is fixed at 0; it is kept for when reseeding becomes part of the public API.
+  /* v8 ignore start */
   if (seed > 0 && seed < 1) {
     seed *= 65536
   }
@@ -93,6 +96,7 @@ function seedNoise(seed: number) {
   if (seed < 256) {
     seed |= seed << 8
   }
+  /* v8 ignore stop */
 
   for (let i = 0; i < 256; i++) {
     const v = i & 1 ? p[i] ^ (seed & 255) : p[i] ^ ((seed >> 8) & 255)
