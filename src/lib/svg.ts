@@ -639,7 +639,8 @@ ${body}
         r -= cases[i][0]
       }
     }
-    // fallback (should never happen)
+    /* v8 ignore next 2 -- unreachable: with a positive total some case
+       always outweighs the remaining r; kept as a defensive fallback. */
     return cases[0][1]()
   }
 
@@ -668,7 +669,8 @@ ${body}
   ) {
     const { from = 0, to = 1, n, inclusive = true } = config
 
-    const di = (to - from) / n
+    // n = 0 would otherwise make di infinite and every emitted value NaN.
+    const di = n === 0 ? 0 : (to - from) / n
     const max = inclusive ? n : n - 1
     for (let i = 0; i <= max; i++) {
       callback(i * di + from)

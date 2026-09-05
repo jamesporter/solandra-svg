@@ -1,6 +1,7 @@
 import { Transform } from "./transforms.js"
 import { hslToRgb } from "./util/colorCalcs.js"
 import { Point2D } from "./util/types.js"
+import { escapeAttribute } from "./util/internalUtil.js"
 
 /**
  * Fluent builder for SVG presentation attributes and inline styles.
@@ -322,11 +323,11 @@ export class Attributes {
     // don't want unnecessary spaces if either or both are missing
     let attrString = [
       Object.entries(this.attributes)
-        .map(([k, v]) => `${k}="${v}"`)
+        .map(([k, v]) => `${k}="${escapeAttribute(v)}"`)
         .join(" "),
       styleAttributeEntries.length > 0
         ? `style="${styleAttributeEntries
-            .map(([k, v]) => `${k}:${v};`)
+            .map(([k, v]) => `${k}:${escapeAttribute(v)};`)
             .join(" ")}"`
         : "",
     ]

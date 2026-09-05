@@ -358,7 +358,8 @@ export class Path {
    * @returns `this` for chaining
    */
   chaikin(n: number = 2): Path {
-    if (this.segments.length === 0) return this
+    // With fewer than three segments there are no corners to cut.
+    if (this.segments.length < 3) return this
     for (let k = 0; k < n; k++) {
       const newSegments: PathSegment[] = []
       newSegments.push(this.segments[0])
