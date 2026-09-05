@@ -84,7 +84,7 @@ export function sum(numbers: number[]): number {
  * ```
  */
 export function arrayOf<T>(n: number, init: () => T): T[] {
-  return Array.from({ length: n }, (_) => init())
+  return Array.from({ length: n }, () => init())
 }
 
 export default {

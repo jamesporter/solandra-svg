@@ -9,6 +9,12 @@ import * as lib from "../index"
 // scripts/verify-package.mjs makes the same kind of check against the built
 // artifact; this one catches the problem at source, in the diff that caused it.
 
+// Looking an export up by name is the point of the table-driven test below,
+// but that is a computed member access, which the import plugin cannot check
+// against a namespace object. A plain snapshot of the namespace keeps the
+// lookup honest and the rule enabled.
+const exported: Record<string, unknown> = { ...lib }
+
 /** Every value the package exports, and the shape consumers can rely on. */
 const PUBLIC_API = {
   // Core drawing classes
@@ -38,7 +44,7 @@ describe("the public API", () => {
   })
 
   it.each(Object.entries(PUBLIC_API))("exports %s as a %s", (name, kind) => {
-    expect(typeof lib[name as keyof typeof lib]).toBe(kind)
+    expect(typeof exported[name]).toBe(kind)
   })
 
   it("exposes the vector helpers on v", () => {
