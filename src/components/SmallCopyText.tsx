@@ -3,14 +3,16 @@ import { toast } from "sonner"
 
 export function SmallCopyText({ text }: { text: string }) {
   return (
-    <div className="flex flex-row gap-4 items-center bg-sky-200 p-2 rounded justify-between">
-      <span className="font-mono text-sm text-zinc-700">{text}</span>
+    <div className="flex flex-row gap-4 items-center bg-sky-200 dark:bg-sky-900 p-2 rounded justify-between">
+      <span className="font-mono text-sm text-zinc-700 dark:text-zinc-200">
+        {text}
+      </span>
       <button
         onClick={() => {
           void navigator.clipboard.writeText(text)
           toast.success("Copied to clipboard")
         }}
-        className="text-sky-600 hover:text-sky-700 cursor-pointer"
+        className="text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-200 cursor-pointer"
       >
         <CopyIcon />
       </button>

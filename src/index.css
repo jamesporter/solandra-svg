@@ -4,23 +4,23 @@
 @custom-variant dark (&:is(.dark *));
 
 h1 {
-  @apply text-sky-600 text-2xl lg:text-4xl my-4;
+  @apply text-sky-600 dark:text-sky-400 text-2xl lg:text-4xl my-4;
 }
 
 h2 {
-  @apply text-sky-700 text-xl lg:text-3xl my-4;
+  @apply text-sky-700 dark:text-sky-300 text-xl lg:text-3xl my-4;
 }
 
 h3 {
-  @apply text-sky-800 text-lg lg:text-xl my-4;
+  @apply text-sky-800 dark:text-sky-200 text-lg lg:text-xl my-4;
 }
 
 p {
-  @apply text-zinc-800 mb-2;
+  @apply text-zinc-800 dark:text-zinc-300 mb-2;
 }
 
 a {
-  @apply font-semibold text-sky-600 hover:text-sky-800;
+  @apply font-semibold text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-200;
 }
 
 .sourceContainer {
