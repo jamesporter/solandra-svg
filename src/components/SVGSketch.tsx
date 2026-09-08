@@ -1,4 +1,12 @@
+import { useIsDark } from "@/hooks/useIsDark"
 import { SolandraSvg } from "../lib/index"
+
+/**
+ * Sketches are rendered to an image at render time, so CSS can't restyle them
+ * for dark mode: instead the current theme is passed in and the sketch can pick
+ * its own colours.
+ */
+export type Sketch = (sol: SolandraSvg, isDark: boolean) => void
 
 export function SVGSketch({
   sketch,
@@ -7,14 +15,15 @@ export function SVGSketch({
   style = {},
   className,
 }: {
-  sketch: (sol: SolandraSvg) => void
+  sketch: Sketch
   width: number
   height: number
   style?: any
   className?: string
 }) {
+  const isDark = useIsDark()
   const svg = new SolandraSvg(width, height, 1)
-  sketch(svg)
+  sketch(svg, isDark)
   return (
     <img
       src={svg.imageSrc(false)}
@@ -31,17 +40,13 @@ export function SVGSketch({
   )
 }
 
-export function A4ishSketch({
-  sketch,
-}: {
-  sketch: (sol: SolandraSvg) => void
-}) {
+export function A4ishSketch({ sketch }: { sketch: Sketch }) {
   return (
     <SVGSketch
       width={3508 / 4}
       height={2480 / 4}
       sketch={sketch}
-      className="shadow"
+      className="bg-white shadow"
     />
   )
 }
@@ -50,11 +55,12 @@ export function A4InkscapeSketch({
   sketch,
   seed = 1,
 }: {
-  sketch: (sol: SolandraSvg) => void
+  sketch: Sketch
   seed?: number
 }) {
+  const isDark = useIsDark()
   const svg = new SolandraSvg(297, 210, seed)
-  sketch(svg)
+  sketch(svg, isDark)
 
   return (
     <img
@@ -66,7 +72,7 @@ export function A4InkscapeSketch({
         display: "block",
         margin: "20px auto",
       }}
-      className="shadow"
+      className="bg-white shadow"
     />
   )
 }

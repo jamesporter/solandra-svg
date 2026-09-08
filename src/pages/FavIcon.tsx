@@ -2,7 +2,7 @@ import { PageLayout } from "@/components/PageLayout"
 import Source from "@/components/Source"
 
 import { SolandraSvg, v } from "@/lib"
-import { useControls } from "leva"
+import { Leva, useControls } from "leva"
 
 export default function Favicon() {
   const { seed } = useControls({
@@ -16,6 +16,8 @@ export default function Favicon() {
 
   return (
     <PageLayout>
+      {/* keep the controls clear of the nav bar (and its theme switcher) */}
+      <Leva titleBar={{ position: { x: 0, y: 64 } }} />
       <h1>A Favicon for Solandra-SVG</h1>
 
       <div className="flex flex-col gap-4">
@@ -351,7 +353,11 @@ export function SmallSketch({
   return (
     <div className="flex flex-col gap-4 md:flex-row items-center">
       <a href={svg.imageSrc()} download="solandra.svg">
-        <img src={svg.imageSrc(false)} alt="favicon" className="shadow" />
+        <img
+          src={svg.imageSrc(false)}
+          alt="favicon"
+          className="bg-white shadow"
+        />
       </a>
       <Source code={codeSnippet} />
     </div>

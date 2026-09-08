@@ -1,10 +1,12 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Point2D, SolandraSvg, v } from "@/lib"
-import { useControls } from "leva"
+import { Leva, useControls } from "leva"
 
 export default function CutAndFold() {
   return (
     <PageLayout>
+      {/* keep the controls clear of the nav bar (and its theme switcher) */}
+      <Leva titleBar={{ position: { x: 0, y: 64 } }} />
       <h1>Cut and Fold</h1>
 
       <a
@@ -172,7 +174,10 @@ export function RegularTree() {
 
   return (
     <div className="flex flex-col gap-8 mx-auto container my-8">
-      <img src={s.imageSrc()} className="size-[800px] shadow-xl" />
+      <img
+        src={s.imageSrc()}
+        className="size-[800px] bg-white rounded shadow-xl"
+      />
 
       <div className="flex flex-row justify-start">
         <a

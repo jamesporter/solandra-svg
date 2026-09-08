@@ -4,6 +4,7 @@ import { PageLayout } from "@/components/PageLayout"
 import { SmallCopyText } from "@/components/SmallCopyText"
 import Source from "@/components/Source"
 import { SVGSketch } from "@/components/SVGSketch"
+import { useIsDark } from "@/hooks/useIsDark"
 
 import { Slider } from "@/components/ui/slider"
 import { Attributes, Point2D, v } from "@/lib"
@@ -14,6 +15,12 @@ import { Link } from "react-router"
 export function Home() {
   const [n, setN] = useState(25)
   const [h, setH] = useState(20)
+  const dark = useIsDark()
+
+  // Sketches are drawn into an image, so CSS can't restyle them for dark mode.
+  // Instead pick lighter ink (and brighter fills) when the page is dark; the
+  // code shown alongside each sketch uses the same values.
+  const ink = dark ? 100 : 0
 
   return (
     <>
@@ -25,7 +32,14 @@ export function Home() {
             sketch={(s) => {
               s.times(n, () => {
                 s.strokedPath((attr) =>
-                  attr.fill(s.sample([h - 20, h, h + 20]), 90, 50, 0.2)
+                  attr
+                    .stroke(0, 0, ink)
+                    .fill(
+                      s.sample([h - 20, h, h + 20]),
+                      90,
+                      dark ? 65 : 50,
+                      0.2
+                    )
                 )
                   .moveTo(s.randomPoint())
                   .arcTo(s.randomPoint())
@@ -37,8 +51,8 @@ export function Home() {
             <Source
               code={`s.times(${n}, () => {
   s.strokedPath((attr) =>
-    attr.fill(
-      s.sample([${h - 20}, ${h}, ${h + 20}]), 90, 50, 0.2)
+    attr.stroke(0, 0, ${ink}).fill(
+      s.sample([${h - 20}, ${h}, ${h + 20}]), 90, ${dark ? 65 : 50}, 0.2)
   )
     .moveTo(s.randomPoint())
     .arcTo(s.randomPoint())
@@ -88,15 +102,17 @@ export function Home() {
           This is the main class. It is the thing that creates SVGs, but it also
           offers many convenient functions and handles pseudo-randomness. In
           most examples an instance of this is accessed via{" "}
-          <span className="font-mono text-sky-700">s</span>.
+          <span className="font-mono text-sky-700 dark:text-sky-300">s</span>.
         </p>
 
         <h3>Path class</h3>
 
         <p>
           The main thing that allows you to assemble drawings. Get started with{" "}
-          <span className="font-mono text-sky-700">s.path</span> or another more
-          specific call.
+          <span className="font-mono text-sky-700 dark:text-sky-300">
+            s.path
+          </span>{" "}
+          or another more specific call.
         </p>
 
         <h3>Attributes class and Transform class</h3>
@@ -104,9 +120,10 @@ export function Home() {
         <p>
           These set up things like strokes and fills and transforms. You can
           create a new instance of each with{" "}
-          <span className="font-mono text-sky-700">s.T</span> or{" "}
-          <span className="font-mono text-sky-700">s.A</span> and start using
-          chained calls to configure.
+          <span className="font-mono text-sky-700 dark:text-sky-300">s.T</span>{" "}
+          or{" "}
+          <span className="font-mono text-sky-700 dark:text-sky-300">s.A</span>{" "}
+          and start using chained calls to configure.
         </p>
 
         <h2>Why this library?</h2>
@@ -137,7 +154,7 @@ export function Home() {
         <h2>Try it</h2>
 
         <div className="flex flex-col md:flex-row gap-4 ">
-          <div className="bg-sky-100 rounded p-4 flex-[1.2]">
+          <div className="bg-sky-100 dark:bg-sky-950 rounded p-4 flex-[1.2]">
             <a
               className="mb-4 flex flex-row gap-2 items-center"
               href="https://codesandbox.io/s/simple-solandra-svg-demo-obinl"
@@ -148,7 +165,7 @@ export function Home() {
             <p>A ready to play with CodeSandbox.</p>
           </div>
 
-          <div className="bg-sky-100 rounded p-4 flex-[1.2]">
+          <div className="bg-sky-100 dark:bg-sky-950 rounded p-4 flex-[1.2]">
             <a
               className="mb-4 flex flex-row gap-2 items-center"
               href="https://github.com/jamesporter/solandra-svg"
@@ -159,7 +176,7 @@ export function Home() {
             <p>Full source code for the library and this site</p>
           </div>
 
-          <div className="bg-sky-100 rounded p-4 flex-[2]">
+          <div className="bg-sky-100 dark:bg-sky-950 rounded p-4 flex-[2]">
             <a
               className="mb-4 flex flex-row gap-2 items-center"
               href="https://www.npmjs.com/package/solandra-svg"
@@ -219,7 +236,9 @@ export function Home() {
               ([x, y], [dX]) => {
                 const path = s
                   .strokedPath((attr) =>
-                    attr.stroke(355, 10, 10, 0.9).fill(340, 90, 70, 0.2)
+                    attr
+                      .stroke(355, 10, dark ? 85 : 10, 0.9)
+                      .fill(340, 90, 70, dark ? 0.3 : 0.2)
                   )
                   .moveTo([0.5, 0.5])
 
@@ -238,7 +257,9 @@ export function Home() {
   ([x, y], [dX]) => {
     const path = s
       .strokedPath((attr) =>
-        attr.stroke(355, 10, 10, 0.9).fill(340, 90, 70, 0.2)
+        attr
+          .stroke(355, 10, ${dark ? 85 : 10}, 0.9)
+          .fill(340, 90, 70, ${dark ? 0.3 : 0.2})
       )
       .moveTo([0.5, 0.5])
 
@@ -266,13 +287,13 @@ export function Home() {
             s.times(15, () => {
               let start: Point2D = [s.random(), bottom]
               let end: Point2D = [s.random(), bottom]
-              s.strokedPath((attr) => attr.stroke(20, 90, 60, 0.5))
+              s.strokedPath((attr) => attr.stroke(20, 90, dark ? 70 : 60, 0.5))
                 .moveTo(start)
                 .curveTo(end, { curveSize: 3 })
 
               start = [s.random(), 0]
               end = [s.random(), 0]
-              s.strokedPath((attr) => attr.stroke(0, 90, 60, 0.5))
+              s.strokedPath((attr) => attr.stroke(0, 90, dark ? 70 : 60, 0.5))
                 .moveTo(start)
                 .curveTo(end, { polarity: -1, curveSize: 3 })
             })
@@ -283,13 +304,13 @@ export function Home() {
           code={`s.times(15, () => {
   let start = [s.random(), bottom] as Point2D
   let end = [s.random(), bottom] as Point2D
-  s.strokedPath((attr) => attr.stroke(20, 90, 60, 0.5))
+  s.strokedPath((attr) => attr.stroke(20, 90, ${dark ? 70 : 60}, 0.5))
     .moveTo(start)
     .curveTo(end, { curveSize: 3 })
 
   start = [s.random(), 0] as Point2D
   end = [s.random(), 0] as Point2D
-  s.strokedPath((attr) => attr.stroke(0, 90, 60, 0.5))
+  s.strokedPath((attr) => attr.stroke(0, 90, ${dark ? 70 : 60}, 0.5))
     .moveTo(start)
     .curveTo(end, { polarity: -1, curveSize: 3 })
 })`}
@@ -305,7 +326,9 @@ export function Home() {
           height={480}
           sketch={(s) => {
             s.times(25, () => {
-              s.strokedPath((attr) => attr.fill(220, 90, 50, 0.2)).rect(
+              s.strokedPath((attr) =>
+                attr.stroke(0, 0, ink).fill(220, 90, dark ? 65 : 50, 0.2)
+              ).rect(
                 s.randomPoint(),
                 s.gaussian({ sd: 0.05, mean: 0.2 }),
                 s.gaussian({ sd: 0.1, mean: 0.3 })
@@ -316,7 +339,9 @@ export function Home() {
 
         <Source
           code={`s.times(25, () => {
-  s.strokedPath((attr) => attr.fill(220, 90, 50, 0.2)).rect(
+  s.strokedPath((attr) =>
+    attr.stroke(0, 0, ${ink}).fill(220, 90, ${dark ? 65 : 50}, 0.2)
+  ).rect(
     s.randomPoint(),
     s.gaussian({ sd: 0.05, mean: 0.2 }),
     s.gaussian({ sd: 0.1, mean: 0.3 })
@@ -337,7 +362,9 @@ export function Home() {
             s.times(35, () => {
               const size = s.gaussian({ sd: 0.2, mean: 0.25 })
               s.strokedPath((attr) =>
-                attr.fill(s.sample([130, 200, 210]), 90, 40, 0.2)
+                attr
+                  .stroke(0, 0, ink)
+                  .fill(s.sample([130, 200, 210]), 90, dark ? 60 : 40, 0.2)
               ).ellipse(s.randomPoint(), size, size / 1.25)
             })
           }}
@@ -347,7 +374,9 @@ export function Home() {
           code={`s.times(35, () => {
   const size = s.gaussian({ sd: 0.2, mean: 0.25 })
   s.strokedPath((attr) =>
-    attr.fill(s.sample([130, 200, 210]), 90, 40, 0.2)
+    attr
+      .stroke(0, 0, ${ink})
+      .fill(s.sample([130, 200, 210]), 90, ${dark ? 60 : 40}, 0.2)
   ).ellipse(s.randomPoint(), size, size / 1.25)
 })`}
         />
@@ -368,7 +397,9 @@ export function Home() {
             s.times(4, (n) => {
               const path = s
                 .strokedPath((attr) =>
-                  attr.strokeOpacity(0.2 + n * 0.1).stroke(15, 90, 60)
+                  attr
+                    .strokeOpacity(0.2 + n * 0.1)
+                    .stroke(15, 90, dark ? 70 : 60)
                 )
                 .moveTo([0.1, bottom * 0.4])
               for (let i = 0.1; i <= 0.9; i += 0.2) {
@@ -393,7 +424,7 @@ export function Home() {
 s.times(4, (n) => {
   const path = s
     .strokedPath((attr) =>
-      attr.strokeOpacity(0.2 + n * 0.1).stroke(15, 90, 60)
+      attr.strokeOpacity(0.2 + n * 0.1).stroke(15, 90, ${dark ? 70 : 60})
     )
     .moveTo([0.1, bottom * 0.4])
   for (let i = 0.1; i <= 0.9; i += 0.2) {
@@ -417,40 +448,55 @@ s.times(4, (n) => {
           width={480}
           height={480}
           sketch={(s) => {
-            s.strokedPath((attr) => attr.fill(210, 90, 10, 0.5)).rect(
-              [0.3, 0.3],
-              0.2,
-              0.3,
-              "center"
-            )
+            // the darker end of this ramp disappears on a dark page, so shift
+            // the whole ramp lighter there
+            const l = (lightness: number) => (dark ? lightness + 30 : lightness)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 20, 0.5).transform(s.T.rotate(Math.PI / 8))
+              attr.stroke(0, 0, ink).fill(210, 90, l(10), 0.5)
+            ).rect([0.3, 0.3], 0.2, 0.3, "center")
+
+            s.strokedPath((attr) =>
+              attr
+                .stroke(0, 0, ink)
+                .fill(210, 90, l(20), 0.5)
+                .transform(s.T.rotate(Math.PI / 8))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
               attr
-                .fill(210, 90, 30, 0.5)
+                .stroke(0, 0, ink)
+                .fill(210, 90, l(30), 0.5)
                 .transform(s.T.rotate(Math.PI / 3, 0.3, 0.3))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 40, 0.5).transform(s.T.scale(1.5, 1.8))
+              attr
+                .stroke(0, 0, ink)
+                .fill(210, 90, l(40), 0.5)
+                .transform(s.T.scale(1.5, 1.8))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 50, 0.5).transform(s.T.skewX(20))
+              attr
+                .stroke(0, 0, ink)
+                .fill(210, 90, l(50), 0.5)
+                .transform(s.T.skewX(20))
             ).rect([0.3, 0.3], 0.2, 0.3)
 
             s.strokedPath((attr) =>
-              attr.fill(210, 90, 60, 0.5).transform(s.T.skewY(20))
+              attr
+                .stroke(0, 0, ink)
+                .fill(210, 90, l(60), 0.5)
+                .transform(s.T.skewY(20))
             ).rect([0.3, 0.3], 0.2, 0.3)
           }}
         />
         <Source
           code={`s.strokedPath((attr) =>
   attr
-    .fill(210, 90, 20, 0.5)
+    .stroke(0, 0, ${ink})
+    .fill(210, 90, ${dark ? 50 : 20}, 0.5)
     .transform(s.T.rotate(Math.PI / 8))
 ).rect([0.3, 0.3], 0.2, 0.3)`}
         />
@@ -460,24 +506,30 @@ s.times(4, (n) => {
           width={480}
           height={480}
           sketch={(s) => {
-            const path = s.strokedPath().ellipse([0, 0], 0.3, 0.4)
+            const path = s
+              .strokedPath((attr) => attr.stroke(0, 0, ink))
+              .ellipse([0, 0], 0.3, 0.4)
 
             s.times(20, (n) => {
               s.clonePath(path).configureAttributes((attr) =>
-                attr.transform(s.T.scale(n / 2, n / 2)).stroke(n * 5, 90, 40)
+                attr
+                  .transform(s.T.scale(n / 2, n / 2))
+                  .stroke(n * 5, 90, dark ? 65 : 40)
               )
             })
           }}
         />
 
         <Source
-          code={`const path = s.strokedPath().ellipse([0, 0], 0.3, 0.4)
+          code={`const path = s
+  .strokedPath((attr) => attr.stroke(0, 0, ${ink}))
+  .ellipse([0, 0], 0.3, 0.4)
 
 s.times(20, (n) => {
   s.clonePath(path).configureAttributes((attr) =>
     attr
       .transform(s.T.scale(n / 2, n / 2))
-      .stroke(n * 5, 90, 40)
+      .stroke(n * 5, 90, ${dark ? 65 : 40})
   )
 })`}
         />
@@ -494,14 +546,16 @@ s.times(20, (n) => {
             const { center } = s.meta
             s.times(8, (n) => {
               s.group(
-                Attributes.stroked.transform(
-                  s.T.translate(center).scale((4 + n) / 14)
-                ),
+                Attributes.stroked
+                  .stroke(0, 0, ink)
+                  .transform(s.T.translate(center).scale((4 + n) / 14)),
                 () => {
                   s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
 
                   s.path(
-                    s.A.stroke(n * 4, 90, 50).transform(s.T.rotate(n))
+                    s.A.stroke(n * 4, 90, dark ? 65 : 50).transform(
+                      s.T.rotate(n)
+                    )
                   ).ellipse([0, 0], 1, 0.8)
                 }
               )
@@ -513,14 +567,16 @@ s.times(20, (n) => {
           code={`const { center } = s.meta
 s.times(8, (n) => {
   s.group(
-    Attributes.stroked.transform(
-      s.T.translate(center).scale((4 + n) / 14)
-    ),
+    Attributes.stroked
+      .stroke(0, 0, ${ink})
+      .transform(
+        s.T.translate(center).scale((4 + n) / 14)
+      ),
     () => {
       s.path(s.A.opacity((8 - n) / 10)).rect([0, 0], 1, 1)
 
       s.path(
-        s.A.stroke(n * 4, 90, 50).transform(s.T.rotate(n))
+        s.A.stroke(n * 4, 90, ${dark ? 65 : 50}).transform(s.T.rotate(n))
       ).ellipse([0, 0], 1, 0.8)
     }
   )

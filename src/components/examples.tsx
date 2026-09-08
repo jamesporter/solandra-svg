@@ -3,7 +3,7 @@ import { SVGSketch } from "./SVGSketch"
 export function OkLCHExample() {
   return (
     <SVGSketch
-      className="bg-zinc-100"
+      className="bg-zinc-100 dark:bg-zinc-900"
       width={360}
       height={120}
       sketch={(s) => {
@@ -40,16 +40,14 @@ export function OkLCHExample() {
 export function PolygonExample() {
   return (
     <SVGSketch
-      className="bg-zinc-100"
+      className="bg-zinc-100 dark:bg-zinc-900"
       width={360}
       height={120}
-      sketch={(s) => {
+      sketch={(s, isDark) => {
         s.forHorizontal({ n: 12, margin: 0.1 }, (p, d, c, i) => {
-          s.strokedPath((a) => a.fill(340 - i * 5, 90, 60, 0.6)).regularPolygon(
-            c,
-            4 + i,
-            d[1] * s.gaussian({ mean: 0.8, sd: 0.1 })
-          )
+          s.strokedPath((a) =>
+            a.stroke(0, 0, isDark ? 100 : 0).fill(340 - i * 5, 90, 60, 0.6)
+          ).regularPolygon(c, 4 + i, d[1] * s.gaussian({ mean: 0.8, sd: 0.1 }))
         })
       }}
     />

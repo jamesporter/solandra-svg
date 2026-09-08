@@ -8,6 +8,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
+import { ThemeSwitcher } from "./ThemeSwitcher"
 import { forwardRef } from "react"
 import { Link } from "react-router"
 
@@ -58,15 +59,14 @@ const examples: {
 
 export function NavMenu() {
   return (
-    <div className="p-4 bg-gradient-to-r from-sky-300 via-amber-300 to-rose-300">
+    <div className="p-4 flex flex-row items-center justify-between gap-4 bg-gradient-to-r from-sky-300 via-amber-300 to-rose-300 dark:from-sky-950 dark:via-amber-950 dark:to-rose-950">
       <NavigationMenu>
         <NavigationMenuList>
           <div>
-            <Link
-              to="/"
-              className="font-semibold mr-4 text-neutral-900 text-lg lg:text-xl"
-            >
-              <span className="text-sky-800">Solandra-SVG</span>
+            <Link to="/" className="font-semibold mr-4 text-lg lg:text-xl">
+              <span className="text-sky-800 dark:text-sky-200">
+                Solandra-SVG
+              </span>
             </Link>
           </div>
           <NavigationMenuItem>
@@ -112,6 +112,8 @@ export function NavMenu() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+
+      <ThemeSwitcher />
     </div>
   )
 }
@@ -146,10 +148,10 @@ const ListItem = forwardRef(
             )}
             {...props}
           >
-            <div className="text-sm font-medium leading-none text-sky-700">
+            <div className="text-sm font-medium leading-none text-sky-700 dark:text-sky-300">
               {title}
               {isNew && (
-                <div className="absolute top-2 right-2 bg-sky-600 text-sky-50 py-1 px-2 rounded-full">
+                <div className="absolute top-2 right-2 bg-sky-600 text-sky-50 dark:bg-sky-500 dark:text-sky-950 py-1 px-2 rounded-full">
                   New
                 </div>
               )}
