@@ -27,3 +27,21 @@ export function escapeAttribute(value: string | number): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
 }
+
+/**
+ * Escapes a value for use as XML text content.
+ *
+ * Text drawn with {@link SolandraSvg.text} is user-supplied, so an ampersand or
+ * an angle bracket in it would otherwise produce markup no SVG renderer can
+ * parse.
+ *
+ * @param value - The raw text
+ * @returns The text with `&`, `<` and `>` replaced by entity references
+ * @internal
+ */
+export function escapeText(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+}

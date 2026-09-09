@@ -4,16 +4,30 @@ import { Attributes } from "./attributes.js"
 import { indent } from "./util/internalUtil.js"
 import { RNG } from "./rng.js"
 import { Transform } from "./transforms.js"
+import { Text } from "./text.js"
+import {
+  Gradient,
+  GradientUnits,
+  LinearGradient,
+  RadialGradient,
+} from "./gradients.js"
 
 /**
- * An SVG `<g>` group element that can contain nested {@link Path} and {@link Group} children.
+ * Anything that can be drawn at the top level of a drawing, or nested inside a
+ * {@link Group}.
+ */
+export type SvgElement = Group | Path | Text
+
+/**
+ * An SVG `<g>` group element that can contain nested {@link Path}, {@link Text}
+ * and {@link Group} children.
  *
  * Groups are created via {@link SolandraSvg.group} and allow shared attributes
  * (e.g. transforms, styles) to be applied to multiple child elements.
  */
 export class Group {
-  /** The child elements (paths or nested groups) within this group. */
-  children: (Group | Path)[] = []
+  /** The child elements (paths, text or nested groups) within this group. */
+  children: SvgElement[] = []
 
   /**
    * @param attributes - The {@link Attributes} applied to this `<g>` element
@@ -36,11 +50,11 @@ export class Group {
   }
 
   /**
-   * Adds a child element (path or nested group) to this group.
+   * Adds a child element (path, text or nested group) to this group.
    *
    * @param element - The child to add
    */
-  push(element: Group | Path) {
+  push(element: SvgElement) {
     this.children.push(element)
   }
 }
@@ -48,11 +62,11 @@ export class Group {
 /**
  * Serialises a top-level or nested SVG element to indented markup lines.
  *
- * @param element - The group or path to serialise
+ * @param element - The group, path or text run to serialise
  * @param depth - The indentation depth for pretty-printing
  * @internal
  */
-function renderElement(element: Group | Path, depth: number): string[] {
+function renderElement(element: SvgElement, depth: number): string[] {
   return element instanceof Group
     ? element.strings(depth)
     : [element.string(depth)]
@@ -123,6 +137,8 @@ function forEachCell(
  *
  * Provides a declarative, fluent API for building SVG graphics with:
  * - Path creation ({@link path}, {@link strokedPath}, {@link cutPath}, {@link creasePath})
+ * - Text ({@link text})
+ * - Gradients ({@link linearGradient}, {@link radialGradient})
  * - Grouping ({@link group}, {@link groupWithId})
  * - Layout iteration ({@link forTiling}, {@link forHorizontal}, {@link forVertical}, {@link forGrid}, {@link aroundCircle})
  * - Seeded randomness ({@link random}, {@link gaussian}, {@link poisson}, {@link sample}, {@link shuffle})
@@ -145,9 +161,10 @@ export class SolandraSvg {
   /** The width-to-height ratio of the drawing. */
   readonly aspectRatio: number
   private rng: RNG
-  /** The top-level SVG elements (paths and groups). */
-  elements: (Group | Path)[] = []
+  /** The top-level SVG elements (paths, text and groups). */
+  elements: SvgElement[] = []
   private currentGroup: Group | null = null
+  private definitions: Gradient[] = []
 
   /**
    * Creates a new SolandraSvg drawing context.
@@ -173,7 +190,18 @@ export class SolandraSvg {
    * @internal
    */
   private render(unit: string): string {
-    const body = this.elements.flatMap((el) => renderElement(el, 1)).join("\n")
+    const defs =
+      this.definitions.length > 0
+        ? [
+            indent("<defs>", 1),
+            ...this.definitions.flatMap((d) => d.strings(2)),
+            indent("</defs>", 1),
+          ]
+        : []
+    const body = [
+      ...defs,
+      ...this.elements.flatMap((el) => renderElement(el, 1)),
+    ].join("\n")
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 ${
       1 / this.aspectRatio
     }" width="${this.width}${unit}" height="${this.height}${unit}">
@@ -254,7 +282,7 @@ ${body}
    * Returns the current element container (either the active group or the top-level element list).
    * @internal
    */
-  get currentElements(): Group | (Group | Path)[] {
+  get currentElements(): Group | SvgElement[] {
     if (this.currentGroup) {
       return this.currentGroup
     } else {
@@ -325,6 +353,95 @@ ${body}
    */
   clonePath(path: Path, attributes?: Attributes): Path {
     return this.addPath(path.clone(attributes))
+  }
+
+  /**
+   * Draws a run of text anchored at a point.
+   *
+   * Typography is set through the usual {@link Attributes} builder
+   * ({@link Attributes.fontSize}, {@link Attributes.fontFamily},
+   * {@link Attributes.textAnchor}, ...). Sizes are in the drawing's coordinate
+   * system, so `0.1` is a tenth of its width. The content is escaped, so any
+   * text is safe to draw.
+   *
+   * @param content - The text to draw
+   * @param at - The anchor position
+   * @param attributes - Optional {@link Attributes} for the text element
+   * @returns The new {@link Text} element
+   *
+   * @example
+   * ```ts
+   * s.text("solandra", s.meta.center, s.A.fontSize(0.1).textAnchor("middle"))
+   * ```
+   */
+  text(
+    content: string,
+    at: Point2D,
+    attributes: Attributes = new Attributes(),
+  ): Text {
+    const element = new Text(content, at, attributes)
+    this.currentElements.push(element)
+    return element
+  }
+
+  /**
+   * Defines a linear gradient on the drawing, which paths and text can then be
+   * painted with.
+   *
+   * The gradient is added to the drawing's `<defs>`; reference it by `id` with
+   * {@link Attributes.fillGradient} or {@link Attributes.strokeGradient}. Add
+   * colours with {@link Gradient.stop}.
+   *
+   * @param id - The `id` used to reference this gradient
+   * @param config - Optional geometry
+   * @param config.from - Where the gradient starts (default `[0, 0]`)
+   * @param config.to - Where the gradient ends (default `[1, 0]`, i.e. left to right)
+   * @param config.units - `"objectBoundingBox"` (default) makes the coordinates
+   *   fractions of the painted shape; `"userSpaceOnUse"` uses drawing coordinates
+   * @returns The new {@link LinearGradient}, for chaining stops onto
+   *
+   * @example
+   * ```ts
+   * s.linearGradient("sky", { to: [0, 1] })
+   *   .stop(0, 210, 80, 60)
+   *   .stop(1, 340, 80, 60)
+   * s.path(s.A.fillGradient("sky")).rect(s.meta.center, 0.8, 0.4)
+   * ```
+   */
+  linearGradient(
+    id: string,
+    config: { from?: Point2D; to?: Point2D; units?: GradientUnits } = {},
+  ): LinearGradient {
+    const gradient = new LinearGradient(id, config)
+    this.definitions.push(gradient)
+    return gradient
+  }
+
+  /**
+   * Defines a radial gradient on the drawing, which paths and text can then be
+   * painted with.
+   *
+   * @param id - The `id` used to reference this gradient
+   * @param config - Optional geometry
+   * @param config.at - The centre of the gradient (default `[0.5, 0.5]`)
+   * @param config.r - The radius of the gradient (default `0.5`)
+   * @param config.focus - Optional focal point, which offsets the highlight from the centre
+   * @param config.units - `"objectBoundingBox"` (default) makes the coordinates
+   *   fractions of the painted shape; `"userSpaceOnUse"` uses drawing coordinates
+   * @returns The new {@link RadialGradient}, for chaining stops onto
+   */
+  radialGradient(
+    id: string,
+    config: {
+      at?: Point2D
+      r?: number
+      focus?: Point2D
+      units?: GradientUnits
+    } = {},
+  ): RadialGradient {
+    const gradient = new RadialGradient(id, config)
+    this.definitions.push(gradient)
+    return gradient
   }
 
   /**

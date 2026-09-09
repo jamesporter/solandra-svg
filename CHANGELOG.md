@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.9.0]
 
 ### Fixed
 
@@ -48,6 +48,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Text. `s.text(content, at, attributes)` draws an SVG `<text>` element, escaping
+  its content so any string is safe to draw. Typography is set through the usual
+  `Attributes` builder, which gains `fontSize`, `fontFamily`, `fontWeight`,
+  `fontStyle`, `textAnchor`, `dominantBaseline` and `letterSpacing`. Text nests
+  in groups, is transformed, cloned and styled like any other element.
+- Gradients. `s.linearGradient(id, config)` and `s.radialGradient(id, config)`
+  define a gradient in the drawing's `<defs>` (only emitted when a drawing has
+  one); `.stop(offset, h, s, l, opacity?)` adds colours using the same HSL
+  arguments as `fill`. Paint with them via the new `Attributes.fillGradient` and
+  `Attributes.strokeGradient`. Coordinates default to fractions of the shape
+  being painted, so one gradient fits everything it paints; pass
+  `units: "userSpaceOnUse"` for drawing coordinates instead.
+- Smooth lines and explicit bezier curves. `Path.smoothLine(points, config)`
+  fits a Catmull-Rom spline through the given points and emits it as cubic
+  beziers, so — unlike `chaikin`, which cuts corners off a polyline — the curve
+  passes exactly through every point. `closed` wraps it round into a loop and
+  `tension` controls how far it bulges (`0` gives straight lines). The
+  underlying `Path.cubicTo(control1, control2, to)` and
+  `Path.quadraticTo(control, to)` expose the raw SVG `C` and `Q` commands for
+  when you want to place control points yourself.
 - A `Package` CI workflow and `pnpm verify:package` script that build the
   publishable package and smoke-test both the ESM and CJS artifacts (public
   exports resolve, an SVG renders, and the two builds have matching surfaces),

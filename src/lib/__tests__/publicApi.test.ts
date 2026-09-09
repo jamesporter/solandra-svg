@@ -20,9 +20,14 @@ const PUBLIC_API = {
   // Core drawing classes
   SolandraSvg: "function",
   Path: "function",
+  Text: "function",
   Group: "function",
   Attributes: "function",
   Transform: "function",
+  // Gradients
+  Gradient: "function",
+  LinearGradient: "function",
+  RadialGradient: "function",
   // Namespaced helpers
   v: "object",
   c: "object",

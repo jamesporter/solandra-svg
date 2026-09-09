@@ -8,6 +8,8 @@ export * from "./svg.js"
 export * from "./attributes.js"
 export * from "./transforms.js"
 export * from "./path.js"
+export * from "./text.js"
+export * from "./gradients.js"
 
 export * from "./util/noise.js"
 /** Vector/point math utilities (add, subtract, rotate, scale, etc.) */

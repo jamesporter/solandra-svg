@@ -22,6 +22,14 @@ The `Path` class is used to define the geometry of an SVG shape. You can create 
 
 The `Attributes` class is used to set the visual properties of a path, such as its stroke, fill, and opacity. You can create a new `Attributes` object using `s.A` and then chain methods like `stroke()`, `fill()`, and `opacity()` to configure the desired attributes.
 
+### `Text` Class
+
+Drawings are not limited to paths. `s.text(content, at, attributes?)` adds an SVG `<text>` element anchored at a point. Positions and font sizes are in the same normalised coordinate system as everything else, so a `fontSize` of `0.1` is a tenth of the drawing's width. The content is escaped, so any string is safe to draw.
+
+### Gradients
+
+`s.linearGradient(id, config?)` and `s.radialGradient(id, config?)` define a gradient in the drawing's `<defs>`; colours are added with `.stop(offset, hue, saturation, lightness, opacity?)`. Reference one from any path or text with `attr.fillGradient(id)` or `attr.strokeGradient(id)`.
+
 ### `Transform` Class
 
 The `Transform` class is used to apply transformations to a path, such as rotation, scaling, and skewing. You can create a new `Transform` object using `s.T` and then chain methods like `rotate()`, `scale()`, and `skewX()` to define the transformation.
@@ -243,3 +251,76 @@ s.times(8, (n) => {
 
 - `s.group(Attributes.stroked.transform(...), () => { ... })`: This creates a group of paths. The first argument is an `Attributes` object that is applied to the entire group. The second argument is a function that contains the paths to be included in the group.
 - In this example, the group is translated to the center of the canvas and scaled. The paths within the group are a rectangle and an ellipse, each with their own attributes.
+
+### Smooth Lines Through Points
+
+The Chaikin example above smooths a path by cutting its corners, which pulls the curve away from the points it was built from. When you want a curve that is smooth *and* passes exactly through your points, use `smoothLine`, which fits a Catmull-Rom spline and emits it as cubic beziers.
+
+**Code:**
+
+```typescript
+const points = s.build(s.aroundCircle, { n: 7, r: 0.3 }, (at) => at)
+
+s.strokedPath().smoothLine(points, { closed: true })
+```
+
+**Explanation:**
+
+- `s.build(...)`: collects the points of an iteration helper into an array rather than drawing in the callback.
+- `.smoothLine(points, { closed: true })`: draws a smooth curve through every point, joining the last back to the first and closing the path.
+- `tension` (default `1`) controls how much the curve bulges at each point; `0` gives straight lines between them.
+
+For full control of an individual curve there are also the raw SVG bezier commands:
+
+```typescript
+s.strokedPath()
+  .moveTo([0.1, 0.6])
+  .cubicTo([0.3, 0.2], [0.5, 0.9], [0.7, 0.5])
+  .quadraticTo([0.85, 0.2], [0.9, 0.6])
+```
+
+- `.cubicTo(control1, control2, to)`: an SVG `C` command, with both control points given explicitly (unlike `curveTo`, which derives them from a `CurveConfig`).
+- `.quadraticTo(control, to)`: an SVG `Q` command, with a single control point.
+
+### Text
+
+**Code:**
+
+```typescript
+s.text(
+  "solandra",
+  s.meta.center,
+  s.A.fontSize(0.15)
+    .textAnchor("middle")
+    .dominantBaseline("middle")
+    .fill(210, 80, 50)
+)
+```
+
+**Explanation:**
+
+- `s.text(content, at, attributes)`: draws a run of text anchored at `at`.
+- `fontSize(0.15)`: sizes are in drawing units, not pixels.
+- `textAnchor("middle")` and `dominantBaseline("middle")`: centre the text on its anchor point horizontally and vertically.
+- Other typography attributes: `fontFamily`, `fontWeight`, `fontStyle` and `letterSpacing`.
+- The returned `Text` element can be reconfigured afterwards (`configureAttributes`) or cloned, like a path.
+
+### Gradients
+
+**Code:**
+
+```typescript
+s.linearGradient("sky", { to: [0, 1] })
+  .stop(0, 210, 80, 60)
+  .stop(1, 340, 80, 65)
+
+s.path(s.A.fillGradient("sky")).rect(s.meta.center, 0.7, 0.5)
+```
+
+**Explanation:**
+
+- `s.linearGradient(id, { from, to, units })`: defines a linear gradient, running from `[0, 0]` to `[1, 0]` unless told otherwise. Here `to: [0, 1]` makes it run down the shape instead of across it.
+- `.stop(offset, hue, saturation, lightness, opacity?)`: adds a colour stop, taking the same HSL arguments as `fill`. Stops are chainable.
+- `s.radialGradient(id, { at, r, focus, units })`: the radial equivalent; `focus` offsets the highlight from the centre.
+- `attr.fillGradient(id)` / `attr.strokeGradient(id)`: paint a path or text with a gradient defined on the drawing.
+- By default a gradient's coordinates are fractions of the bounding box of whatever it paints, so a single gradient suits every shape that uses it. Pass `units: "userSpaceOnUse"` to use the drawing's own coordinates.

@@ -91,6 +91,49 @@ const sketches: [name: string, draw: () => SolandraSvg][] = [
       return s
     },
   ],
+  [
+    "gradients-text-and-splines",
+    () => {
+      const s = new SolandraSvg(600, 400, 6)
+      s.linearGradient("sky", { to: [0, 1] })
+        .stop(0, 210, 80, 60)
+        .stop(1, 340, 80, 65, 0.8)
+      s.radialGradient("glow", { r: 0.6, focus: [0.35, 0.35] })
+        .stop(0, 50, 90, 70)
+        .stop(1, 20, 90, 40, 0)
+
+      s.path(s.A.fillGradient("sky")).rect(s.meta.center, 0.9, 0.6)
+      s.path(s.A.fillGradient("glow")).ellipse([0.3, 0.3], 0.3, 0.3)
+
+      const wave: [number, number][] = []
+      s.range({ from: 0.1, to: 0.9, n: 8 }, (x) =>
+        wave.push([x, 0.4 + 0.12 * Math.sin(x * 8)]),
+      )
+      s.strokedPath((a) =>
+        a.strokeGradient("sky").strokeWidth(0.006),
+      ).smoothLine(wave)
+
+      s.strokedPath((a) => a.strokeWidth(0.004)).smoothLine(
+        s.build(s.aroundCircle, { n: 7, r: 0.12, at: [0.75, 0.5] }, (at) => at),
+        { closed: true, tension: 0.8 },
+      )
+
+      s.strokedPath((a) => a.strokeWidth(0.003))
+        .moveTo([0.1, 0.62])
+        .cubicTo([0.3, 0.5], [0.5, 0.75], [0.7, 0.62])
+        .quadraticTo([0.8, 0.5], [0.9, 0.62])
+
+      s.text(
+        "solandra & svg",
+        [0.5, 0.15],
+        s.A.fontSize(0.09)
+          .fontFamily("Helvetica, sans-serif")
+          .textAnchor("middle")
+          .fillGradient("sky"),
+      )
+      return s
+    },
+  ],
   ["kitchen-sink", () => randomSketch(42)],
 ]
 
