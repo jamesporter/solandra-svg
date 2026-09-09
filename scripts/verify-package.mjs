@@ -18,9 +18,12 @@ const require = createRequire(import.meta.url)
 const expectedExports = [
   "SolandraSvg",
   "Path",
+  "Text",
   "Group",
   "Attributes",
   "Transform",
+  "LinearGradient",
+  "RadialGradient",
   "v",
   "c",
 ]

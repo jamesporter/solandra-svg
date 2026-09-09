@@ -58,8 +58,8 @@ const svg = new SolandraSvg(width, height, 1)`}
       />
       <h3>Arcs</h3>
       <p>
-        Draw elliptical arcs between points. By default the radii are taken
-        from the distance between the points; use{" "}
+        Draw elliptical arcs between points. By default the radii are taken from
+        the distance between the points; use{" "}
         <span className="font-mono">largeArc</span> to take the longer way
         around the same ellipse and <span className="font-mono">sweep</span> to
         draw in the opposite (mirrored) direction.
@@ -119,6 +119,127 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
           s.filledPath((a) => a.fill(210, 80, 50))
             .rect(s.meta.center, 0.5, 0.2)
             .chaikin(2)
+        }}
+        className="bg-zinc-100"
+      />
+      <h3>Smooth Line</h3>
+      <p>
+        Fits a smooth (Catmull-Rom) curve through every point you give it.
+        Unlike <span className="font-mono">chaikin</span>, which cuts corners
+        off and so pulls away from your points, this passes exactly through
+        them. Pass <span className="font-mono">closed</span> to join the last
+        point back to the first, and <span className="font-mono">tension</span>{" "}
+        to control how much the curve bulges (
+        <span className="font-mono">0</span> gives straight lines).
+      </p>
+      <Source
+        code={`const points = s.build(s.aroundCircle, { n: 7, r: 0.3 }, (at) => at)
+
+s.strokedPath().smoothLine(points, { closed: true })`}
+      />
+      <SVGSketch
+        width={320}
+        height={320}
+        sketch={(s) => {
+          const points = s.build(
+            s.aroundCircle,
+            { n: 7, r: 0.3 },
+            (at: Point2D) => at,
+          )
+          s.strokedPath().smoothLine(points, { closed: true })
+          s.strokedPath((a) =>
+            a.stroke(210, 80, 50).strokeWidth(0.002),
+          ).smoothLine(points, { closed: true, tension: 0 })
+        }}
+        className="bg-zinc-100"
+      />
+      <h3>Bezier Curves</h3>
+      <p>
+        Where <span className="font-mono">curveTo</span> describes a curve by
+        how far it bulges, <span className="font-mono">cubicTo</span> and{" "}
+        <span className="font-mono">quadraticTo</span> are the raw SVG{" "}
+        <span className="font-mono">C</span> and{" "}
+        <span className="font-mono">Q</span> commands: you place the control
+        points yourself.
+      </p>
+      <Source
+        code={`s.strokedPath()
+    .moveTo([0.1, 0.6])
+    .cubicTo([0.3, 0.2], [0.5, 0.9], [0.7, 0.5])
+    .quadraticTo([0.85, 0.2], [0.9, 0.6])`}
+      />
+      <SVGSketch
+        width={320}
+        height={320}
+        sketch={(s) => {
+          s.strokedPath()
+            .moveTo([0.1, 0.6])
+            .cubicTo([0.3, 0.2], [0.5, 0.9], [0.7, 0.5])
+            .quadraticTo([0.85, 0.2], [0.9, 0.6])
+        }}
+        className="bg-zinc-100"
+      />
+      <h2>Text</h2>
+      <p>
+        Draw text with <span className="font-mono">s.text</span>. Positions and
+        font sizes are in the same coordinate system as everything else, so{" "}
+        <span className="font-mono">0.1</span> is a tenth of the width of the
+        drawing. Typography is set through the usual{" "}
+        <span className="font-mono">Attributes</span> builder.
+      </p>
+      <Source
+        code={`s.text(
+    "solandra",
+    s.meta.center,
+    s.A.fontSize(0.15)
+      .textAnchor("middle")
+      .dominantBaseline("middle")
+      .fill(210, 80, 50)
+  )`}
+      />
+      <SVGSketch
+        width={320}
+        height={320}
+        sketch={(s) => {
+          s.text(
+            "solandra",
+            s.meta.center,
+            s.A.fontSize(0.15)
+              .textAnchor("middle")
+              .dominantBaseline("middle")
+              .fill(210, 80, 50),
+          )
+        }}
+        className="bg-zinc-100"
+      />
+      <h2>Gradients</h2>
+      <p>
+        Define a gradient on the drawing, then paint any path or text with it by{" "}
+        <span className="font-mono">id</span>. Stops take the same HSL arguments
+        as <span className="font-mono">fill</span>. Coordinates default to
+        fractions of the shape being painted, so one gradient fits every shape
+        that uses it.
+      </p>
+      <Source
+        code={`s.linearGradient("sky", { to: [0, 1] })
+    .stop(0, 210, 80, 60)
+    .stop(1, 340, 80, 65)
+
+s.path(s.A.fillGradient("sky")).rect(s.meta.center, 0.7, 0.5)`}
+      />
+      <SVGSketch
+        width={320}
+        height={320}
+        sketch={(s) => {
+          s.linearGradient("sky", { to: [0, 1] })
+            .stop(0, 210, 80, 60)
+            .stop(1, 340, 80, 65)
+          s.radialGradient("glow", { focus: [0.35, 0.35] })
+            .stop(0, 50, 90, 70)
+            .stop(1, 20, 90, 45, 0)
+
+          s.path(s.A.fillGradient("sky")).rect(s.meta.center, 0.7, 0.5)
+          s.path(s.A.fillGradient("glow")).ellipse(s.meta.center, 0.4, 0.4)
         }}
         className="bg-zinc-100"
       />
@@ -196,7 +317,7 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
           s.forHorizontal({ n: 40, margin: 0.1 }, (_, d, c, i) => {
             s.filledPath((a) => a.fill(210, 80 - i, 50)).rect(
               s.perturb({ at: c }),
-              ...d
+              ...d,
             )
           })
         }}
@@ -227,7 +348,7 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
             s.filledPath((a) => a.fill(340 - i, 80, 50, 0.8)).regularPolygon(
               s.perturb({ at: p }),
               6,
-              0.05
+              0.05,
             )
           })
         }}
@@ -271,9 +392,9 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
               const hue = 200 + (i % 6) * 15
               s.filledPath((a) => a.fill(hue, 80, 60, 0.9)).rect(
                 c,
-                ...v.scale(d, 1.8)
+                ...v.scale(d, 1.8),
               )
-            }
+            },
           )
         }}
         className="bg-zinc-100"
@@ -302,7 +423,7 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
               s.filledPath((a) => a.fill(340, 80, 60, 0.8)).regularPolygon(
                 c,
                 6,
-                r
+                r,
               )
             })
           })
@@ -357,7 +478,7 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
             s.filledPath((a) => a.fill(210, 80, 60, 0.6)).regularPolygon(
               point,
               3,
-              0.02
+              0.02,
             )
           })
         }}
@@ -384,7 +505,7 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
           s.times(45, () => {
             const radius = 0.05 + s.random() * 0.25
             s.strokedPath((a) =>
-              a.strokeWidth(0.002 + s.random() * 0.003)
+              a.strokeWidth(0.002 + s.random() * 0.003),
             ).regularPolygon(s.meta.center, 6, radius)
           })
         }}
@@ -437,7 +558,7 @@ s.strokedPath((at) => at.stroke(280, 90, 50))
             s.filledPath((a) => a.fill(60 + sides * 30, 80, 60)).regularPolygon(
               c,
               sides,
-              r
+              r,
             )
           })
         }}
@@ -479,7 +600,7 @@ s.times(200, () => {
             s.filledPath((a) => a.fill(210, 80, 60, 0.3)).ellipse(
               s.perturb({ at: point, magnitude: 0.025 }),
               stepX,
-              stepY
+              stepY,
             )
           })
         }}
@@ -509,7 +630,7 @@ s.times(200, () => {
             const y = 0.1 + (i / 20) * (0.8 / s.meta.aspectRatio)
             const x = 0.5 + polarity * 0.25
             s.filledPath((a) =>
-              a.fill(polarity === 1 ? 210 : 340, 80, 60, 0.85)
+              a.fill(polarity === 1 ? 210 : 340, 80, 60, 0.85),
             ).rect([x, y], 0.18, 0.05)
           })
         }}
@@ -585,7 +706,7 @@ picks.forEach(([h, sValue, l], i) => {
             s.filledPath((a) => a.fill(h, sValue, l, 0.9)).rect(
               [x, s.meta.center[1]],
               w,
-              0.9 / s.meta.aspectRatio
+              0.9 / s.meta.aspectRatio,
             )
           })
         }}
@@ -662,13 +783,13 @@ s.forHorizontal({ n: hues.length, margin: 0.05 }, (_, d, c, i) => {
                 -0.25 / s.meta.aspectRatio,
                 Math.min(
                   0.25 / s.meta.aspectRatio,
-                  s.gaussian({ sd: 0.08 }) / s.meta.aspectRatio
-                )
+                  s.gaussian({ sd: 0.08 }) / s.meta.aspectRatio,
+                ),
               )
             s.filledPath((a) => a.fill(210, 80, 60, 0.5)).ellipse(
               [x, y],
               0.04,
-              0.04
+              0.04,
             )
           })
         }}
@@ -700,7 +821,7 @@ s.forHorizontal({ n: hues.length, margin: 0.05 }, (_, d, c, i) => {
               s.filledPath((a) => a.fill(hue, 80, 60, 0.85)).regularPolygon(
                 p,
                 3,
-                0.05
+                0.05,
               )
             })
           })

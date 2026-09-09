@@ -213,7 +213,7 @@ export class Attributes {
    * @returns `this` for chaining
    */
   lineJoin(
-    join: "arcs" | "bevel" | "miter" | "miter-clip" | "round"
+    join: "arcs" | "bevel" | "miter" | "miter-clip" | "round",
   ): Attributes {
     this.styleAttributes["stroke-linejoin"] = join
     return this
@@ -249,6 +249,128 @@ export class Attributes {
    */
   dashOffset(offset: number) {
     this.styleAttributes["stroke-dashoffset"] = offset
+    return this
+  }
+
+  /**
+   * Sets the font size, in the drawing's coordinate units.
+   *
+   * Note: with the default `0`-to-`1` viewBox, `0.1` is a tenth of the
+   * drawing's width, not ten pixels.
+   *
+   * @param size - The font size in viewBox units
+   * @returns `this` for chaining
+   */
+  fontSize(size: number): Attributes {
+    this.styleAttributes["font-size"] = size
+    return this
+  }
+
+  /**
+   * Sets the font family.
+   *
+   * @param family - A CSS font family list, e.g. `"Helvetica, sans-serif"`
+   * @returns `this` for chaining
+   */
+  fontFamily(family: string): Attributes {
+    this.styleAttributes["font-family"] = family
+    return this
+  }
+
+  /**
+   * Sets the font weight.
+   *
+   * @param weight - A numeric weight (e.g. `700`) or a CSS keyword
+   * @returns `this` for chaining
+   */
+  fontWeight(
+    weight: number | "normal" | "bold" | "lighter" | "bolder",
+  ): Attributes {
+    this.styleAttributes["font-weight"] = weight
+    return this
+  }
+
+  /**
+   * Sets the font style.
+   *
+   * @param style - `"normal"`, `"italic"` or `"oblique"`
+   * @returns `this` for chaining
+   */
+  fontStyle(style: "normal" | "italic" | "oblique"): Attributes {
+    this.styleAttributes["font-style"] = style
+    return this
+  }
+
+  /**
+   * Sets how text is aligned horizontally relative to its anchor point.
+   *
+   * @param anchor - `"start"`, `"middle"` or `"end"`
+   * @returns `this` for chaining
+   */
+  textAnchor(anchor: "start" | "middle" | "end"): Attributes {
+    this.styleAttributes["text-anchor"] = anchor
+    return this
+  }
+
+  /**
+   * Sets how text is aligned vertically relative to its anchor point.
+   *
+   * @param baseline - A CSS `dominant-baseline` value, e.g. `"middle"` to centre
+   *   text on its anchor
+   * @returns `this` for chaining
+   */
+  dominantBaseline(
+    baseline:
+      | "auto"
+      | "middle"
+      | "central"
+      | "hanging"
+      | "text-top"
+      | "text-bottom"
+      | "alphabetic",
+  ): Attributes {
+    this.styleAttributes["dominant-baseline"] = baseline
+    return this
+  }
+
+  /**
+   * Sets the spacing added between characters.
+   *
+   * @param spacing - The extra spacing in viewBox units
+   * @returns `this` for chaining
+   */
+  letterSpacing(spacing: number): Attributes {
+    this.styleAttributes["letter-spacing"] = spacing
+    return this
+  }
+
+  /**
+   * Fills the element with a gradient defined on the drawing.
+   *
+   * @param id - The `id` of a gradient created with
+   *   {@link SolandraSvg.linearGradient} or {@link SolandraSvg.radialGradient}
+   * @returns `this` for chaining
+   *
+   * @example
+   * ```ts
+   * s.linearGradient("sky").stop(0, 210, 80, 60).stop(1, 340, 80, 60)
+   * s.path(s.A.fillGradient("sky")).rect(s.meta.center, 0.8, 0.4)
+   * ```
+   */
+  fillGradient(id: string): Attributes {
+    this.styleAttributes["fill"] = `url(#${id})`
+    return this
+  }
+
+  /**
+   * Strokes the element with a gradient defined on the drawing.
+   *
+   * @param id - The `id` of a gradient created with
+   *   {@link SolandraSvg.linearGradient} or {@link SolandraSvg.radialGradient}
+   * @returns `this` for chaining
+   */
+  strokeGradient(id: string): Attributes {
+    this.styleAttributes["stroke"] = `url(#${id})`
     return this
   }
 

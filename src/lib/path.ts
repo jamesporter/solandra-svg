@@ -10,7 +10,9 @@ import { indent } from "./util/internalUtil.js"
  * Each variant corresponds to an SVG path command:
  * - `"move"` - Move to a point (`M`)
  * - `"line"` - Draw a line to a point (`L`)
- * - `"cubicCurve"` - Draw a cubic bezier curve (`C`)
+ * - `"cubicCurve"` - Draw a cubic bezier curve from a {@link CurveConfig} (`C`)
+ * - `"bezier"` - Draw a cubic bezier curve from explicit control points (`C`)
+ * - `"quadratic"` - Draw a quadratic bezier curve from an explicit control point (`Q`)
  * - `"arc"` - Draw an elliptical arc (`A`)
  * - `"close"` - Close the path (`Z`)
  */
@@ -26,6 +28,13 @@ export type PathSegment =
       config: Required<CurveConfig>
     }
   | { kind: "arc"; to: Point2D; config: Required<ArcConfig> }
+  | {
+      kind: "bezier"
+      to: Point2D
+      control1: Point2D
+      control2: Point2D
+    }
+  | { kind: "quadratic"; to: Point2D; control: Point2D }
   | { kind: "close" }
 
 /**
@@ -59,6 +68,19 @@ function cloneSegment(segment: PathSegment): PathSegment {
         to: [...segment.to],
         config: { ...segment.config },
       }
+    case "bezier":
+      return {
+        kind: "bezier",
+        to: [...segment.to],
+        control1: [...segment.control1],
+        control2: [...segment.control2],
+      }
+    case "quadratic":
+      return {
+        kind: "quadratic",
+        to: [...segment.to],
+        control: [...segment.control],
+      }
   }
 }
 
@@ -89,6 +111,12 @@ function segmentToString(segment: PathSegment, previous?: Point2D): string {
         to: segment.to,
         ...segment.config,
       })
+    case "bezier":
+      return `C ${segment.control1.join(" ")}, ${segment.control2.join(
+        " ",
+      )}, ${segment.to.join(" ")}`
+    case "quadratic":
+      return `Q ${segment.control.join(" ")}, ${segment.to.join(" ")}`
     case "arc": {
       const {
         config: { rX, rY, largeArc, sweep, xAxisRotation },
@@ -216,6 +244,101 @@ export class Path {
         sweep,
       },
     })
+
+    return this
+  }
+
+  /**
+   * Draws a cubic bezier curve from the current position, using explicit
+   * control points.
+   *
+   * Where {@link curveTo} describes a curve in terms of how far it bulges from
+   * the straight line between two points, this is the raw SVG `C` command: you
+   * place both control points yourself.
+   *
+   * @param control1 - The control point leaving the current position
+   * @param control2 - The control point arriving at `point`
+   * @param point - The target position
+   * @returns `this` for chaining
+   */
+  cubicTo(control1: Point2D, control2: Point2D, point: Point2D): Path {
+    this.segments.push({
+      kind: "bezier",
+      to: point,
+      control1,
+      control2,
+    })
+    return this
+  }
+
+  /**
+   * Draws a quadratic bezier curve from the current position, using an explicit
+   * control point (the SVG `Q` command).
+   *
+   * @param control - The single control point shaping the curve
+   * @param point - The target position
+   * @returns `this` for chaining
+   */
+  quadraticTo(control: Point2D, point: Point2D): Path {
+    this.segments.push({ kind: "quadratic", to: point, control })
+    return this
+  }
+
+  /**
+   * Draws a smooth curve that passes through every one of the given points.
+   *
+   * Unlike {@link chaikin}, which cuts corners off a polyline and so pulls away
+   * from it, this fits a Catmull-Rom spline through the points and emits it as
+   * cubic bezier segments: the curve is smooth *and* hits each point exactly.
+   *
+   * @param points - The points to pass through (at least two)
+   * @param config - Optional configuration
+   * @param config.tension - How much the curve overshoots at corners; `0` gives
+   *   straight lines, `1` (the default) a standard Catmull-Rom spline
+   * @param config.closed - If `true`, joins the last point smoothly back to the
+   *   first and closes the path (default `false`)
+   * @returns `this` for chaining
+   * @throws If fewer than two points are given
+   *
+   * @example
+   * ```ts
+   * s.strokedPath().smoothLine([
+   *   [0.1, 0.5],
+   *   [0.4, 0.2],
+   *   [0.7, 0.7],
+   *   [0.9, 0.4],
+   * ])
+   * ```
+   */
+  smoothLine(
+    points: Point2D[],
+    config: { tension?: number; closed?: boolean } = {},
+  ): Path {
+    const { tension = 1, closed = false } = config
+    const n = points.length
+    if (n < 2) {
+      throw new Error("smoothLine requires at least two points")
+    }
+
+    // Catmull-Rom needs a point either side of each segment. A closed curve
+    // wraps around for those; an open one repeats its endpoints, which keeps
+    // the first and last segments from curling away.
+    const at = (i: number): Point2D =>
+      closed
+        ? points[((i % n) + n) % n]
+        : points[Math.min(Math.max(i, 0), n - 1)]
+
+    this.moveTo(points[0])
+    const segments = closed ? n : n - 1
+    for (let i = 0; i < segments; i++) {
+      const [p0, p1, p2, p3] = [at(i - 1), at(i), at(i + 1), at(i + 2)]
+      this.cubicTo(
+        v.add(p1, v.scale(v.subtract(p2, p0), tension / 6)),
+        v.subtract(p2, v.scale(v.subtract(p3, p1), tension / 6)),
+        p2,
+      )
+    }
+    if (closed) this.close()
 
     return this
   }
