@@ -198,6 +198,13 @@ code {
   * {
     @apply border-border outline-ring/50;
   }
+  /* Stop the rubber-band bounce past the top/bottom of the page, which
+     otherwise exposes the plain background above the gradient nav bar
+     and below the footer. Only the y axis, so swipe navigation still works. */
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
   body {
     @apply bg-background text-foreground;
   }
